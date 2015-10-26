@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Created by guilhem on 25/10/2015.
  */
-public class Cars {
+public class Car {
 
     private int id;
     private Model model;
