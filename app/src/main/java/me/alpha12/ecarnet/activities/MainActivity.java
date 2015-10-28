@@ -4,6 +4,8 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,9 +26,15 @@ import java.util.ArrayList;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.classes.Car;
 import me.alpha12.ecarnet.classes.Model;
+import me.alpha12.ecarnet.classes.OnFragmentInteractionListener;
+import me.alpha12.ecarnet.fragments.GasFragment;
+import me.alpha12.ecarnet.fragments.HomeFragment;
+import me.alpha12.ecarnet.fragments.OperationsFragment;
+import me.alpha12.ecarnet.fragments.ShareFragment;
+import me.alpha12.ecarnet.fragments.TagsFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
 
     public ArrayList<Car> cars = new ArrayList<>();
     public Car currentCar;
@@ -46,16 +54,14 @@ public class MainActivity extends AppCompatActivity
         cars.add(new Car("CT 091 DQ", model2));
         cars.add(new Car("XX 180 TG", model3));
 
-        changeCar(cars.get(0));
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -65,6 +71,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
+
+        changeCar(cars.get(0));
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, HomeFragment.newInstance()).commit();
     }
 
     @Override
@@ -105,15 +116,21 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
+        if (findViewById(R.id.fragment_container) != null) {
+            if (id == R.id.nav_home) {
+                openMainFragment(HomeFragment.newInstance());
+            } else if (id == R.id.nav_gas) {
+                openMainFragment(GasFragment.newInstance());
+            } else if (id == R.id.nav_repair) {
+                openMainFragment(OperationsFragment.newInstance());
+            } else if (id == R.id.nav_share) {
+                openMainFragment(ShareFragment.newInstance());
+            } else if (id == R.id.nav_nfc) {
+                openMainFragment(TagsFragment.newInstance());
+            }
 
-        } else if (id == R.id.nav_gas) {
-
-        } else if (id == R.id.nav_repair) {
-
+            closeDrawer();
         }
-
-        closeDrawer();
 
         return true;
     }
@@ -121,6 +138,13 @@ public class MainActivity extends AppCompatActivity
     public void closeDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    public void openMainFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void changeCar(Car newCar) {
