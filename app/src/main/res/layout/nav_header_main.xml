@@ -19,8 +19,8 @@
         <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:src="@android:drawable/sym_def_app_icon" android:id="@+id/brand_image_view" />
 
-        <android.widget.Space
-            android:layout_width="match_parent"
+        <View
+            android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1" />
     </LinearLayout>
@@ -28,10 +28,13 @@
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing" android:text="Android Studio"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/white"
         android:id="@+id/car_name" />
 
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="android.studio@android.com"
+        android:textColor="@android:color/white"
+        android:alpha="0.7"
         android:id="@+id/car_desc"/>
 
 </LinearLayout>
