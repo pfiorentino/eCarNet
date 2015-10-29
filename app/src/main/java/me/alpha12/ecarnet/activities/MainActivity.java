@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -35,9 +36,11 @@ import me.alpha12.ecarnet.fragments.TagsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
+    public final static String FRAGMENT_MENU_ENTRY_ID = "fmei";
 
     public ArrayList<Car> cars = new ArrayList<>();
     public Car currentCar;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +72,23 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
         changeCar(cars.get(0));
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, HomeFragment.newInstance()).commit();
+                .add(R.id.fragment_container, HomeFragment.newInstance(R.id.nav_home), "CURRENT_FRAGMENT").commit();
+
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    public void onBackStackChanged() {
+                        Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
+                        if (navigationView != null && currentFragment != null && currentFragment.isVisible()) {
+                            navigationView.getMenu().findItem(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID)).setChecked(true);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -118,15 +131,15 @@ public class MainActivity extends AppCompatActivity
 
         if (findViewById(R.id.fragment_container) != null) {
             if (id == R.id.nav_home) {
-                openMainFragment(HomeFragment.newInstance());
+                openMainFragment(HomeFragment.newInstance(id));
             } else if (id == R.id.nav_gas) {
-                openMainFragment(GasFragment.newInstance());
+                openMainFragment(GasFragment.newInstance(id));
             } else if (id == R.id.nav_repair) {
-                openMainFragment(OperationsFragment.newInstance());
+                openMainFragment(OperationsFragment.newInstance(id));
             } else if (id == R.id.nav_share) {
-                openMainFragment(ShareFragment.newInstance());
+                openMainFragment(ShareFragment.newInstance(id));
             } else if (id == R.id.nav_nfc) {
-                openMainFragment(TagsFragment.newInstance());
+                openMainFragment(TagsFragment.newInstance(id));
             }
 
             closeDrawer();
@@ -142,7 +155,7 @@ public class MainActivity extends AppCompatActivity
 
     public void openMainFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
+        transaction.replace(R.id.fragment_container, fragment, "CURRENT_FRAGMENT");
         transaction.addToBackStack(null);
         transaction.commit();
     }
