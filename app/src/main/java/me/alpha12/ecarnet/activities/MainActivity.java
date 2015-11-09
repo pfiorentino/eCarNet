@@ -1,16 +1,14 @@
 package me.alpha12.ecarnet.activities;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,6 +16,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,13 +40,18 @@ public class MainActivity extends AppCompatActivity
 
     public ArrayList<Car> cars = new ArrayList<>();
     public Car currentCar;
+
     NavigationView navigationView;
+    FloatingActionButton fab;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.title_fragment_home);
         setSupportActionBar(toolbar);
 
         Model model1 = new Model("Renault", "Clio 2.2", "1.5l DCI 65ch");
@@ -57,14 +62,16 @@ public class MainActivity extends AppCompatActivity
         cars.add(new Car("CT 091 DQ", model2));
         cars.add(new Car("XX 180 TG", model3));
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                Intent intent = new Intent(view.getContext(), FillUpActivity.class);
+                startActivity(intent);
             }
-        });*/
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -86,6 +93,8 @@ public class MainActivity extends AppCompatActivity
                         Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
                         if (navigationView != null && currentFragment != null && currentFragment.isVisible()) {
                             navigationView.getMenu().findItem(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID)).setChecked(true);
+                            setFABVisibility(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID));
+                            setFragmentTitle(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID));
                         }
                     }
                 });
@@ -131,14 +140,24 @@ public class MainActivity extends AppCompatActivity
 
         if (findViewById(R.id.fragment_container) != null) {
             if (id == R.id.nav_home) {
+                fab.show();
+                toolbar.setTitle(R.string.title_fragment_home);
                 openMainFragment(HomeFragment.newInstance(id));
             } else if (id == R.id.nav_gas) {
+                fab.show();
+                toolbar.setTitle(R.string.title_fragment_gas);
                 openMainFragment(GasFragment.newInstance(id));
             } else if (id == R.id.nav_repair) {
+                fab.hide();
+                toolbar.setTitle(R.string.title_fragment_operations);
                 openMainFragment(OperationsFragment.newInstance(id));
             } else if (id == R.id.nav_share) {
+                fab.hide();
+                toolbar.setTitle(R.string.title_fragment_share);
                 openMainFragment(ShareFragment.newInstance(id));
             } else if (id == R.id.nav_nfc) {
+                fab.hide();
+                toolbar.setTitle(R.string.title_fragment_tags);
                 openMainFragment(TagsFragment.newInstance(id));
             }
 
@@ -146,6 +165,35 @@ public class MainActivity extends AppCompatActivity
         }
 
         return true;
+    }
+
+    public void setFragmentTitle(int menuItemId) {
+        if (toolbar != null) {
+            if (menuItemId == R.id.nav_home) {
+                toolbar.setTitle(R.string.title_fragment_home);
+            } else if (menuItemId == R.id.nav_gas) {
+                toolbar.setTitle(R.string.title_fragment_gas);
+            } else if (menuItemId == R.id.nav_repair) {
+                toolbar.setTitle(R.string.title_fragment_operations);
+            } else if (menuItemId == R.id.nav_share) {
+                toolbar.setTitle(R.string.title_fragment_share);
+            } else if (menuItemId == R.id.nav_nfc) {
+                toolbar.setTitle(R.string.title_fragment_tags);
+            }
+        }
+    }
+
+    public void setFABVisibility(int menuItemId) {
+        if (fab != null) {
+            switch (menuItemId) {
+                case R.id.nav_home:
+                case R.id.nav_gas:
+                    fab.show();
+                    break;
+                default:
+                    fab.hide();
+            }
+        }
     }
 
     public void closeDrawer() {
