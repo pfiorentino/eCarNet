@@ -14,12 +14,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -82,6 +85,20 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
+
+        LinearLayout profileSpinner = (LinearLayout) findViewById(R.id.profile_spinner);
+        profileSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigationView.getMenu().setGroupVisible(R.id.views_group, false);
+                navigationView.getMenu().setGroupVisible(R.id.misc_group, false);
+
+                MenuItem item = navigationView.getMenu().findItem(R.id.share_group_item);
+                item.setVisible(false);
+
+                navigationView.getMenu().setGroupVisible(R.id.profiles_group, true);
+            }
+        });
 
         changeCar(cars.get(0));
         getSupportFragmentManager().beginTransaction()

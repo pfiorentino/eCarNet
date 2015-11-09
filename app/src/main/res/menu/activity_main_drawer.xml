@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <group android:checkableBehavior="single" android:id="@+id/views">
+    <group android:checkableBehavior="single" android:id="@+id/views_group">
         <item android:id="@+id/nav_home" android:icon="@drawable/ic_action_home"
             android:title="Accueil" />
         <item android:id="@+id/nav_gas" android:icon="@drawable/ic_maps_local_gas_station"
@@ -10,9 +9,9 @@
             android:title="Interventions" />
     </group>
 
-    <item android:title="Partage">
+    <item android:title="Partage" android:id="@+id/share_group_item">
         <menu>
-            <group android:checkableBehavior="single" android:id="@+id/share">
+            <group android:checkableBehavior="single" android:id="@+id/share_group">
                 <item android:id="@+id/nav_nfc" android:icon="@drawable/ic_device_nfc"
                     android:title="Mes tags NFC" />
                 <item android:id="@+id/nav_share" android:icon="@drawable/ic_social_share"
@@ -21,10 +20,15 @@
         </menu>
     </item>
 
-    <group android:id="@+id/misc" android:menuCategory="system">
+    <group android:id="@+id/misc_group">
         <item android:id="@+id/nav_settings" android:icon="@drawable/ic_action_settings"
             android:title="Paramètres" />
         <item android:id="@+id/nav_help" android:icon="@drawable/ic_action_help"
+            android:title="Aide" />
+    </group>
+
+    <group android:id="@+id/profiles_group" android:visible="false">
+        <item android:id="@+id/nav_helpo" android:icon="@drawable/ic_arrow_drop_down_black_18dp"
             android:title="Aide" />
     </group>
 </menu>
