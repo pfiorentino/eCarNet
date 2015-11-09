@@ -82,7 +82,7 @@ public class FillUpActivity extends AppCompatActivity {
         }
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            Calendar c = Calendar.getInstance();
+            final Calendar c = Calendar.getInstance();
             c.set(Calendar.HOUR_OF_DAY, hourOfDay);
             c.set(Calendar.MINUTE, minute);
 
@@ -108,11 +108,7 @@ public class FillUpActivity extends AppCompatActivity {
         public void onDateSet(DatePicker view, int year, int month, int day) {
             final Calendar c = Calendar.getInstance();
             c.set(year, month, day);
-
-            String dateStr = DateUtils.formatDateTime(this.getContext(),
-                    c.getTimeInMillis(),
-                    DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH);
-            mDateTextView.setText(dateStr);
+            mDateTextView.setText(getFormattedDate(this.getContext(), c));
         }
     }
 
