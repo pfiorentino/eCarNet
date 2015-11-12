@@ -4,7 +4,12 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_global_settings">Settings</string>
+    <string name="title_activity_fill_up">Ajouter un plein</string>
+
+    <string name="title_fragment_home">Accueil</string>
+    <string name="title_fragment_gas">Pleins d\'essence</string>
+    <string name="title_fragment_operations">Interventions</string>
+    <string name="title_fragment_share">Partages</string>
+    <string name="title_fragment_tags">Mes tags NFC</string>
+    <string name="add">Ajouter</string>
 </resources>
