@@ -1,4 +1,4 @@
-package me.alpha12.ecarnet.model;
+package me.alpha12.ecarnet.models;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +17,22 @@ public class Car {
     private User owner;
     private ArrayList<User> sharedPeople;
     private ArrayList<Intervention> myInterventions;
+    private String plateNum;
+
+
+    public Car(String plateNum, Model model) {
+        this.plateNum = plateNum;
+        this.model = model;
+    }
+
+
+    public String getPlateNum() {
+        return plateNum;
+    }
+
+    public void setPlateNum(String plateNum) {
+        this.plateNum = plateNum;
+    }
 
     public Model getModel() {
         return model;

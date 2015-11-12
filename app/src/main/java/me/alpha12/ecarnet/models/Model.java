@@ -1,4 +1,4 @@
-package me.alpha12.ecarnet.model;
+package me.alpha12.ecarnet.models;
 
 /**
  * Created by guilhem on 25/10/2015.
@@ -10,11 +10,20 @@ public class Model {
     private String model;
     private int year;
     private String energy;
-    private int horsePower;
+    private String engine;
     private int ratedHP;
     private double consumption;
     private int doors;
     private String subModel;
+
+
+    public Model(String brand, String model, String engine) {
+        this.brand = brand;
+        this.model = model;
+        this.engine = engine;
+    }
+
+
 
     public int getId() {
         return id;
@@ -56,12 +65,12 @@ public class Model {
         this.energy = energy;
     }
 
-    public int getHorsePower() {
-        return horsePower;
+    public String getEngine() {
+        return engine;
     }
 
-    public void setHorsePower(int horsePower) {
-        this.horsePower = horsePower;
+    public void setEngine(String engine) {
+        this.engine = engine;
     }
 
     public int getRatedHP() {

@@ -1,4 +1,4 @@
-package me.alpha12.ecarnet.model;
+package me.alpha12.ecarnet.models;
 
 /**
  * Created by guilhem on 25/10/2015.
