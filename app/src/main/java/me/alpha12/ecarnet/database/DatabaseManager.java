@@ -12,17 +12,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
     //Table CAR
     public static final String T_CAR = "Car";
     public static final String C_CAR_ID = "id";
-    public static final String C_CAR_LICENCE = "licence";
-    public static final String C_CAR_KILLOMETERS = "killometers";
+    public static final String C_CAR_KILLOMETERS = "kilometers";
     public static final String C_CAR_BUYING_DATE = "buying_date";
+    public static final String C_CAR_CIRCULATION_DATE = "circulation_date";
     public static final String C_CAR_AVERAGE_CONSUMPTION = "average_consumption";
+    public static final String C_CAR_PLATE_NUMBER = "plate_number";
     private static final String INIT_BDD_CAR =
             "CREATE TABLE "
                     + T_CAR + "("
                     + C_CAR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + C_CAR_LICENCE + "TEXT NOT NULL,"
                     + C_CAR_KILLOMETERS + " INTEGER NOT NULL,"
                     + C_CAR_BUYING_DATE + " NUMERIC NOT NULL,"
+                    + C_CAR_CIRCULATION_DATE + "NUMERIC NOT NULL,"
+                    + C_CAR_PLATE_NUMBER + "TEXT NOT NULL,"
                     + C_CAR_AVERAGE_CONSUMPTION + " REAL NOT NULL"
                     + ");";
 
@@ -102,7 +104,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String C_MODEL_MODEL = "model";
     public static final String C_MODEL_YEAR = "year";
     public static final String C_MODEL_ENERGY = "energy";
-    public static final String C_MODEL_HORSE_POWER = "horse_power";
+    public static final String C_MODEL_ENGINE = "engine";
     public static final String C_MODEL_RATED_HP = "rated_hp";
     public static final String C_MODEL_CONSUMPTION = "consumption";
     public static final String C_MODEL_DOORS = "doors";
@@ -115,7 +117,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + C_MODEL_MODEL + " TEXT NOT NULL,"
                     + C_MODEL_YEAR + " INTEGER NOT NULL,"
                     + C_MODEL_ENERGY + " TEXT NOT NULL,"
-                    + C_MODEL_HORSE_POWER + " INTEGER NOT NULL,"
+                    + C_MODEL_ENGINE + " TEXT NOT NULL,"
                     + C_MODEL_RATED_HP + " INTEGER NOT NULL,"
                     + C_MODEL_CONSUMPTION + " REAL,"
                     + C_MODEL_DOORS + " INTEGER NOT NULL,"
@@ -208,7 +210,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         bdd.execSQL(INIT_BDD_OWN);
         bdd.execSQL(INIT_BDD_SHARE);
         bdd.execSQL(INIT_BDD_USER);
-
 
     }
 

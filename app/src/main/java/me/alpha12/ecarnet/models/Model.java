@@ -17,12 +17,25 @@ public class Model {
     private String subModel;
 
 
+    public Model(int id, String brand, String model, int year, String energy, String engine, int ratedHP, double consumption, int doors, String subModel) {
+        this.id = id;
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+        this.energy = energy;
+        this.engine = engine;
+        this.ratedHP = ratedHP;
+        this.consumption = consumption;
+        this.doors = doors;
+        this.subModel = subModel;
+    }
+
+
     public Model(String brand, String model, String engine) {
         this.brand = brand;
         this.model = model;
         this.engine = engine;
     }
-
 
 
     public int getId() {

@@ -2,15 +2,10 @@ package me.alpha12.ecarnet.activities;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,14 +22,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.classes.Car;
-import me.alpha12.ecarnet.classes.Model;
-import me.alpha12.ecarnet.classes.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
 import me.alpha12.ecarnet.fragments.ShareFragment;
 import me.alpha12.ecarnet.fragments.TagsFragment;
+import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
+import me.alpha12.ecarnet.models.Car;
+import me.alpha12.ecarnet.models.Model;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
@@ -167,12 +164,12 @@ public class MainActivity extends AppCompatActivity
         currentCar = newCar;
 
         TextView drawerTitle = (TextView) findViewById(R.id.car_name);
-        drawerTitle.setText(currentCar.model.brand+" "+currentCar.model.model);
+        drawerTitle.setText(currentCar.getModel().getBrand()+" "+currentCar.model.getModel());
 
         TextView drawerDesc = (TextView) findViewById(R.id.car_desc);
-        drawerDesc.setText(currentCar.plateNum+" - "+currentCar.model.engine);
+        drawerDesc.setText(currentCar.getPlateNum()+" - "+currentCar.model.getEngine());
 
-        switch (currentCar.model.brand){
+        switch (currentCar.model.getBrand()){
             case "Renault":
                 header.setBackgroundResource(R.drawable.background_renault);
                 brandImageView.setImageResource(R.mipmap.ic_renault);
@@ -191,9 +188,9 @@ public class MainActivity extends AppCompatActivity
         carsLayout.removeViews(2, carsLayout.getChildCount() - 2);
 
         for (Car car : cars) {
-            if (currentCar != null && !car.plateNum.equals(currentCar.plateNum)) {
+            if (currentCar != null && !car.getPlateNum().equals(currentCar.getPlateNum())) {
                 ImageView carImage = new ImageView(getBaseContext());
-                switch (car.model.brand) {
+                switch (car.model.getBrand()) {
                     case "Renault":
                         carImage.setImageResource(R.mipmap.ic_renault);
                         break;
@@ -248,4 +245,9 @@ public class MainActivity extends AppCompatActivity
 
         closeDrawer();
     }
+
+
 }
+
+
+
