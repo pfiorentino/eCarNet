@@ -1,17 +1,15 @@
 package me.alpha12.ecarnet.fragments;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
-import me.alpha12.ecarnet.classes.OnFragmentInteractionListener;
+import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 
 /**
  * A simple {@link Fragment} subclass.

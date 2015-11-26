@@ -1,4 +1,4 @@
-package me.alpha12.ecarnet.model;
+package me.alpha12.ecarnet.models;
 
 import java.sql.Date;
 import java.util.ArrayList;

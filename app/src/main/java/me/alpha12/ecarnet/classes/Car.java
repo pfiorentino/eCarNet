@@ -1,5 +1,7 @@
 package me.alpha12.ecarnet.classes;
 
+import me.alpha12.ecarnet.models.Model;
+
 /**
  * Created by paul on 02/10/2015.
  */
