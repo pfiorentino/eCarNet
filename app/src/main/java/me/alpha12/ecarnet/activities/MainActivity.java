@@ -5,7 +5,6 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,13 +18,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.classes.Car;
@@ -41,12 +40,14 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
     public final static String FRAGMENT_MENU_ENTRY_ID = "fmei";
 
-    public ArrayList<Car> cars = new ArrayList<>();
+    public HashMap<String, Car> cars = new HashMap<>();
     public Car currentCar;
 
     NavigationView navigationView;
     FloatingActionButton fab;
     Toolbar toolbar;
+
+    boolean isProfilesMenuOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +62,14 @@ public class MainActivity extends AppCompatActivity
         Model model2 = new Model("Peugeot", "206+", "1.4l 70ch");
         Model model3 = new Model("Citroën", "Saxo", "1.0l 50ch");
 
-        cars.add(new Car("71 AFB 34", model1));
-        cars.add(new Car("CT 091 DQ", model2));
-        cars.add(new Car("XX 180 TG", model3));
+        cars.put("uuid_101", new Car(101, "71 AFB 34", model1));
+        cars.put("uuid_102", new Car(102, "CT 091 DQ", model2));
+        cars.put("uuid_203", new Car(203, "XX 180 TG", model3));
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
                 Intent intent = new Intent(view.getContext(), FillUpActivity.class);
                 startActivity(intent);
             }
@@ -86,21 +85,22 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
+        for(Map.Entry<String, Car> carEntry : cars.entrySet()) {
+            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().uuid, 0, carEntry.getValue().plateNum+" - "+carEntry.getValue().model.engine);
+        }
+
+        navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, false);
+
         LinearLayout profileSpinner = (LinearLayout) findViewById(R.id.profile_spinner);
         profileSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigationView.getMenu().setGroupVisible(R.id.views_group, false);
-                navigationView.getMenu().setGroupVisible(R.id.misc_group, false);
-
-                MenuItem item = navigationView.getMenu().findItem(R.id.share_group_item);
-                item.setVisible(false);
-
-                navigationView.getMenu().setGroupVisible(R.id.profiles_group, true);
+                isProfilesMenuOpen = !isProfilesMenuOpen;
+                refreshProfilesMenu();
             }
         });
 
-        changeCar(cars.get(0));
+        changeCar(cars.entrySet().iterator().next().getValue());
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, HomeFragment.newInstance(R.id.nav_home), "CURRENT_FRAGMENT").commit();
 
@@ -155,6 +155,8 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+
+
         if (findViewById(R.id.fragment_container) != null) {
             if (id == R.id.nav_home) {
                 fab.show();
@@ -176,6 +178,17 @@ public class MainActivity extends AppCompatActivity
                 fab.hide();
                 toolbar.setTitle(R.string.title_fragment_tags);
                 openMainFragment(TagsFragment.newInstance(id));
+            } else if (id == R.id.nav_add_car) {
+                Intent intent = new Intent(this.getBaseContext(), AddCarActivity.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_manage_car) {
+                Intent intent = new Intent(this.getBaseContext(), CarsMgmtActivity.class);
+                startActivity(intent);
+            } else {
+                Car selectedCar = cars.get("uuid_"+id);
+                if (selectedCar != null){
+                    changeCar(selectedCar);
+                }
             }
 
             closeDrawer();
@@ -229,13 +242,21 @@ public class MainActivity extends AppCompatActivity
         LinearLayout header = (LinearLayout) findViewById(R.id.drawer_header);
         ImageView brandImageView = (ImageView) findViewById(R.id.brand_image_view);
 
+        if (currentCar != null){
+            navigationView.getMenu().add(R.id.cars_mgmt_group, currentCar.uuid, 0, currentCar.plateNum + " - " + currentCar.model.engine);
+        }
+        navigationView.getMenu().removeItem(newCar.uuid);
+
+        isProfilesMenuOpen = false;
+        refreshProfilesMenu();
+
         currentCar = newCar;
 
         TextView drawerTitle = (TextView) findViewById(R.id.car_name);
-        drawerTitle.setText(currentCar.model.brand+" "+currentCar.model.model);
+        drawerTitle.setText(currentCar.model.brand + " " + currentCar.model.model);
 
         TextView drawerDesc = (TextView) findViewById(R.id.car_desc);
-        drawerDesc.setText(currentCar.plateNum+" - "+currentCar.model.engine);
+        drawerDesc.setText(currentCar.plateNum + " - " + currentCar.model.engine);
 
         switch (currentCar.model.brand){
             case "Renault":
@@ -255,8 +276,10 @@ public class MainActivity extends AppCompatActivity
         LinearLayout carsLayout = (LinearLayout) findViewById(R.id.cars_icon_layout);
         carsLayout.removeViews(2, carsLayout.getChildCount() - 2);
 
-        for (Car car : cars) {
-            if (currentCar != null && !car.plateNum.equals(currentCar.plateNum)) {
+        for(Map.Entry<String, Car> carEntry : cars.entrySet()) {
+            Car car = carEntry.getValue();
+
+            if (currentCar != null && car.uuid != currentCar.uuid) {
                 ImageView carImage = new ImageView(getBaseContext());
                 switch (car.model.brand) {
                     case "Renault":
@@ -312,5 +335,20 @@ public class MainActivity extends AppCompatActivity
         }
 
         closeDrawer();
+    }
+
+    public void refreshProfilesMenu() {
+        navigationView.getMenu().setGroupVisible(R.id.views_group, !isProfilesMenuOpen);
+        navigationView.getMenu().setGroupVisible(R.id.misc_group, !isProfilesMenuOpen);
+        navigationView.getMenu().findItem(R.id.share_group_item).setVisible(!isProfilesMenuOpen);
+
+        navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, isProfilesMenuOpen);
+
+        ImageView spinnerTrigger = (ImageView) findViewById(R.id.spinner_trigger);
+        if (!isProfilesMenuOpen){
+            spinnerTrigger.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
+        } else {
+            spinnerTrigger.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
+        }
     }
 }
