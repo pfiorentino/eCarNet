@@ -1,6 +1,7 @@
 package me.alpha12.ecarnet.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,7 +40,9 @@ import me.alpha12.ecarnet.models.Model;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
-    public final static String FRAGMENT_MENU_ENTRY_ID = "fmei";
+    public static final String PREFS_NAME = "user_prefs_file";
+    public static final String PREFS_SAVED_CAR_KEY = "current_car";
+    public static final String FRAGMENT_MENU_ENTRY_ID = "fmei";
 
     public HashMap<String, Car> cars = new HashMap<>();
     public Car currentCar;
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MainActivity", "OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -123,7 +127,16 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        changeCar(cars.entrySet().iterator().next().getValue(), true);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        int savedCarId = settings.getInt(PREFS_SAVED_CAR_KEY, -1);
+        Car savedCar = cars.get("uuid_" + savedCarId);
+        if (savedCar != null){
+            Log.d("savedCar", "CurrentCarFound");
+            changeCar(savedCar, true);
+        } else {
+            Log.d("savedCar", "CurrentCarNotFound");
+            changeCar(cars.entrySet().iterator().next().getValue(), true);
+        }
     }
 
     @Override
@@ -251,6 +264,9 @@ public class MainActivity extends AppCompatActivity
 
     public void changeCar(Car newCar, boolean openFragment) {
         Log.d("fragment", "Change car ("+openFragment+")");
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        settings.edit().putInt(PREFS_SAVED_CAR_KEY, newCar.uuid).commit();
+
         LinearLayout header = (LinearLayout) findViewById(R.id.drawer_header);
         ImageView brandImageView = (ImageView) findViewById(R.id.brand_image_view);
 
