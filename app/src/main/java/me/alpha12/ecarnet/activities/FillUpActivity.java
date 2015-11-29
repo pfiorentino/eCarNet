@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -31,7 +32,6 @@ public class FillUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fill_up);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mCurrentDate = Calendar.getInstance();
@@ -55,6 +55,16 @@ public class FillUpActivity extends AppCompatActivity {
                 newFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private static String getFormattedDate(Context ctx, Calendar c) {
