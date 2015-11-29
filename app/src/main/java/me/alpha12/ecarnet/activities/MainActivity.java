@@ -2,6 +2,7 @@ package me.alpha12.ecarnet.activities;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -13,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -25,16 +27,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.classes.Car;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
 import me.alpha12.ecarnet.fragments.ShareFragment;
 import me.alpha12.ecarnet.fragments.TagsFragment;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
+import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Model;
-/*import me.alpha12.ecarnet.models.Car;*/
-/*import me.alpha12.ecarnet.models.Model;*/
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
@@ -86,7 +87,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
         for(Map.Entry<String, Car> carEntry : cars.entrySet()) {
-            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().uuid, 0, carEntry.getValue().plateNum+" - "+carEntry.getValue().model.getEngine());
+            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().uuid, 0, carEntry.getValue().getPlateNum() + " - " + carEntry.getValue().model.getEngine());
+            navigationView.getMenu().findItem(carEntry.getValue().uuid).setIcon(R.drawable.ic_car_circle);
         }
 
         navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, false);
@@ -100,25 +102,33 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        changeCar(cars.entrySet().iterator().next().getValue());
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, HomeFragment.newInstance(R.id.nav_home), "CURRENT_FRAGMENT").commit();
+        /*getSupportFragmentManager().beginTransaction()
+                                   .add(R.id.fragment_container, HomeFragment.newInstance(R.id.nav_home), "CURRENT_FRAGMENT")
+                                   .addToBackStack("FIRST_FRAGMENT")
+                                   .commit();*/
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
                     public void onBackStackChanged() {
-                        Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
-                        if (navigationView != null && currentFragment != null && currentFragment.isVisible()) {
-                            navigationView.getMenu().findItem(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID)).setChecked(true);
-                            setFABVisibility(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID));
-                            setFragmentTitle(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID));
+                        Log.d("fragment", "On back fragment - stack: "+getSupportFragmentManager().getBackStackEntryCount());
+
+                        if (getSupportFragmentManager().getBackStackEntryCount() == 0){
+                            onBackPressed();
+                        } else {
+                            Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
+                            if (navigationView != null && currentFragment != null && currentFragment.isVisible()) {
+                                fragmentSelected(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID));
+                            }
                         }
                     }
                 });
+
+        changeCar(cars.entrySet().iterator().next().getValue(), true);
     }
 
     @Override
     public void onBackPressed() {
+        Log.d("fragment", "On back - stack: "+getSupportFragmentManager().getBackStackEntryCount());
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -152,78 +162,39 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        int menuItemId = item.getItemId();
 
-
-
-        if (findViewById(R.id.fragment_container) != null) {
-            if (id == R.id.nav_home) {
-                fab.show();
-                toolbar.setTitle(R.string.title_fragment_home);
-                openMainFragment(HomeFragment.newInstance(id));
-            } else if (id == R.id.nav_gas) {
-                fab.show();
-                toolbar.setTitle(R.string.title_fragment_gas);
-                openMainFragment(GasFragment.newInstance(id));
-            } else if (id == R.id.nav_repair) {
-                fab.hide();
-                toolbar.setTitle(R.string.title_fragment_operations);
-                openMainFragment(OperationsFragment.newInstance(id));
-            } else if (id == R.id.nav_share) {
-                fab.hide();
-                toolbar.setTitle(R.string.title_fragment_share);
-                openMainFragment(ShareFragment.newInstance(id));
-            } else if (id == R.id.nav_nfc) {
-                fab.hide();
-                toolbar.setTitle(R.string.title_fragment_tags);
-                openMainFragment(TagsFragment.newInstance(id));
-            } else if (id == R.id.nav_add_car) {
-                Intent intent = new Intent(this.getBaseContext(), AddCarActivity.class);
-                startActivity(intent);
-            } else if (id == R.id.nav_manage_car) {
-                Intent intent = new Intent(this.getBaseContext(), CarsMgmtActivity.class);
-                startActivity(intent);
-            } else {
-                Car selectedCar = cars.get("uuid_"+id);
+        switch (menuItemId) {
+            case R.id.nav_home:
+                openMainFragment(HomeFragment.newInstance(menuItemId), menuItemId);
+                break;
+            case R.id.nav_gas:
+                openMainFragment(GasFragment.newInstance(menuItemId), menuItemId);
+                break;
+            case R.id.nav_repair:
+                openMainFragment(OperationsFragment.newInstance(menuItemId), menuItemId);
+                break;
+            case R.id.nav_share:
+                openMainFragment(ShareFragment.newInstance(menuItemId), menuItemId);
+                break;
+            case R.id.nav_nfc:
+                openMainFragment(TagsFragment.newInstance(menuItemId), menuItemId);
+                break;
+            case R.id.nav_add_car:
+                openActivity(AddCarActivity.class);
+                break;
+            case R.id.nav_manage_car:
+                openActivity(CarsMgmtActivity.class);
+                break;
+            default:
+                Car selectedCar = cars.get("uuid_"+menuItemId);
                 if (selectedCar != null){
-                    changeCar(selectedCar);
+                    changeCar(selectedCar, true);
                 }
-            }
-
-            closeDrawer();
         }
 
+        closeDrawer();
         return true;
-    }
-
-    public void setFragmentTitle(int menuItemId) {
-        if (toolbar != null) {
-            if (menuItemId == R.id.nav_home) {
-                toolbar.setTitle(R.string.title_fragment_home);
-            } else if (menuItemId == R.id.nav_gas) {
-                toolbar.setTitle(R.string.title_fragment_gas);
-            } else if (menuItemId == R.id.nav_repair) {
-                toolbar.setTitle(R.string.title_fragment_operations);
-            } else if (menuItemId == R.id.nav_share) {
-                toolbar.setTitle(R.string.title_fragment_share);
-            } else if (menuItemId == R.id.nav_nfc) {
-                toolbar.setTitle(R.string.title_fragment_tags);
-            }
-        }
-    }
-
-    public void setFABVisibility(int menuItemId) {
-        if (fab != null) {
-            switch (menuItemId) {
-                case R.id.nav_home:
-                case R.id.nav_gas:
-                    fab.show();
-                    break;
-                default:
-                    fab.hide();
-            }
-        }
     }
 
     public void closeDrawer() {
@@ -231,19 +202,61 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    public void openMainFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment, "CURRENT_FRAGMENT");
-        transaction.addToBackStack(null);
-        transaction.commit();
+    public void openActivity(Class activityClass) {
+        Intent intent = new Intent(this.getBaseContext(), activityClass);
+        startActivity(intent);
     }
 
-    public void changeCar(Car newCar) {
+    public void openMainFragment(Fragment fragment, int fragmentId) {
+        if (findViewById(R.id.fragment_container) != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0){
+                Log.d("fragment", "This is the first fragment");
+                transaction.add(R.id.fragment_container, fragment, "CURRENT_FRAGMENT");
+                transaction.addToBackStack("FIRST_FRAGMENT");
+            } else {
+                transaction.replace(R.id.fragment_container, fragment, "CURRENT_FRAGMENT");
+                transaction.addToBackStack(null);
+            }
+
+            transaction.commit();
+
+            fragmentSelected(fragmentId);
+        }
+    }
+
+    public void fragmentSelected(int fragmentId) {
+        navigationView.getMenu().findItem(fragmentId).setChecked(true);
+
+        if (toolbar != null) {
+            if (fragmentId == R.id.nav_home) {
+                toolbar.setTitle(currentCar.getModel().getModel() + " - " + currentCar.getPlateNum());
+                fab.show();
+            } else if (fragmentId == R.id.nav_gas) {
+                toolbar.setTitle(R.string.title_fragment_gas);
+                fab.show();
+            } else if (fragmentId == R.id.nav_repair) {
+                toolbar.setTitle(R.string.title_fragment_operations);
+                fab.hide();
+            } else if (fragmentId == R.id.nav_share) {
+                toolbar.setTitle(R.string.title_fragment_share);
+                fab.hide();
+            } else if (fragmentId == R.id.nav_nfc) {
+                toolbar.setTitle(R.string.title_fragment_tags);
+                fab.hide();
+            }
+        }
+    }
+
+    public void changeCar(Car newCar, boolean openFragment) {
+        Log.d("fragment", "Change car ("+openFragment+")");
         LinearLayout header = (LinearLayout) findViewById(R.id.drawer_header);
         ImageView brandImageView = (ImageView) findViewById(R.id.brand_image_view);
 
         if (currentCar != null){
-            navigationView.getMenu().add(R.id.cars_mgmt_group, currentCar.uuid, 0, currentCar.plateNum + " - " + currentCar.model.getEngine());
+            navigationView.getMenu().add(R.id.cars_mgmt_group, currentCar.uuid, 0, currentCar.getPlateNum() + " - " + currentCar.model.getEngine());
+            navigationView.getMenu().findItem(currentCar.uuid).setIcon(R.drawable.ic_car_circle);
         }
         navigationView.getMenu().removeItem(newCar.uuid);
 
@@ -256,21 +269,13 @@ public class MainActivity extends AppCompatActivity
         drawerTitle.setText(currentCar.model.getBrand() + " " + currentCar.model.getModel());
 
         TextView drawerDesc = (TextView) findViewById(R.id.car_desc);
-        drawerDesc.setText(currentCar.plateNum + " - " + currentCar.model.getEngine());
-
-        switch (currentCar.model.getBrand()){
-            case "Renault":
-                header.setBackgroundResource(R.drawable.background_renault);
-                brandImageView.setImageResource(R.mipmap.ic_renault);
-                break;
-            case "Peugeot":
-                header.setBackgroundResource(R.drawable.background_peugeot);
-                brandImageView.setImageResource(R.mipmap.ic_peugeot);
-                break;
-            case "Citroën":
-                header.setBackgroundResource(R.drawable.background_citroen);
-                brandImageView.setImageResource(R.mipmap.ic_citroen);
-                break;
+        drawerDesc.setText(currentCar.getPlateNum() + " - " + currentCar.model.getEngine());
+        brandImageView.setImageDrawable(currentCar.getCarPicture(getBaseContext()));
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.JELLY_BEAN){
+            header.setBackground(currentCar.getCarBanner(getBaseContext()));
+        } else{
+            header.setBackgroundDrawable(currentCar.getCarBanner(getBaseContext()));
         }
 
         LinearLayout carsLayout = (LinearLayout) findViewById(R.id.cars_icon_layout);
@@ -281,17 +286,7 @@ public class MainActivity extends AppCompatActivity
 
             if (currentCar != null && car.uuid != currentCar.uuid) {
                 ImageView carImage = new ImageView(getBaseContext());
-                switch (car.model.getBrand()) {
-                    case "Renault":
-                        carImage.setImageResource(R.mipmap.ic_renault);
-                        break;
-                    case "Peugeot":
-                        carImage.setImageResource(R.mipmap.ic_peugeot);
-                        break;
-                    case "Citroën":
-                        carImage.setImageResource(R.mipmap.ic_citroen);
-                        break;
-                }
+                carImage.setImageDrawable(car.getCarPicture(getBaseContext()));
 
                 int size = (int) getResources().getDimension(R.dimen.other_car_size);
                 int spacing = (int) getResources().getDimension(R.dimen.other_car_spacing);
@@ -315,7 +310,7 @@ public class MainActivity extends AppCompatActivity
                             }
                             case MotionEvent.ACTION_UP: {
                                 Car associatedCar = (Car) v.getTag();
-                                changeCar(associatedCar);
+                                changeCar(associatedCar, true);
                             }
                             case MotionEvent.ACTION_CANCEL: {
                                 ImageView view = (ImageView) v;
@@ -334,6 +329,10 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
+        if (openFragment) {
+            getSupportFragmentManager().popBackStack("FIRST_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            openMainFragment(HomeFragment.newInstance(R.id.nav_home), R.id.nav_home);
+        }
         closeDrawer();
     }
 

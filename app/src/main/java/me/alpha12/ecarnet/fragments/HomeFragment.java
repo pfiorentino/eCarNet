@@ -6,10 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
+import me.alpha12.ecarnet.models.Car;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,7 +56,15 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        Car currentCar = ((MainActivity) getActivity()).currentCar;
+
+        TextView tv = (TextView) view.findViewById(R.id.main_text);
+
+        tv.setText("Home car: "+currentCar.getPlateNum());
+
+        return view;
     }
 
     @Override
