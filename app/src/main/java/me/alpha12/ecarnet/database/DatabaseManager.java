@@ -28,8 +28,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + C_CAR_AVERAGE_CONSUMPTION + " REAL NOT NULL"
                     + ");";
 
-    public String bidon;
-
 
     //Table Contains
     public static final String T_CONTAINS= "Contains";
