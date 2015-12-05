@@ -73,7 +73,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     //Table Intervention
     public static final String T_INTERVENTION = "Intervention";
     public static final String C_INTERVENTION_ID = "id";
-    public static final String C_INTERVENTION_KILLOMETERS = "killometers";
+    public static final String C_INTERVENTION_KILLOMETERS = "kilometers";
     public static final String C_INTERVENTION_PRICE = "price";
     public static final String C_INTERVENTION_DATE_INTERVENTION = "date_intervention";
     public static final String C_INTERVENTION_ID_GROUP_OPERATION = "id_group_operation";

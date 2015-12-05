@@ -142,6 +142,8 @@ public class Car {
     }
 
 
+
+
     public void getModelFromCar(SQLiteDatabase bdd) {
         exq = bdd.rawQuery("SELECT * FROM Own o, Model m WHERE o.id_car = " + this.id, null);
         if(exq.moveToFirst()) {
