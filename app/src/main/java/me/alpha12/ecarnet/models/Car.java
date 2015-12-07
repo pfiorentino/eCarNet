@@ -80,12 +80,12 @@ public class Car {
         exq = bdd.rawQuery("SELECT * FROM Car WHERE id = " + id, null);
         if(exq.moveToFirst())
         {
-            int ident = getInt("id");
-            int kilometers = getInt("kilometers");
-            double averageConsumption = getDouble("averageConsumption");
-            Date buyingDate = getDate("buying_date");
-            Date circulationDate = getDate("circulation_date");
-            String plateNBR = getString("plate_number");
+            int ident = getInt(DatabaseManager.C_CAR_ID);
+            int kilometers = getInt(DatabaseManager.C_CAR_KILLOMETERS);
+            double averageConsumption = getDouble(DatabaseManager.C_CAR_AVERAGE_CONSUMPTION);
+            Date buyingDate = getDate(DatabaseManager.C_CAR_BUYING_DATE);
+            Date circulationDate = getDate(DatabaseManager.C_CAR_CIRCULATION_DATE);
+            String plateNBR = getString(DatabaseManager.C_CAR_PLATE_NUMBER);
             return new Car(ident, null, kilometers, buyingDate, circulationDate, averageConsumption, null, null, null, plateNBR);
         }
         else
@@ -100,42 +100,40 @@ public class Car {
         ArrayList<User> users = new ArrayList<>();
         exq = bdd.rawQuery("SELECT * FROM User u, Share s WHERE s.id_user = u.user AND s.id_car = " + this.id, null);
         while(exq.moveToNext()) {
-            int idUser = getInt("id_user");
-            String email = getString("email");
-            String firstName = getString("first_name");
-            String lastName = getString("last_name");
+            int idUser = getInt(DatabaseManager.C_USER_ID);
+            String email = getString(DatabaseManager.C_USER_EMAIL);
+            String firstName = getString(DatabaseManager.C_USER_FIRSTNAME);
+            String lastName = getString(DatabaseManager.C_USER_LASTNAME);
             users.add(new User(idUser, firstName, lastName, email));
         }
         this.sharedPeople = users;
     }
 
 
-    public void getOwner(SQLiteDatabase bdd)
-    {
+    public void getOwner(SQLiteDatabase bdd) {
         exq = bdd.rawQuery("SELECT * FROM Share WHERE id_car = " + this.id, null);
         if(exq.moveToFirst())
         {
-            int idUser = getInt("id_user");
-            String email = getString("email");
-            String firstName = getString("first_name");
-            String lastName = getString("last_name");
+            int idUser = getInt(DatabaseManager.C_USER_ID);
+            String email = getString(DatabaseManager.C_USER_EMAIL);
+            String firstName = getString(DatabaseManager.C_USER_FIRSTNAME);
+            String lastName = getString(DatabaseManager.C_USER_LASTNAME);
             this.owner = new User(idUser, firstName, lastName, email);
         }
     }
 
 
-    public static ArrayList<Car> getAllCars(SQLiteDatabase bdd)
-    {
+    public static ArrayList<Car> getAllCars(SQLiteDatabase bdd) {
         ArrayList<Car> cars = new ArrayList<>();
         exq = bdd.rawQuery("SELECT * FROM car", null);
         while(exq.moveToNext())
         {
-            int ident = getInt("id");
-            int kilometers = getInt("kilometers");
-            double averageConsumption = getDouble("averageConsumption");
-            Date buyingDate = getDate("buying_date");
-            Date circulationDate = getDate("circulation_date");
-            String plateNBR = getString("plate_number");
+            int ident = getInt(DatabaseManager.C_CAR_ID);
+            int kilometers = getInt(DatabaseManager.C_CAR_KILLOMETERS);
+            double averageConsumption = getDouble(DatabaseManager.C_CAR_AVERAGE_CONSUMPTION);
+            Date buyingDate = getDate(DatabaseManager.C_CAR_BUYING_DATE);
+            Date circulationDate = getDate(DatabaseManager.C_CAR_CIRCULATION_DATE);
+            String plateNBR = getString(DatabaseManager.C_CAR_PLATE_NUMBER);
             cars.add(new Car(ident, null, kilometers, buyingDate, circulationDate, averageConsumption, null, null, null, plateNBR));
         }
         return cars;
@@ -148,15 +146,15 @@ public class Car {
         exq = bdd.rawQuery("SELECT * FROM Own o, Model m WHERE o.id_car = " + this.id, null);
         if(exq.moveToFirst()) {
             int idModel = getInt("m.id");
-            String brand = getString("brand");
-            String model = getString("model");
-            int year = getInt("year");
-            String energy = getString("energy");
-            String engine = getString("engine");
-            int ratedHP = getInt("rated_hp");
-            double consumption = getDouble("consumption");
-            int doors = getInt("doors");
-            String sub_model = getString("sub_model");
+            String brand = getString(DatabaseManager.C_MODEL_BRAND);
+            String model = getString(DatabaseManager.C_MODEL_MODEL);
+            int year = getInt(DatabaseManager.C_MODEL_YEAR);
+            String energy = getString(DatabaseManager.C_MODEL_ENERGY);
+            String engine = getString(DatabaseManager.C_MODEL_ENGINE);
+            int ratedHP = getInt(DatabaseManager.C_MODEL_RATED_HP);
+            double consumption = getDouble(DatabaseManager.C_MODEL_CONSUMPTION);
+            int doors = getInt(DatabaseManager.C_MODEL_DOORS);
+            String sub_model = getString(DatabaseManager.C_MODEL_SUB_MODEL);
             Model mod = new Model(idModel, brand, model, year, energy, engine, ratedHP, consumption, doors, sub_model);
             this.model = mod;
         }
@@ -174,12 +172,12 @@ public class Car {
             car.setId(id + 1);
         }
         ContentValues newValues = new ContentValues();
-        newValues.put("id", car.getId());
-        newValues.put("kilometers", car.getKilometers());
-        newValues.put("buying_date", car.getBuyingDate().getTime());
-        newValues.put("circulation_date", car.getCirculationDate().getTime());
-        newValues.put("average_consumption", car.getAverageConsumption());
-        newValues.put("plate_number", car.getPlateNum());
+        newValues.put(DatabaseManager.C_CAR_ID, car.uuid);
+        newValues.put(DatabaseManager.C_CAR_KILLOMETERS, car.getKilometers());
+        newValues.put(DatabaseManager.C_CAR_BUYING_DATE, car.getBuyingDate().getTime());
+        newValues.put(DatabaseManager.C_CAR_CIRCULATION_DATE, car.getCirculationDate().getTime());
+        newValues.put(DatabaseManager.C_CAR_AVERAGE_CONSUMPTION, car.getAverageConsumption());
+        newValues.put(DatabaseManager.C_CAR_PLATE_NUMBER, car.getPlateNum());
         db.insert("Car", null, newValues);
     }
 
