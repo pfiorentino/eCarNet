@@ -5,13 +5,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
 /**
@@ -19,7 +25,7 @@ import me.alpha12.ecarnet.database.DatabaseManager;
  */
 public class Car {
 
-    private int id;
+    public int uuid;
     public Model model;
     private int kilometers;
     private Date buyingDate;
@@ -33,7 +39,8 @@ public class Car {
 
     private static final SimpleDateFormat originalFormat = new SimpleDateFormat("yyyyMMdd");
 
-    public Car(String plateNum, Model model) {
+    public Car(int uuid, String plateNum, Model model) {
+        this.uuid = uuid;
         this.plateNum = plateNum;
         this.model = model;
     }
@@ -50,8 +57,8 @@ public class Car {
     };
 
 
-    public Car(int id, Model model, int kilometers, Date buyingDate, Date circulationDate, double averageConsumption, User owner, ArrayList<User> sharedPeople, ArrayList<Intervention> myInterventions, String plateNum) {
-        this.id = id;
+    public Car(int uuid, Model model, int kilometers, Date buyingDate, Date circulationDate, double averageConsumption, User owner, ArrayList<User> sharedPeople, ArrayList<Intervention> myInterventions, String plateNum) {
+        this.uuid = uuid;
         this.model = model;
         this.kilometers = kilometers;
         this.buyingDate = buyingDate;
@@ -64,8 +71,8 @@ public class Car {
     }
 
 
-    public Car(int id, int kilometers, Date buyingDate, Date circulationDate, Model model, String plateNum, double averageConsumption) {
-        this.id = id;
+    public Car(int uuid, int kilometers, Date buyingDate, Date circulationDate, Model model, String plateNum, double averageConsumption) {
+        this.uuid = uuid;
         this.kilometers = kilometers;
         this.buyingDate = buyingDate;
         this.circulationDate = circulationDate;
@@ -80,12 +87,12 @@ public class Car {
         exq = bdd.rawQuery("SELECT * FROM Car WHERE id = " + id, null);
         if(exq.moveToFirst())
         {
-            int ident = getInt("id");
-            int kilometers = getInt("kilometers");
-            double averageConsumption = getDouble("averageConsumption");
-            Date buyingDate = getDate("buying_date");
-            Date circulationDate = getDate("circulation_date");
-            String plateNBR = getString("plate_number");
+            int ident = getInt(DatabaseManager.C_CAR_ID);
+            int kilometers = getInt(DatabaseManager.C_CAR_KILLOMETERS);
+            double averageConsumption = getDouble(DatabaseManager.C_CAR_AVERAGE_CONSUMPTION);
+            Date buyingDate = getDate(DatabaseManager.C_CAR_BUYING_DATE);
+            Date circulationDate = getDate(DatabaseManager.C_CAR_CIRCULATION_DATE);
+            String plateNBR = getString(DatabaseManager.C_CAR_PLATE_NUMBER);
             return new Car(ident, null, kilometers, buyingDate, circulationDate, averageConsumption, null, null, null, plateNBR);
         }
         else
@@ -98,12 +105,12 @@ public class Car {
     public void getSharedPeopleFromCar(SQLiteDatabase bdd)
     {
         ArrayList<User> users = new ArrayList<>();
-        exq = bdd.rawQuery("SELECT * FROM User u, Share s WHERE s.id_user = u.user AND s.id_car = " + this.id, null);
+        exq = bdd.rawQuery("SELECT * FROM User u, Share s WHERE s.id_user = u.user AND s.id_car = " + this.uuid, null);
         while(exq.moveToNext()) {
-            int idUser = getInt("id_user");
-            String email = getString("email");
-            String firstName = getString("first_name");
-            String lastName = getString("last_name");
+            int idUser = getInt(DatabaseManager.C_USER_ID);
+            String email = getString(DatabaseManager.C_USER_EMAIL);
+            String firstName = getString(DatabaseManager.C_USER_FIRSTNAME);
+            String lastName = getString(DatabaseManager.C_USER_LASTNAME);
             users.add(new User(idUser, firstName, lastName, email));
         }
         this.sharedPeople = users;
@@ -112,13 +119,13 @@ public class Car {
 
     public void getOwner(SQLiteDatabase bdd)
     {
-        exq = bdd.rawQuery("SELECT * FROM Share WHERE id_car = " + this.id, null);
+        exq = bdd.rawQuery("SELECT * FROM Share WHERE id_car = " + this.uuid, null);
         if(exq.moveToFirst())
         {
-            int idUser = getInt("id_user");
-            String email = getString("email");
-            String firstName = getString("first_name");
-            String lastName = getString("last_name");
+            int idUser = getInt(DatabaseManager.C_USER_ID);
+            String email = getString(DatabaseManager.C_USER_EMAIL);
+            String firstName = getString(DatabaseManager.C_USER_FIRSTNAME);
+            String lastName = getString(DatabaseManager.C_USER_LASTNAME);
             this.owner = new User(idUser, firstName, lastName, email);
         }
     }
@@ -130,33 +137,31 @@ public class Car {
         exq = bdd.rawQuery("SELECT * FROM car", null);
         while(exq.moveToNext())
         {
-            int ident = getInt("id");
-            int kilometers = getInt("kilometers");
-            double averageConsumption = getDouble("averageConsumption");
-            Date buyingDate = getDate("buying_date");
-            Date circulationDate = getDate("circulation_date");
-            String plateNBR = getString("plate_number");
+            int ident = getInt(DatabaseManager.C_CAR_ID);
+            int kilometers = getInt(DatabaseManager.C_CAR_KILLOMETERS);
+            double averageConsumption = getDouble(DatabaseManager.C_CAR_AVERAGE_CONSUMPTION);
+            Date buyingDate = getDate(DatabaseManager.C_CAR_BUYING_DATE);
+            Date circulationDate = getDate(DatabaseManager.C_CAR_CIRCULATION_DATE);
+            String plateNBR = getString(DatabaseManager.C_CAR_PLATE_NUMBER);
             cars.add(new Car(ident, null, kilometers, buyingDate, circulationDate, averageConsumption, null, null, null, plateNBR));
         }
         return cars;
     }
 
 
-
-
     public void getModelFromCar(SQLiteDatabase bdd) {
-        exq = bdd.rawQuery("SELECT * FROM Own o, Model m WHERE o.id_car = " + this.id, null);
+        exq = bdd.rawQuery("SELECT * FROM Own o, Model m WHERE o.id_car = " + this.uuid, null);
         if(exq.moveToFirst()) {
             int idModel = getInt("m.id");
-            String brand = getString("brand");
-            String model = getString("model");
-            int year = getInt("year");
-            String energy = getString("energy");
-            String engine = getString("engine");
-            int ratedHP = getInt("rated_hp");
-            double consumption = getDouble("consumption");
-            int doors = getInt("doors");
-            String sub_model = getString("sub_model");
+            String brand = getString(DatabaseManager.C_MODEL_BRAND);
+            String model = getString(DatabaseManager.C_MODEL_MODEL);
+            int year = getInt(DatabaseManager.C_MODEL_YEAR);
+            String energy = getString(DatabaseManager.C_MODEL_ENERGY);
+            String engine = getString(DatabaseManager.C_MODEL_ENGINE);
+            int ratedHP = getInt(DatabaseManager.C_MODEL_RATED_HP);
+            double consumption = getDouble(DatabaseManager.C_MODEL_CONSUMPTION);
+            int doors = getInt(DatabaseManager.C_MODEL_DOORS);
+            String sub_model = getString(DatabaseManager.C_MODEL_SUB_MODEL);
             Model mod = new Model(idModel, brand, model, year, energy, engine, ratedHP, consumption, doors, sub_model);
             this.model = mod;
         }
@@ -164,22 +169,22 @@ public class Car {
 
 
     public static void addCar(Car car, SQLiteDatabase db) {
-        if (car.getId() == 0){
+        if (car.uuid == 0){
             int id = 0;
             String query = "SELECT MAX(id) as max FROM Car";
             Cursor cursor = db.rawQuery(query, null);
             if (cursor.moveToFirst()) {
                 id = cursor.getInt(0);
             }
-            car.setId(id + 1);
+            car.uuid = id + 1;
         }
         ContentValues newValues = new ContentValues();
-        newValues.put("id", car.getId());
-        newValues.put("kilometers", car.getKilometers());
-        newValues.put("buying_date", car.getBuyingDate().getTime());
-        newValues.put("circulation_date", car.getCirculationDate().getTime());
-        newValues.put("average_consumption", car.getAverageConsumption());
-        newValues.put("plate_number", car.getPlateNum());
+        newValues.put(DatabaseManager.C_CAR_ID, car.uuid);
+        newValues.put(DatabaseManager.C_CAR_KILLOMETERS, car.getKilometers());
+        newValues.put(DatabaseManager.C_CAR_BUYING_DATE, car.getBuyingDate().getTime());
+        newValues.put(DatabaseManager.C_CAR_CIRCULATION_DATE, car.getCirculationDate().getTime());
+        newValues.put(DatabaseManager.C_CAR_AVERAGE_CONSUMPTION, car.getAverageConsumption());
+        newValues.put(DatabaseManager.C_CAR_PLATE_NUMBER, car.getPlateNum());
         db.insert("Car", null, newValues);
     }
 
@@ -211,16 +216,6 @@ public class Car {
     public static Date getDate(String ColumnName)
     {
         return new Date(exq.getLong(exq.getColumnIndex(ColumnName))*1000);
-    }
-
-    public int getId()
-    {
-        return id;
-    }
-
-    public void setId(int id)
-    {
-        this.id = id;
     }
 
     public String getPlateNum() {
@@ -277,5 +272,27 @@ public class Car {
 
     public void setSharedPeople(ArrayList<User> sharedPeople) {
         this.sharedPeople = sharedPeople;
+    }
+
+    public Drawable getCarPicture(Context ctx) {
+        String filePath = "/sdcard/Images/test_image.jpg";
+        File imgFile = new  File(filePath);
+
+        if(imgFile.exists()){
+            return Drawable.createFromPath(imgFile.getAbsolutePath());
+        }
+
+        return ContextCompat.getDrawable(ctx, R.drawable.ic_car_profile_picture);
+    }
+
+    public Drawable getCarBanner(Context ctx) {
+        String filePath = "/sdcard/Images/test_image.jpg";
+        File imgFile = new  File(filePath);
+
+        if(imgFile.exists()){
+            return Drawable.createFromPath(imgFile.getAbsolutePath());
+        }
+
+        return ContextCompat.getDrawable(ctx, R.drawable.default_car_background);
     }
 }
