@@ -3,16 +3,11 @@ package me.alpha12.ecarnet.models;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,7 +45,7 @@ public class Car {
     private DatabaseManager helper;
     private String[] columns = {
             helper.C_CAR_ID,
-            helper.C_CAR_KILLOMETERS,
+            helper.C_CAR_KILOMETERS,
             helper.C_CAR_BUYING_DATE,
             helper.C_CAR_AVERAGE_CONSUMPTION,
             helper.C_CAR_PLATE_NUMBER
@@ -84,15 +79,17 @@ public class Car {
 
     public static Car getSimpleCarById(SQLiteDatabase bdd, int id)
     {
-        exq = bdd.rawQuery("SELECT * FROM Car WHERE id = " + id, null);
+        String[] args = {};
+        args[0] = Integer.toString(id);
+        exq = bdd.rawQuery("SELECT * FROM Car WHERE id = ?;", args);
         if(exq.moveToFirst())
         {
-            int ident = getInt("id");
-            int kilometers = getInt("kilometers");
-            double averageConsumption = getDouble("averageConsumption");
-            Date buyingDate = getDate("buying_date");
-            Date circulationDate = getDate("circulation_date");
-            String plateNBR = getString("plate_number");
+            int ident = getInt(DatabaseManager.C_CAR_ID);
+            int kilometers = getInt(DatabaseManager.C_CAR_KILOMETERS);
+            double averageConsumption = getDouble(DatabaseManager.C_CAR_AVERAGE_CONSUMPTION);
+            Date buyingDate = getDate(DatabaseManager.C_CAR_BUYING_DATE);
+            Date circulationDate = getDate(DatabaseManager.C_CAR_CIRCULATION_DATE);
+            String plateNBR = getString(DatabaseManager.C_CAR_PLATE_NUMBER);
             return new Car(ident, null, kilometers, buyingDate, circulationDate, averageConsumption, null, null, null, plateNBR);
         }
         else
@@ -102,30 +99,34 @@ public class Car {
     }
 
 
-    public void getSharedPeopleFromCar(SQLiteDatabase bdd)
+    public void getSharedPeopleFromCar(SQLiteDatabase bdd, int id)
     {
+        String[] args = {};
+        args[0] = Integer.toString(id);
         ArrayList<User> users = new ArrayList<>();
-        exq = bdd.rawQuery("SELECT * FROM User u, Share s WHERE s.id_user = u.user AND s.id_car = " + this.uuid, null);
+        exq = bdd.rawQuery("SELECT * FROM User u, Use s WHERE s.id_user = u.user AND s.id_car = ? AND s.own = 0;", args);
         while(exq.moveToNext()) {
-            int idUser = getInt("id_user");
-            String email = getString("email");
-            String firstName = getString("first_name");
-            String lastName = getString("last_name");
+            int idUser = getInt(DatabaseManager.C_USE_USER_ID);
+            String email = getString(DatabaseManager.C_USER_EMAIL);
+            String firstName = getString(DatabaseManager.C_USER_FIRSTNAME);
+            String lastName = getString(DatabaseManager.C_USER_LASTNAME);
             users.add(new User(idUser, firstName, lastName, email));
         }
         this.sharedPeople = users;
     }
 
 
-    public void getOwner(SQLiteDatabase bdd)
+    public void getOwner(SQLiteDatabase bdd, int id)
     {
-        exq = bdd.rawQuery("SELECT * FROM Share WHERE id_car = " + this.uuid, null);
+        String[] args = {};
+        args[0] = Integer.toString(id);
+        exq = bdd.rawQuery("SELECT * FROM User u, Use s WHERE s.id_car = ? AND s.id_user = u.id_user AND own = 1;", args);
         if(exq.moveToFirst())
         {
-            int idUser = getInt("id_user");
-            String email = getString("email");
-            String firstName = getString("first_name");
-            String lastName = getString("last_name");
+            int idUser = getInt(DatabaseManager.C_USE_USER_ID);
+            String email = getString(DatabaseManager.C_USER_EMAIL);
+            String firstName = getString(DatabaseManager.C_USER_FIRSTNAME);
+            String lastName = getString(DatabaseManager.C_USER_LASTNAME);
             this.owner = new User(idUser, firstName, lastName, email);
         }
     }
