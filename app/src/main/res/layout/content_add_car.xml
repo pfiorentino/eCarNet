@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,6 +10,101 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="me.alpha12.ecarnet.activities.AddCarActivity"
+    android:orientation="vertical"
     tools:showIn="@layout/activity_add_car">
 
-</RelativeLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/addCar"
+                android:hint="Ajouter un véhicule"
+                android:textSize="35sp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/brand_spinner"
+            android:hint="Marque"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/model_spinner"
+            android:hint="Modèle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/year_spinner"
+            android:hint="Finition"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/model"
+                android:hint="Kilomètres"
+                android:autoText="false"
+                android:text="" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Date"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="4dp"
+            android:textSize="12sp"
+            android:id="@+id/textView" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:text="lun. 9 nov. 2015"
+                android:id="@+id/date"
+                style="@style/Widget.AppCompat.Spinner"/>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/raised_button_height"
+            android:minWidth="@dimen/raised_button_min_width"
+            android:text="@string/add"
+            android:id="@+id/btn_save"
+            android:textColor="@color/colorPrimaryText"
+            android:layout_gravity="right" />
+
+    </LinearLayout>
+
+

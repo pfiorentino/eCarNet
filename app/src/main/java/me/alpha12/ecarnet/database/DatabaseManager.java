@@ -64,7 +64,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + C_INTERVENTION_OPERATION + " TEXT NOT NULL,"
                     + C_INTERVENTION_TYPE + " NUMERIC NOT NULL,"
                     + C_INTERVENTION_QUANTITY + " REAL,"
-                    + C_INTERVENTION_ID_CAR + " INTEGER NOT NULL,"
+                    + C_INTERVENTION_ID_CAR + " INTEGER NOT NULL"
                     + ");";
 
 

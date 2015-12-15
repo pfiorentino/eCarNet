@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.database.EcarnetHelper;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity
     public HashMap<String, Car> cars = new HashMap<>();
     public Car currentCar;
 
+    private EcarnetHelper ecarnetHelper;
+
     NavigationView navigationView;
     FloatingActionButton fab;
     Toolbar toolbar;
@@ -58,6 +61,21 @@ public class MainActivity extends AppCompatActivity
         Log.d("MainActivity", "OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //------------database set--------------
+        ecarnetHelper = new EcarnetHelper(this);
+        ecarnetHelper.open();
+        if(!ecarnetHelper.isInitialized())
+        {
+            System.out.println("init bdd");
+            ecarnetHelper.init(this, false);
+        }
+        else System.out.println("non init");
+
+
+
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_fragment_home);
