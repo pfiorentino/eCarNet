@@ -3,12 +3,12 @@ package me.alpha12.ecarnet.activities;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
-import android.text.method.CharacterPickerDialog;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -75,7 +75,7 @@ public class AddCarActivity extends AppCompatActivity implements AdapterView.OnI
         yearSpinner = (Spinner)findViewById(R.id.year_spinner);
         subModelSpinner = (Spinner)findViewById(R.id.sub_model_spinner);
 
-        addCarButton = (Button)findViewById(R.id.btn_addCar);
+        addCarButton = (Button)findViewById(R.id.btn_addUser);
         addCarButton.setEnabled(false);
 
         //initialize default value
@@ -95,6 +95,8 @@ public class AddCarActivity extends AppCompatActivity implements AdapterView.OnI
 
                 Car.addCar(new Car(0, "CZ-123-PB", (Model)subModelSpinner.getSelectedItem()), EcarnetHelper.bdd);
                 Toast.makeText(getBaseContext(), "added car : " + brandSpinner.getSelectedItem().toString() + " - " + modelSpinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AddCarActivity.this, MainActivity.class);
+                AddCarActivity.this.startActivity(intent);
             }
         });
 

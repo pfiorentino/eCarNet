@@ -124,7 +124,7 @@ public class Car {
             String email = getString(DatabaseManager.C_USER_EMAIL);
             String firstName = getString(DatabaseManager.C_USER_FIRSTNAME);
             String lastName = getString(DatabaseManager.C_USER_LASTNAME);
-            users.add(new User(idUser, firstName, lastName, email));
+            users.add(new User(idUser, firstName, lastName, email, null));
         }
         this.sharedPeople = users;
     }
@@ -141,7 +141,7 @@ public class Car {
             String email = getString(DatabaseManager.C_USER_EMAIL);
             String firstName = getString(DatabaseManager.C_USER_FIRSTNAME);
             String lastName = getString(DatabaseManager.C_USER_LASTNAME);
-            this.owner = new User(idUser, firstName, lastName, email);
+            this.owner = new User(idUser, firstName, lastName, email, null);
         }
     }
 
@@ -221,6 +221,19 @@ public class Car {
     }
 
 
+    public static int getNumOfCarr(SQLiteDatabase bdd)
+    {
+        try {
+            exq = bdd.rawQuery("SELECT COUNT (*) FROM Car;", null);
+            exq.moveToFirst();
+            return exq.getInt(0);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+            return 0;
+        }
+    }
 
 
 

@@ -107,7 +107,7 @@
             android:layout_height="@dimen/raised_button_height"
             android:minWidth="@dimen/raised_button_min_width"
             android:text="@string/add"
-            android:id="@+id/btn_addCar"
+            android:id="@+id/btn_addUser"
             android:textColor="@color/colorPrimaryText"
             android:layout_gravity="right" />
 

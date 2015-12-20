@@ -110,7 +110,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + C_USER_EMAIL + " TEXT NOT NULL,"
                     + C_USER_FIRSTNAME + " TEXT NOT NULL,"
                     + C_USER_LASTNAME + " TEXT NOT NULL,"
-                    + C_USER_PASSWORD + "TEXT NOT NULL"
+                    + C_USER_PASSWORD + " TEXT NOT NULL"
                     + ");";
 
 
