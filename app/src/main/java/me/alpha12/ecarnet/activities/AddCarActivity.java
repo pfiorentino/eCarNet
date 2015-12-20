@@ -2,128 +2,163 @@ package me.alpha12.ecarnet.activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.text.method.CharacterPickerDialog;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
+import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.EcarnetHelper;
+import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Model;
 
-public class AddCarActivity extends AppCompatActivity {
+public class AddCarActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
 
     private static TextView mTimeTextView;
     private static TextView mDateTextView;
     private static Calendar mCurrentDate;
+
+
+    //values of spinners
     private ArrayList<String> brands = Model.getBrands(EcarnetHelper.bdd);
     private ArrayList<String> models = new ArrayList<String>();
     private ArrayList<String> years = new ArrayList<String>();
-    private Context cont = this;
+    private ArrayList<Model> subModel = new ArrayList<Model>();
+
+    //value of selected item;
+    private String currentBrand;
+    private String currentModel;
+    private String currentYear;
+    private Model currentSubModel;
+
+
+    //spinners
+    private Spinner brandSpinner;
+    private Spinner modelSpinner;
+    private Spinner yearSpinner;
+    private Spinner subModelSpinner;
+
+
+    private Button addCarButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_car);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mTimeTextView = (TextView)findViewById(R.id.kilometers);
 
+        currentBrand = "";
+        currentModel = "";
 
-        //static set for tests
+        //findView of spinners
+        brandSpinner = (Spinner)findViewById(R.id.brand_spinner);
+        modelSpinner = (Spinner)findViewById(R.id.model_spinner);
+        yearSpinner = (Spinner)findViewById(R.id.year_spinner);
+        subModelSpinner = (Spinner)findViewById(R.id.sub_model_spinner);
+
+        addCarButton = (Button)findViewById(R.id.btn_addCar);
+        addCarButton.setEnabled(false);
+
+        //initialize default value
+        brands.add(0, " Select Brand ");
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, brands);
+        brandSpinner.setAdapter(adapter);
+
+        brandSpinner.setOnItemSelectedListener(this);
+        modelSpinner.setOnItemSelectedListener(this);
+        yearSpinner.setOnItemSelectedListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mCurrentDate = Calendar.getInstance();
 
-        mDateTextView = (TextView) findViewById(R.id.date);
-        mDateTextView.setText(getFormattedDate(this, mCurrentDate));
-        mDateTextView.setOnClickListener(new View.OnClickListener() {
+        addCarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new DatePickerFragment();
-                newFragment.show(getSupportFragmentManager(), "datePicker");
+
+                Car.addCar(new Car(0, "CZ-123-PB", (Model)subModelSpinner.getSelectedItem()), EcarnetHelper.bdd);
+                Toast.makeText(getBaseContext(), "added car : " + brandSpinner.getSelectedItem().toString() + " - " + modelSpinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
-
-        final Spinner brandSpin = (Spinner) findViewById(R.id.brand_spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, brands);
-        brandSpin.setAdapter(adapter);
-
-        brandSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                models = Model.getModelFromBrand(EcarnetHelper.bdd, brandSpin.getSelectedItem().toString());
-
-                final Spinner modelSpin = (Spinner) findViewById(R.id.model_spinner);
-                ArrayAdapter<String> modelAdapter = new ArrayAdapter<String>(cont, android.R.layout.simple_spinner_item, models);
-                modelSpin.setAdapter(modelAdapter);
-
-                modelSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                        years = Model.getYearsFromBrandAndModel(EcarnetHelper.bdd, brandSpin.getSelectedItem().toString(), modelSpin.getSelectedItem().toString());
-                        Spinner yearSpinner = (Spinner) findViewById(R.id.year_spinner);
-                        ArrayAdapter<String> modelAdapter = new ArrayAdapter<String>(cont, android.R.layout.simple_spinner_item, years);
-                        yearSpinner.setAdapter(modelAdapter);
-                    }
-
-
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-                        return;
-                    }
-                });
-            }
-
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                return;
-            }
-        });
-
-
-
- /*       modelSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if (selectedItemView.toString() == "Clio") {
-                    submodels.add("campus 65ch 1.0L");
-                    submodels.add("sport 150ch 2.5L");
-                }
-                if (brandSpin.getSelectedItem().toString() == "206") {
-                    submodels.add("xbox360 75ch 1.2L");
-                    submodels.add("sport 180ch 2.5L");
-                }
-            }
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                submodels.add(" - ");
-                return;
-            }
-        });
-
-        Spinner submodelSpin = (Spinner) findViewById(R.id.submodel_spinner);
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, submodels);
-        brandSpin.setAdapter(adapter);
-*/
     }
 
+
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        if(brandSpinner.getSelectedItem().toString() != " Select Brand ")
+        {
+            if(models.size()==0 || (brandSpinner.getSelectedItem().toString() != currentBrand))
+            {
+                models = Model.getModelFromBrand(EcarnetHelper.bdd, brandSpinner.getSelectedItem().toString());
+                models.add(0, " Select Model ");
+                ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, models);
+                modelSpinner.setAdapter(adapter);
+                years = new ArrayList<String>();
+                adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, subModel);
+                yearSpinner.setAdapter(adapter);
+                subModel = new ArrayList<Model>();
+                adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, subModel);
+                subModelSpinner.setAdapter(adapter);
+            }
+            else if(modelSpinner.getSelectedItem().toString() != " Select Model ")
+            {
+                if(years.size()==0 || modelSpinner.getSelectedItem().toString() != currentModel) {
+                    years = Model.getYearsFromBrandAndModel(EcarnetHelper.bdd, brandSpinner.getSelectedItem().toString(), modelSpinner.getSelectedItem().toString());
+                    years.add(0, " Select Year ");
+                    ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, years);
+                    yearSpinner.setAdapter(adapter);
+                    subModel = new ArrayList<Model>();
+                    adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, subModel);
+                    subModelSpinner.setAdapter(adapter);
+                }
+                else
+                {
+                    ArrayAdapter subModelAdapter;
+                    if(yearSpinner.getSelectedItem().toString() == " Select Year ")
+                    {
+                        subModel = Model.getModelFromBrandModelYearAndRatedHP(EcarnetHelper.bdd, brandSpinner.getSelectedItem().toString(), modelSpinner.getSelectedItem().toString(), null);
+                    }
+                    else
+                    {
+                        if(yearSpinner.getSelectedItem().toString() != currentYear)
+                        {
+                            System.out.println("aqui");
+                            subModel = Model.getModelFromBrandModelYearAndRatedHP(EcarnetHelper.bdd, brandSpinner.getSelectedItem().toString(), modelSpinner.getSelectedItem().toString(), yearSpinner.getSelectedItem().toString());
+                        }
+                    }
+                    currentYear = yearSpinner.getSelectedItem().toString();
+                    subModelAdapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, subModel);
+                    subModelSpinner.setAdapter(subModelAdapter);
+                }
+                currentModel = modelSpinner.getSelectedItem().toString();
+            }
+            currentBrand = brandSpinner.getSelectedItem().toString();
+        }
+        if(subModelSpinner.getSelectedItem() != null)
+            addCarButton.setEnabled(true);
+    }
+
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        return;
+    }
 
 
     @Override

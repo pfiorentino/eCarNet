@@ -60,7 +60,7 @@ public class Model {
     public static ArrayList<String> getBrands(SQLiteDatabase bdd)
     {
         ArrayList<String>brands = new ArrayList<String>();
-        exq = bdd.rawQuery("SELECT DISTINCT(brand) FROM Model;", null);
+        exq = bdd.rawQuery("SELECT DISTINCT(brand) FROM Model ORDER BY brand ASC;", null);
         while(exq.moveToNext()) {
             brands.add(getString(DatabaseManager.C_MODEL_BRAND));
         }
@@ -73,8 +73,7 @@ public class Model {
         ArrayList<String>models = new ArrayList<String>();
         String[]args = new String[1];
         args[0] = brand;
-        exq = bdd.rawQuery("SELECT DISTINCT(model) FROM Model WHERE brand = ?;", args);
-        System.out.println(exq.getCount());
+        exq = bdd.rawQuery("SELECT DISTINCT(model) FROM Model WHERE brand = ? ORDER BY model ASC;", args);
         while(exq.moveToNext()) {
             models.add(getString(DatabaseManager.C_MODEL_MODEL));
         }
@@ -88,7 +87,7 @@ public class Model {
         String[]args = new String[2];
         args[0] = brand;
         args[1] = model;
-        exq = bdd.rawQuery("SELECT DISTINCT(year) FROM Model WHERE brand = ? AND model = ?;", args);
+        exq = bdd.rawQuery("SELECT DISTINCT(year) FROM Model WHERE brand = ? AND model = ? ORDER BY year ASC;", args);
         while(exq.moveToNext()) {
             years.add(Integer.toString(getInt(DatabaseManager.C_MODEL_YEAR)));
         }
@@ -96,15 +95,15 @@ public class Model {
     }
 
 
-    public static ArrayList<Integer> getRatedHPFromBrandModel(SQLiteDatabase bdd, String brand, String model)
+    public static ArrayList<String> getRatedHPFromBrandModel(SQLiteDatabase bdd, String brand, String model)
     {
-        ArrayList<Integer>ratedHP = new ArrayList<Integer>();
-        String[]args = {};
+        ArrayList<String>ratedHP = new ArrayList<String>();
+        String[]args = new String[2];
         args[0] = brand;
         args[1] = model;
-        exq = bdd.rawQuery("SELECT DISTINCT(rated_hp) FROM Model WHERE brand = ? AND model = ?;", args);
+        exq = bdd.rawQuery("SELECT DISTINCT(rated_hp) FROM Model WHERE brand = ? AND model = ? ORDER BY rated_hp ASC;", args);
         while(exq.moveToNext()) {
-            ratedHP.add(getInt(DatabaseManager.C_MODEL_YEAR));
+            ratedHP.add(getString(DatabaseManager.C_MODEL_RATED_HP));
         }
         return ratedHP;
     }
@@ -155,7 +154,7 @@ public class Model {
     public static ArrayList<Model> getAllModel(SQLiteDatabase bdd)
     {
         ArrayList<Model>models = new ArrayList<Model>();
-        exq = bdd.rawQuery("SELECT * FROM Model;", null);
+        exq = bdd.rawQuery("SELECT id, brand, model, year, energy, engine, rated_hp, consumption, doors, sub_model FROM Model;", null);
         while(exq.moveToNext()) {
             int idModel = getInt(DatabaseManager.C_MODEL_ID);
             String brandname = getString(DatabaseManager.C_MODEL_BRAND);
@@ -176,7 +175,7 @@ public class Model {
 
     public static Model getModelById(SQLiteDatabase bdd, int id)
     {
-        String[]args = {};
+        String[]args = new String[1];
         args[0] = Integer.toString(id);
         exq = bdd.rawQuery("SELECT * FROM Model WHERE id = ?;", args);
         if(exq.moveToNext()) {
@@ -196,34 +195,26 @@ public class Model {
     }
 
 
-    public static ArrayList<Model> getModelFromBrandModelYearAndRatedHP(SQLiteDatabase bdd, String brand, String model, Integer year, Integer ratedHP)
+    public static ArrayList<Model> getModelFromBrandModelYearAndRatedHP(SQLiteDatabase bdd, String brand, String model, String year)
     {
         //on recherche le véhicule selon les informations
         //year et ratedHP sont facultatifs, ils permettent de mieux filtrer les résultats
         //dans le cas où on veut faire une recherche sans, il faut que le(s) champs soi(en)t null
         ArrayList<Model>models = new ArrayList<Model>();
-        String[]args = {};
-        args[0] = brand;
-        args[1] = model;
-        if(year == null && ratedHP == null)
+        if(year == null)
         {
+            String[]args = new String[2];
+            args[0] = brand;
+            args[1] = model;
             exq = bdd.rawQuery("SELECT * FROM Model WHERE brand = ? AND model = ?;", args);
-        }
-        else if(year == null)
-        {
-            args[2] = ratedHP.toString();
-            exq = bdd.rawQuery("SELECT * FROM Model WHERE brand = ? AND model = ? AND rated_hp = ?;", args);
-        }
-        else if(ratedHP == null)
-        {
-            args[2] = year.toString();
-            exq = bdd.rawQuery("SELECT * FROM Model WHERE brand = ? AND model = ? AND year = ?;", args);
         }
         else
         {
-            args[2] = ratedHP.toString();
-            args[3] = year.toString();
-            exq = bdd.rawQuery("SELECT * FROM Model WHERE brand = ? AND model = ? AND rated_hp = ? AND year = ?;", args);
+            String[]args = new String[3];
+            args[0] = brand;
+            args[1] = model;
+            args[2] = year;
+            exq = bdd.rawQuery("SELECT * FROM Model WHERE brand = ? AND model = ? AND year = ?;", args);
         }
         while(exq.moveToNext()) {
             int idModel = getInt(DatabaseManager.C_MODEL_ID);
@@ -240,6 +231,11 @@ public class Model {
             models.add(new Model(idModel, brandname, modelname, yearmodel, energy, engine, rated_hp, consumption, doors, submodel));
         }
         return models;
+    }
+
+    public String toString()
+    {
+        return subModel + " " + engine + " - " + doors + " portes - " + energy;
     }
 
     public int getId() {

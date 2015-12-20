@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,9 +86,11 @@ public class MainActivity extends AppCompatActivity
         Model model2 = new Model("Peugeot", "206+", "1.4l 70ch");
         Model model3 = new Model("Citroën", "Saxo", "1.0l 50ch");
 
+        //cars.put("uuid_102", new Car(102, "CT 091 DQ", model2));
+        //cars.put("uuid_203", new Car(203, "XX 180 TG", model3));
+
+        cars = Car.getAllCars(ecarnetHelper.bdd);
         cars.put("uuid_101", new Car(101, "71 AFB 34", model1));
-        cars.put("uuid_102", new Car(102, "CT 091 DQ", model2));
-        cars.put("uuid_203", new Car(203, "XX 180 TG", model3));
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +112,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
         for(Map.Entry<String, Car> carEntry : cars.entrySet()) {
-            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().uuid, 0, carEntry.getValue().getPlateNum() + " - " + carEntry.getValue().model.getEngine());
+            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().uuid, 0, carEntry.getValue().getPlateNum()); //+ " - " + carEntry.getValue().model.getEngine());
             navigationView.getMenu().findItem(carEntry.getValue().uuid).setIcon(R.drawable.ic_car_circle);
         }
 

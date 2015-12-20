@@ -11,6 +11,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.DatabaseManager;
@@ -145,9 +146,11 @@ public class Car {
     }
 
 
-    public static ArrayList<Car> getAllCars(SQLiteDatabase bdd)
+    public static HashMap<String, Car> getAllCars(SQLiteDatabase bdd)
     {
-        ArrayList<Car> cars = new ArrayList<>();
+        String uidd = "uidd_10";
+        int i = 0;
+        HashMap<String, Car> cars = new HashMap<String, Car>();
         exq = bdd.rawQuery("SELECT * FROM car", null);
         while(exq.moveToNext())
         {
@@ -157,7 +160,10 @@ public class Car {
             Date buyingDate = getDate(DatabaseManager.C_CAR_BUYING_DATE);
             Date circulationDate = getDate(DatabaseManager.C_CAR_CIRCULATION_DATE);
             String plateNBR = getString(DatabaseManager.C_CAR_PLATE_NUMBER);
-            cars.add(new Car(ident, null, kilometers, buyingDate, circulationDate, averageConsumption, null, null, null, plateNBR));
+            int id_model = getInt(DatabaseManager.C_CAR_MODEL_ID);
+            uidd += i;
+            cars.put(uidd, new Car(ident, Model.getModelById(bdd, id_model), kilometers, buyingDate, circulationDate, averageConsumption, null, null, null, plateNBR));
+            i++;
         }
         return cars;
     }
@@ -194,6 +200,15 @@ public class Car {
             }
             car.uuid = id + 1;
         }
+
+        if(car.getBuyingDate() == null)
+        {
+            car.setBuyingDate(new Date());
+        }
+        if(car.getCirculationDate() == null)
+        {
+            car.setCirculationDate(new Date());
+        }
         ContentValues newValues = new ContentValues();
         newValues.put(DatabaseManager.C_CAR_ID, car.uuid);
         newValues.put(DatabaseManager.C_CAR_KILOMETERS, car.getKilometers());
@@ -201,6 +216,7 @@ public class Car {
         newValues.put(DatabaseManager.C_CAR_CIRCULATION_DATE, car.getCirculationDate().getTime());
         newValues.put(DatabaseManager.C_CAR_AVERAGE_CONSUMPTION, car.getAverageConsumption());
         newValues.put(DatabaseManager.C_CAR_PLATE_NUMBER, car.getPlateNum());
+        newValues.put(DatabaseManager.C_CAR_MODEL_ID, car.getModel().getId());
         db.insert(DatabaseManager.T_CAR, null, newValues);
     }
 
