@@ -25,7 +25,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + C_CAR_KILOMETERS + " INTEGER NOT NULL,"
                     + C_CAR_BUYING_DATE + " NUMERIC NOT NULL,"
                     + C_CAR_CIRCULATION_DATE + " NUMERIC NOT NULL,"
-                    + C_CAR_PLATE_NUMBER + " TEXT NOT NULL,"
+                    + C_CAR_PLATE_NUMBER + " TEXT,"
                     + C_CAR_AVERAGE_CONSUMPTION + " REAL NOT NULL,"
                     + C_CAR_MODEL_ID + " INTEGER NOT NULL"
                     + ");";
@@ -103,6 +103,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public static final String C_USER_FIRSTNAME = "firstname";
     public static final String C_USER_LASTNAME = "lastname";
     public static final String C_USER_PASSWORD = "password";
+    public static final String C_USER_ACTIVATE = "activate";
     private static final String INIT_BDD_USER =
             "CREATE TABLE "
                     + T_USER + "("
@@ -110,7 +111,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + C_USER_EMAIL + " TEXT NOT NULL,"
                     + C_USER_FIRSTNAME + " TEXT NOT NULL,"
                     + C_USER_LASTNAME + " TEXT NOT NULL,"
-                    + C_USER_PASSWORD + " TEXT NOT NULL"
+                    + C_USER_PASSWORD + " TEXT NOT NULL,"
+                    + C_USER_ACTIVATE + " INTEGER NOT NULL"
                     + ");";
 
 

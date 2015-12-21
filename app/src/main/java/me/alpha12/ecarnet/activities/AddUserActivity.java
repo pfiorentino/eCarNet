@@ -3,9 +3,7 @@ package me.alpha12.ecarnet.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +17,6 @@ import me.alpha12.ecarnet.models.User;
  */
 public class AddUserActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     private TextView firstNameText;
     private TextView lastNameText;
     private TextView emailText;
@@ -30,14 +27,12 @@ public class AddUserActivity extends AppCompatActivity implements View.OnClickLi
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        addUserButton = (Button) findViewById(R.id.btn_addUser);
+        addUserButton = (Button) findViewById(R.id.addUser);
         addUserButton.setOnClickListener(this);
 
-        firstNameText = (TextView) findViewById(R.id.firstName);
-        lastNameText = (TextView) findViewById(R.id.lastName);
+        firstNameText = (TextView) findViewById(R.id.firstname);
+        lastNameText = (TextView) findViewById(R.id.lastname);
         emailText = (TextView) findViewById(R.id.email);
     }
 

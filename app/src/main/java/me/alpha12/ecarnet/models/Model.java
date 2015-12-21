@@ -195,27 +195,13 @@ public class Model {
     }
 
 
-    public static ArrayList<Model> getModelFromBrandModelYearAndRatedHP(SQLiteDatabase bdd, String brand, String model, String year)
+    public static ArrayList<Model> getModelFromBrandModel(SQLiteDatabase bdd, String brand, String model)
     {
-        //on recherche le véhicule selon les informations
-        //year et ratedHP sont facultatifs, ils permettent de mieux filtrer les résultats
-        //dans le cas où on veut faire une recherche sans, il faut que le(s) champs soi(en)t null
         ArrayList<Model>models = new ArrayList<Model>();
-        if(year == null)
-        {
-            String[]args = new String[2];
-            args[0] = brand;
-            args[1] = model;
-            exq = bdd.rawQuery("SELECT * FROM Model WHERE brand = ? AND model = ?;", args);
-        }
-        else
-        {
-            String[]args = new String[3];
-            args[0] = brand;
-            args[1] = model;
-            args[2] = year;
-            exq = bdd.rawQuery("SELECT * FROM Model WHERE brand = ? AND model = ? AND year = ?;", args);
-        }
+        String[]args = new String[2];
+        args[0] = brand;
+        args[1] = model;
+        exq = bdd.rawQuery("SELECT * FROM Model WHERE brand = ? AND model = ?;", args);
         while(exq.moveToNext()) {
             int idModel = getInt(DatabaseManager.C_MODEL_ID);
             String brandname = getString(DatabaseManager.C_MODEL_BRAND);

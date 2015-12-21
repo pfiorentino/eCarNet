@@ -15,86 +15,41 @@
 
 
 
-        <Spinner
-            android:id="@+id/brand_spinner"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <AutoCompleteTextView
+            android:id="@+id/brand"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:hint="Marque"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_gravity="center"
+            android:ems="10" />
+    </android.support.design.widget.TextInputLayout>
 
-        <Spinner
-            android:id="@+id/model_spinner"
-            android:hint="Modèle"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
 
-    <LinearLayout
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Spinner
-            android:id="@+id/year_spinner"
-            android:hint="Année"
+        android:layout_marginTop="30dp">
+        <AutoCompleteTextView
+            android:id="@+id/model"
             android:layout_width="fill_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:hint="Modèle"
+            android:layout_gravity="center"
+            android:ems="10" />
+    </android.support.design.widget.TextInputLayout>
 
-
-
-    </LinearLayout>
 
     <Spinner
         android:id="@+id/sub_model_spinner"
         android:layout_width="fill_parent"
+        android:layout_marginTop="40dp"
         android:hint="Finition"
-        android:layout_height="wrap_content">
-
-    </Spinner>
-
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/kilometers"
-                android:hint="Kilomètres"
-                android:autoText="false"
-                android:text="" />
-        </android.support.design.widget.TextInputLayout>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Date"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp"
-            android:paddingLeft="4dp"
-            android:textSize="12sp"
-            android:id="@+id/textView" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="4dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginRight="10dp"
-                android:text="lun. 9 nov. 2015"
-                android:id="@+id/date"
-                style="@style/Widget.AppCompat.Spinner"/>
-
-
-        </LinearLayout>
+        android:layout_height="wrap_content" />
 
         <View
             android:layout_width="0dp"
