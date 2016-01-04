@@ -13,6 +13,10 @@ package="me.alpha12.ecarnet">
             android:parentActivityName=".activities.MainActivity" android:theme="@style/AppTheme.NoActionBar">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
+        <activity android:name=".activities.AddCarPersonaliseActivity" android:label="@string/title_activity_add_car_personalise"
+            android:parentActivityName=".activities.MainActivity" android:theme="@style/AppTheme.NoActionBar">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="me.alpha12.ecarnet.activities.MainActivity" />
+        </activity>
         <activity android:name=".activities.AddCarActivity" android:label="@string/title_activity_add_car"
             android:parentActivityName=".activities.MainActivity" android:theme="@style/AppTheme.NoActionBar">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="me.alpha12.ecarnet.activities.MainActivity" />
@@ -24,6 +28,19 @@ package="me.alpha12.ecarnet">
         <activity android:name=".activities.AddUserActivity" android:label="@string/title_activity_add_user"
             android:parentActivityName=".activities.MainActivity" android:theme="@style/AppTheme.NoActionBar">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="me.alpha12.ecarnet.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:label="@string/title_activity_car_search" android:launchMode="singleTop" android:name=".activities.CarSearchActivity" >
+            <intent-filter >
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/search_bar" />
         </activity>
     </application>
 </manifest>

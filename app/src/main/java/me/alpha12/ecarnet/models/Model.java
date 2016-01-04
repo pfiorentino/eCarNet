@@ -3,6 +3,8 @@ package me.alpha12.ecarnet.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +14,7 @@ import me.alpha12.ecarnet.database.DatabaseManager;
 /**
  * Created by guilhem on 25/10/2015.
  */
-public class Model {
+public class Model implements Parcelable{
 
     private int id;
     private String brand;
@@ -154,7 +156,7 @@ public class Model {
     public static ArrayList<Model> getAllModel(SQLiteDatabase bdd)
     {
         ArrayList<Model>models = new ArrayList<Model>();
-        exq = bdd.rawQuery("SELECT id, brand, model, year, energy, engine, rated_hp, consumption, doors, sub_model FROM Model;", null);
+        exq = bdd.rawQuery("SELECT id, brand, model, year, energy, engine, rated_hp, consumption, doors, sub_model FROM Model ORDER BY BRAND, MODEL ASC, YEAR DESC;", null);
         while(exq.moveToNext()) {
             int idModel = getInt(DatabaseManager.C_MODEL_ID);
             String brandname = getString(DatabaseManager.C_MODEL_BRAND);
@@ -324,5 +326,24 @@ public class Model {
 
     public static Date getDate(String ColumnName) {
         return new Date(exq.getLong(exq.getColumnIndex(ColumnName))*1000);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.brand);
+        dest.writeString(this.model);
+        dest.writeInt(this.year);
+        dest.writeString(this.energy);
+        dest.writeString(this.engine);
+        dest.writeInt(this.ratedHP);
+        dest.writeDouble(this.consumption);
+        dest.writeInt(this.doors);
+        dest.writeString(this.subModel);
     }
 }
