@@ -1,5 +1,8 @@
 package me.alpha12.ecarnet.models;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -14,6 +17,59 @@ public class Intervention {
     private Date dateIntervention;
     private ArrayList<Operation> myOperations;
     private double amount;
+
+    private static Cursor exq;
+
+
+    private static ArrayList<Intervention> getAllIntervention(SQLiteDatabase bdd, int carId)
+    {
+        ArrayList<Intervention> inters = new ArrayList<>();
+        exq = bdd.rawQuery("SELECT * FROM Intervention WHERE id_car = " + carId, null);
+        while(exq.moveToNext())
+        {
+            int id = getInt("id");
+            int kilometers = getInt("kilometers");
+            double price = getDouble("price");
+            double amount = getDouble("quantity");
+            Date dateIntervention = getDate("date_intervention");
+            inters.add(new Intervention(id, kilometers, price, dateIntervention, Operation.getAllOperation(bdd, id), amount));
+        }
+        return inters;
+    }
+
+
+    public static int getInt(String ColumnName)
+    {
+        return exq.getInt(exq.getColumnIndex(ColumnName));
+    }
+
+
+    public static String getString(String ColumnName)
+    {
+        return exq.getString(exq.getColumnIndex(ColumnName));
+    }
+
+    public static double getDouble(String ColumnName)
+    {
+        return exq.getDouble((exq.getColumnIndex(ColumnName)));
+    }
+
+    public static Date getDate(String ColumnName)
+    {
+        return new Date(exq.getLong(exq.getColumnIndex(ColumnName))*1000);
+    }
+
+
+    public Intervention(int id, int kilometers, double price, Date dateIntervention, ArrayList<Operation> myOperations, double amount)
+    {
+        this.id = id;
+        this.kilometers = kilometers;
+        this.price = price;
+        this.dateIntervention = dateIntervention;
+        this.myOperations = myOperations;
+        this.amount = amount;
+    }
+
 
     public int getKilometers() {
         return kilometers;
