@@ -145,7 +145,6 @@ public class Car {
         }
     }
 
-
     public static HashMap<String, Car> getAllCars(SQLiteDatabase bdd)
     {
         String uidd = "uidd_10";
@@ -167,7 +166,6 @@ public class Car {
         }
         return cars;
     }
-
 
     public void getModelFromCar(SQLiteDatabase bdd, int id) {
         String[] args = {};
