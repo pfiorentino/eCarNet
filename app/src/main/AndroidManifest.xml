@@ -21,5 +21,9 @@ package="me.alpha12.ecarnet">
             android:parentActivityName=".activities.MainActivity" android:theme="@style/AppTheme.NoActionBar">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
+        <activity android:name=".activities.AddUserActivity" android:label="@string/title_activity_add_user"
+            android:parentActivityName=".activities.MainActivity" android:theme="@style/AppTheme.NoActionBar">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="me.alpha12.ecarnet.activities.MainActivity" />
+        </activity>
     </application>
 </manifest>
