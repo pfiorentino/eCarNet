@@ -19,6 +19,8 @@ public class User {
     private String lastName;
     private String email;
     private String password;
+
+
     private static Cursor exq;
 
     public User(int id, String firstName, String lastName, String email, String password) {
@@ -39,7 +41,7 @@ public class User {
 
     public static User getUser(SQLiteDatabase bdd)
     {
-        exq = bdd.rawQuery("SELECT * FROM User;", null);
+        exq = bdd.rawQuery("SELECT * FROM User WHERE activate = 1;", null);
         if (exq.moveToNext()) {
             int id = getInt(DatabaseManager.C_USER_ID);
             String firstName = getString(DatabaseManager.C_USER_FIRSTNAME);
@@ -51,7 +53,7 @@ public class User {
     }
 
 
-    public static void addUser(User user, SQLiteDatabase db) {
+    public static void addUser(User user, SQLiteDatabase bdd) {
         if (user.getId() == 0){
             int id = 0;
             user.setId(id+1);
@@ -62,10 +64,25 @@ public class User {
         newValues.put(DatabaseManager.C_USER_LASTNAME, user.getLastName());
         newValues.put(DatabaseManager.C_USER_EMAIL, user.getEmail());
         newValues.put(DatabaseManager.C_USER_PASSWORD, user.getPassword());
+        newValues.put(DatabaseManager.C_USER_ACTIVATE, 0);
 
-        System.out.println(DatabaseManager.T_USER);
-        System.out.println(newValues.toString());
-        db.insert(DatabaseManager.T_USER, null, newValues);
+        bdd.insert(DatabaseManager.T_USER, null, newValues);
+    }
+
+
+    public static boolean activateUser(SQLiteDatabase bdd)
+    {
+        exq = bdd.rawQuery("SELECT id FROM User WHERE activate = 0;", null);
+        if (exq.moveToNext()) {
+            String[] args = new String[1];
+            args[0] = Integer.toString(getInt(DatabaseManager.C_USER_ID));
+            ContentValues cv = new ContentValues();
+            cv.put("activate",1);
+            bdd.update(DatabaseManager.T_USER, cv, "id=?", args);
+            return true;
+        }
+        else
+            return false;
     }
 
     public String getFirstName() {
@@ -109,7 +126,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     public static int getInt(String ColumnName) {
         return exq.getInt(exq.getColumnIndex(ColumnName));
