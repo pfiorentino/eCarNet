@@ -15,4 +15,5 @@
     <string name="title_activity_add_car">AddCarActivity</string>
     <string name="title_activity_cars_management">CarsManagementActivity</string>
     <string name="title_activity_cars_mgmt">CarsMgmtActivity</string>
+    <string name="title_activity_add_user">AddUserActivity</string>
 </resources>
