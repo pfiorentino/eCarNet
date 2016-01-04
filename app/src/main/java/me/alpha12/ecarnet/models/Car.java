@@ -168,7 +168,6 @@ public class Car {
         return cars;
     }
 
-
     public void getModelFromCar(SQLiteDatabase bdd, int id) {
         String[] args = {};
         args[0] = Integer.toString(id);
