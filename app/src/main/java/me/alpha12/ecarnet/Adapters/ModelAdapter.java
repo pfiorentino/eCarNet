@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Model;
 
 
@@ -42,38 +43,26 @@ public class ModelAdapter extends ArrayAdapter<Model> {
             vi = LayoutInflater.from(getContext());
             v = vi.inflate(R.layout.custom_model_listview, null);
         }
-        CardView card = (CardView) v.findViewById(R.id.card_view);
 
         Model currentModel = getItem(position);
 
         if (currentModel != null) {
-            TextView brand = (TextView) v.findViewById(R.id.brand);
-            TextView model = (TextView) v.findViewById(R.id.model);
-            TextView energy = (TextView) v.findViewById(R.id.energy);
-            TextView engine = (TextView) v.findViewById(R.id.engine);
-            TextView year = (TextView) v.findViewById(R.id.yearText);
-            TextView ratedHP = (TextView) v.findViewById(R.id.ratedHPText);
-
+            TextView brand = (TextView) v.findViewById(R.id.title);
+            TextView year = (TextView) v.findViewById(R.id.time);
+            TextView subModel = (TextView) v.findViewById(R.id.text);
 
             if (brand != null) {
-                brand.setText(currentModel.getBrand());
+                brand.setText(currentModel.getBrand() + "  " + currentModel.getModel());
             }
 
-            if (model != null) {
-                model.setText(currentModel.getModel());
-            }
-
-            if (energy != null) {
-                energy.setText(currentModel.getEnergy());
-            }
-            if (engine != null) {
-                engine.setText(currentModel.getEngine());
-            }
-            if (year != null) {
+            if(year != null)
+            {
                 year.setText(Integer.toString(currentModel.getYear()));
             }
-            if (ratedHP != null) {
-                ratedHP.setText(Integer.toString(currentModel.getRatedHP()));
+
+            if(subModel != null)
+            {
+                subModel.setText(currentModel.getSubModel() + " - " + currentModel.getEngine() + " - " + currentModel.getRatedHP() + "CV");
             }
         }
         return v;
