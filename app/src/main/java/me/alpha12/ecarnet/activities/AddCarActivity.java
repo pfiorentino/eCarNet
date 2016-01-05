@@ -1,5 +1,6 @@
 package me.alpha12.ecarnet.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -8,16 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,22 +31,17 @@ import me.alpha12.ecarnet.models.Model;
 public class AddCarActivity extends AppCompatActivity {
 
 
-    //values of spinners
-    private ArrayList<String> brands = Model.getBrands(EcarnetHelper.bdd);
-    private ArrayList<String> models = new ArrayList<String>();
-    private ArrayList<Model> subModel = new ArrayList<Model>();
-
-
     //affiliated to search bar
     private List<Model> allModels;
     private List<Model> filteredModels;
-    private boolean searchOpened;
+    private boolean isSearchOpened = false;
+    private EditText searchTextEdit;
+    private MenuItem searchAction;
+
     private String currentQuery;
     private ListView modelListView;
     private Drawable iconOpenSearch;
     private Drawable iconCloseSearch;
-    private EditText searchTextEdit;
-    private MenuItem searchAction;
     private Model selectedCar;
 
 
@@ -54,24 +50,9 @@ public class AddCarActivity extends AppCompatActivity {
     private final static String SEARCH_OPENED = "opened";
     private final static String SEARCH_QUERY = "query";
 
-
-
-    //value of selected item;
-    private String currentBrand;
-    private String currentModel;
-
-    private ArrayAdapter brandAdapter;
-    private ArrayAdapter modelAdapter;
-    private ArrayAdapter subModelAdapter;
-
     //spinners
-
-    private Spinner subModelSpinner;
-    private AutoCompleteTextView brandText;
-    private AutoCompleteTextView modelText;
-
-
-    private Button addCarButton;
+    private List<Integer> years = new ArrayList<Integer>();
+    private List<Integer> ratedHP = new ArrayList<Integer>();
 
     private ModelAdapter adapter;
 
@@ -87,111 +68,43 @@ public class AddCarActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             allModels = Model.getAllModel(EcarnetHelper.bdd);
             filteredModels = allModels;
-            searchOpened = false;
+            isSearchOpened = false;
             currentQuery = "";
         } else {
             allModels = savedInstanceState.getParcelableArrayList(MODEL);
             filteredModels = savedInstanceState.getParcelableArrayList(MODEL_FILTERED);
-            searchOpened = savedInstanceState.getBoolean(SEARCH_OPENED);
+            isSearchOpened = savedInstanceState.getBoolean(SEARCH_OPENED);
             currentQuery = savedInstanceState.getString(SEARCH_QUERY);
         }
 
+        for (int i = 0; i < filteredModels.size(); i++)
+        {
+            if(!years.contains(new Integer(filteredModels.get(i).getYear())))
+                years.add(filteredModels.get(i).getYear());
+            if(!ratedHP.contains(new Integer(filteredModels.get(i).getRatedHP())))
+                ratedHP.add(filteredModels.get(i).getRatedHP());
+        }
 
-        iconOpenSearch = getResources().getDrawable(R.drawable.ic_search_black_24dp);
-        iconCloseSearch = getResources().getDrawable(R.drawable.ic_close_black_24dp);
+        iconOpenSearch = getResources().getDrawable(R.drawable.ic_search_white_24dp);
+        iconCloseSearch = getResources().getDrawable(R.drawable.ic_clear_white_24dp);
 
         modelListView = (ListView) findViewById(R.id.modelList);
 
         this.adapter = new ModelAdapter(this, R.id.modelList, filteredModels);
         modelListView.setAdapter(adapter);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         modelListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Model model = (Model)modelListView.getItemAtPosition(position);
+                Model model = (Model) modelListView.getItemAtPosition(position);
                 System.out.println(model.toString());
                 Intent intent = new Intent(AddCarActivity.this, AddCarPersonaliseActivity.class);
                 intent.putExtra("id", model.getId());
                 AddCarActivity.this.startActivity(intent);
             }
         });
-
-        if (searchOpened) {
-            openSearchBar(currentQuery);
-        }
-
-/*
-        currentBrand = "";
-        currentModel = "";
-
-        //findView of spinners
-        subModelSpinner = (Spinner) findViewById(R.id.sub_model_spinner);
-        brandText = (AutoCompleteTextView) findViewById(R.id.brand);
-        modelText = (AutoCompleteTextView) findViewById(R.id.model);
-        modelText.setEnabled(false);
-        subModelSpinner.setEnabled(false);
-
-
-        addCarButton = (Button) findViewById(R.id.btn_addUser);
-        addCarButton.setEnabled(false);
-
-        //initialize default value
-        brandAdapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, brands);
-        brandText.setAdapter(brandAdapter);
-        brandText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                currentBrand = parent.getItemAtPosition(position).toString();
-                models = Model.getModelFromBrand(EcarnetHelper.bdd, currentBrand);
-                modelAdapter = new ArrayAdapter(parent.getContext(), android.R.layout.simple_dropdown_item_1line, models);
-                modelText.setAdapter(modelAdapter);
-                modelText.setEnabled(true);
-                subModel = new ArrayList<Model>();
-                subModelAdapter = new ArrayAdapter(parent.getContext(), android.R.layout.simple_dropdown_item_1line, subModel);
-                subModelSpinner.setAdapter(subModelAdapter);
-            }
-        });
-
-
-        modelText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                currentModel = parent.getItemAtPosition(position).toString();
-                subModel = Model.getModelFromBrandModel(EcarnetHelper.bdd, currentBrand, currentModel);
-                subModelSpinner.setEnabled(true);
-                subModelAdapter = new ArrayAdapter(parent.getContext(), android.R.layout.simple_dropdown_item_1line, subModel);
-                subModelSpinner.setAdapter(subModelAdapter);
-            }
-        });
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        subModelSpinner.setOnItemSelectedListener(this);
-        addCarButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Car.addCar(new Car(0, "CZ-123-PB", (Model) subModelSpinner.getSelectedItem()), EcarnetHelper.bdd);
-                User.activateUser(EcarnetHelper.bdd);
-                Toast.makeText(getBaseContext(), "added car : " + currentBrand + " - " + currentModel, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(AddCarActivity.this, MainActivity.class);
-                AddCarActivity.this.startActivity(intent);
-            }
-        });
-
-    }
-
-
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (subModelSpinner.getSelectedItem() != null)
-            addCarButton.setEnabled(true);
-    }
-
-    public void onNothingSelected(AdapterView<?> adapterView) {
-        return;
-    }
-
-*/
     }
 
 
@@ -200,14 +113,14 @@ public class AddCarActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(MODEL, (ArrayList<Model>) allModels);
         outState.putParcelableArrayList(MODEL_FILTERED, (ArrayList<Model>) filteredModels);
-        outState.putBoolean(SEARCH_OPENED, searchOpened);
+        outState.putBoolean(SEARCH_OPENED, isSearchOpened);
         outState.putString(SEARCH_QUERY, currentQuery);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.activity_add_car_drawer, menu);
         return true;
     }
 
@@ -226,76 +139,65 @@ public class AddCarActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_search) {
-            if (searchOpened) {
-                closeSearchBar();
-            } else {
-                openSearchBar(currentQuery);
-            }
+            handleMenuSearch();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void openSearchBar(String queryText) {
 
-        // Set custom view on action bar.
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(R.layout.search);
+    private void handleMenuSearch()
+    {
+        ActionBar action = getSupportActionBar();
+        if (isSearchOpened) {
+            action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
+            action.setDisplayShowTitleEnabled(true);
 
-        // Search edit text field setup.
-        searchTextEdit = (EditText) actionBar.getCustomView().findViewById(R.id.etSearch);
-        searchTextEdit.addTextChangedListener(new CarSearch());
-        searchTextEdit.setText(queryText);
-        searchTextEdit.requestFocus();
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
 
-        // Change search icon accordingly.
-        actionBar.setIcon(iconCloseSearch);
-        searchOpened = true;
+            searchAction.setIcon(getResources().getDrawable(R.drawable.ic_search_white_24dp));
+            isSearchOpened = false;
+        } else {
+            action.setDisplayShowCustomEnabled(true);
+            action.setCustomView(R.layout.search);
+            action.setDisplayShowTitleEnabled(false);
+            searchTextEdit = (EditText)action.getCustomView().findViewById(R.id.etSearch);
+            searchTextEdit.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-    }
+                }
 
-    private void closeSearchBar() {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-        // Remove custom view.
-        getSupportActionBar().setDisplayShowCustomEnabled(false);
+                }
 
-        // Change search icon accordingly.
-        searchAction.setIcon(iconOpenSearch);
-        searchOpened = false;
+                @Override
+                public void afterTextChanged(Editable s) {
+                    currentQuery = searchTextEdit.getText().toString();
+                    filteredModels = performSearch(currentQuery);
 
-    }
+                    getListAdapter().update(filteredModels);
+                    adapter = new ModelAdapter(getBaseContext(), R.id.modelList, filteredModels);
+                    modelListView.setAdapter(adapter);
+                }
 
-
-    private class CarSearch implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence c, int i, int i2, int i3) {
-
+                private ModelAdapter getListAdapter() {
+                    return (ModelAdapter) modelListView.getAdapter();
+                }
+            });
+            searchTextEdit.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(searchTextEdit, InputMethodManager.SHOW_IMPLICIT);
+            searchAction.setIcon(getResources().getDrawable(R.drawable.ic_clear_white_24dp));
+            isSearchOpened = true;
         }
-
-        @Override
-        public void onTextChanged(CharSequence c, int i, int i2, int i3) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            currentQuery = searchTextEdit.getText().toString();
-            filteredModels = performSearch(allModels, currentQuery);
-            getListAdapter().update(filteredModels);
-        }
-
-
-        private ModelAdapter getListAdapter() {
-            return (ModelAdapter) modelListView.getAdapter();
-        }
-
     }
 
 
-
-    private List<Model> performSearch(List<Model> models, String query) {
+    private List<Model> performSearch(String query) {
 
         // First we split the query so that we're able
         // to search word by word (in lower case).
@@ -330,13 +232,8 @@ public class AddCarActivity extends AppCompatActivity {
                 if (numberOfMatches == 0) {
                     modelsFiltered.add(model);
                 }
-
             }
-
         }
-
         return modelsFiltered;
     }
-
-
 }

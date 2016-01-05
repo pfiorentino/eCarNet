@@ -34,14 +34,12 @@ public class AddCarPersonaliseActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         int idModel = getIntent().getExtras().getInt("id");
         System.out.println(idModel);
         selectedCar = Model.getModelById(EcarnetHelper.bdd, idModel);
 
         imat = (EditText) findViewById(R.id.imat);
         kilometers = (EditText) findViewById(R.id.kilometers);
-
 
         addCarButton = (Button) findViewById(R.id.btn_save);
         addCarButton.setEnabled(true);

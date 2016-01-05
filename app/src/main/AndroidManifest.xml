@@ -30,6 +30,8 @@ package="me.alpha12.ecarnet">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
 
+
+
         <activity
             android:label="@string/title_activity_car_search" android:launchMode="singleTop" android:name=".activities.CarSearchActivity" >
             <intent-filter >
