@@ -44,5 +44,13 @@ package="me.alpha12.ecarnet">
                 android:name="android.app.searchable"
                 android:resource="@xml/search_bar" />
         </activity>
+
+        <uses-permission
+            android:name="android.permission.NFC" />
+        <uses-permission
+            android:name="android.permission.READ_EXTERNAL_STORAGE" />
+        <uses-feature
+            android:name="android.hardware.nfc"
+            android:required="true" />
     </application>
 </manifest>

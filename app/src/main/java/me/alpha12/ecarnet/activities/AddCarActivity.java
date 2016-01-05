@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -154,7 +155,14 @@ public class AddCarActivity extends AppCompatActivity {
             action.setDisplayShowTitleEnabled(true);
 
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
+            searchTextEdit = (EditText)action.getCustomView().findViewById(R.id.etSearch);
+            filteredModels = allModels;
+            adapter = new ModelAdapter(getBaseContext(), R.id.modelList, filteredModels);
+            modelListView.setAdapter(adapter);
+
+
 
             searchAction.setIcon(getResources().getDrawable(R.drawable.ic_search_white_24dp));
             isSearchOpened = false;
@@ -178,14 +186,8 @@ public class AddCarActivity extends AppCompatActivity {
                 public void afterTextChanged(Editable s) {
                     currentQuery = searchTextEdit.getText().toString();
                     filteredModels = performSearch(currentQuery);
-
-                    getListAdapter().update(filteredModels);
                     adapter = new ModelAdapter(getBaseContext(), R.id.modelList, filteredModels);
                     modelListView.setAdapter(adapter);
-                }
-
-                private ModelAdapter getListAdapter() {
-                    return (ModelAdapter) modelListView.getAdapter();
                 }
             });
             searchTextEdit.requestFocus();
@@ -201,7 +203,7 @@ public class AddCarActivity extends AppCompatActivity {
 
         // First we split the query so that we're able
         // to search word by word (in lower case).
-        String[] queryByWords = query.toLowerCase().split("\\s+");
+        String[] queryByWords = query.toLowerCase().split(" ");
 
         // Empty list to fill with matches.
         List<Model> modelsFiltered = new ArrayList<Model>();
@@ -212,20 +214,21 @@ public class AddCarActivity extends AppCompatActivity {
             // Content to search through (in lower case).
             String content = (
                     model.getBrand() + " " + model.getModel() + " " + String.valueOf(model.getYear()) + " " + model.getEngine() + " " +
-                            model.getRatedHP() + " " + model.getEnergy())
+                            model.getRatedHP() + " " + model.getEnergy() + model.getSubModel())
                     .toLowerCase();
+
+            int numberOfMatches = queryByWords.length;
 
             for (String word : queryByWords) {
 
+                Log.d("search_debug", content+" - "+word);
                 // There is a match only if all of the words are contained.
-                int numberOfMatches = queryByWords.length;
+
 
                 // All query words have to be contained,
                 // otherwise the release is filtered out.
                 if (content.contains(word)) {
                     numberOfMatches--;
-                } else {
-                    break;
                 }
 
                 // They all match.
