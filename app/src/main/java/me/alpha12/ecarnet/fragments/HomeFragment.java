@@ -1,6 +1,7 @@
 package me.alpha12.ecarnet.fragments;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,8 +9,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
+import me.alpha12.ecarnet.charts.BarChartCustom;
+import me.alpha12.ecarnet.charts.PieChartCustom;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
 
@@ -23,6 +44,7 @@ import me.alpha12.ecarnet.models.Car;
  */
 public class HomeFragment extends Fragment {
     private int mMenuEntryId;
+    private LineChart mainChart;
 
     private OnFragmentInteractionListener mListener;
 
@@ -51,6 +73,7 @@ public class HomeFragment extends Fragment {
         if (getArguments() != null) {
             mMenuEntryId = getArguments().getInt(MainActivity.FRAGMENT_MENU_ENTRY_ID);
         }
+
     }
 
     @Override
@@ -59,6 +82,31 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         Car currentCar = ((MainActivity) getActivity()).currentCar;
+
+        mainChart = (LineChart) view.findViewById(R.id.chart);
+
+        //fake data ----------------------------------------
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(7.5f, 0));
+        entries.add(new BarEntry(8.0f, 1));
+        entries.add(new BarEntry(6.3f, 2));
+
+        BarDataSet dataset = new BarDataSet(entries, "");
+
+        ArrayList<String> labels = new ArrayList<String>();
+        labels.add("Janv");
+        labels.add("Fevr");
+        labels.add("Mars");
+
+        BarChart chart = (BarChart) view.findViewById(R.id.mainChart);
+        BarChartCustom barCustom = new BarChartCustom(chart, entries, "", labels, null);
+
+        ArrayList<Entry> entriesPie = new ArrayList<>();
+        entriesPie.add(new Entry(7.5f, 0));
+        entriesPie.add(new Entry(8.0f, 1));
+        entriesPie.add(new Entry(6.3f, 2));
+        PieChart pie = (PieChart) view.findViewById(R.id.mainChartPie);
+        PieChartCustom pieCustom = new PieChartCustom(pie, entriesPie, "", labels, null);
 
         TextView tv = (TextView) view.findViewById(R.id.main_text);
 
