@@ -7,6 +7,7 @@ import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -51,13 +52,21 @@ public class RadarChartCustom {
         setDefaultAxes();
     }
 
+    public void addEntries(ArrayList<Entry> entries)
+    {
+        RadarDataSet addData = new RadarDataSet(entries, "");
+        this.data.addDataSet(addData);
+        addData.setDrawFilled(true);
+        addData.setDrawValues(false);
+    }
+
     public void setDefaultChart()
     {
         this.dataset.setDrawFilled(true);
         this.dataset.setDrawValues(false);
         this.data.setValueTextSize(14f);
         this.chart.setData(data);
-        setColor(0xFF2196F3);
+        setColor();
     }
 
     public void setDefaultLegend()
@@ -73,10 +82,18 @@ public class RadarChartCustom {
         chart.animateX(1000);
     }
 
-    public void setColor(int color)
+    public void setColor()
     {
         this.colors.clear();
-        this.colors.add(color);
+        this.colors.add(0xFFF44336);
+        this.colors.add(0xFF2196F3);
+        this.colors.add(0xFF009688);
+        this.colors.add(0xFF8BC34A);
+        this.colors.add(0xFFFFC107);
+        this.colors.add(0xFFFF5722);
+        this.colors.add(0xFF795548);
+        this.colors.add(0xFF9E9E9E);
+        this.colors.add(0xFF607D8B);
         this.dataset.setColors(colors);
     }
 }

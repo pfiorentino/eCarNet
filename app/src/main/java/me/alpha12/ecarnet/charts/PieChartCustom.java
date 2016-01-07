@@ -1,7 +1,12 @@
 package me.alpha12.ecarnet.charts;
 
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.text.SpannableString;
+import android.util.Log;
 
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -36,7 +41,17 @@ public class PieChartCustom {
         if(chartDecription!= null)
             chart.setDescription(chartDecription);
         else chart.setDescription("");
-        this.dataset.setSliceSpace(8f);
+        float sum = 0f;
+        for(int i = 0; i<entries.size(); i++)
+        {
+            sum += entries.get(i).getVal();
+        }
+        this.chart.setCenterText(String.format("%1$s\n%2$.2f", "Total", sum));
+        this.chart.setCenterTextSize(16);
+        Paint text = new Paint();
+        text.setTextAlign(Paint.Align.CENTER);
+        this.chart.setPaint(text, Chart.PAINT_CENTER_TEXT);
+        this.chart.setUsePercentValues(true);
         setDefaultChart();
         setDefaultLegend();
     }
@@ -50,7 +65,6 @@ public class PieChartCustom {
         this.chart.setDrawHoleEnabled(true);
         this.chart.setTransparentCircleRadius(10);
         this.chart.setRotationAngle(0);
-        this.chart.setDrawSliceText(true);
         this.chart.setRotationEnabled(true);
         setColor();
     }
@@ -64,6 +78,14 @@ public class PieChartCustom {
     {
         this.colors.clear();
         this.colors.add(0xFF2196F3);
+        this.colors.add(0xFFF44336);
+        this.colors.add(0xFF009688);
+        this.colors.add(0xFF8BC34A);
+        this.colors.add(0xFFFFC107);
+        this.colors.add(0xFFFF5722);
+        this.colors.add(0xFF795548);
+        this.colors.add(0xFF9E9E9E);
+        this.colors.add(0xFF607D8B);
         this.dataset.setColors(colors);
     }
 }

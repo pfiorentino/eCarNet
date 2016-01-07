@@ -31,6 +31,7 @@ import java.util.List;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
 import me.alpha12.ecarnet.charts.BarChartCustom;
+import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.charts.PieChartCustom;
 import me.alpha12.ecarnet.charts.RadarChartCustom;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
@@ -89,9 +90,12 @@ public class HomeFragment extends Fragment {
 
         //fake data ----------------------------------------
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(7.5f, 0));
-        entries.add(new BarEntry(8.0f, 1));
-        entries.add(new BarEntry(6.3f, 2));
+        entries.add(new BarEntry(37.5f, 0));
+        entries.add(new BarEntry(18.0f, 1));
+        entries.add(new BarEntry(26.3f, 2));
+        entries.add(new BarEntry(10f, 3));
+        entries.add(new BarEntry(15.0f, 4));
+        entries.add(new BarEntry(19.3f, 5));
 
         BarDataSet dataset = new BarDataSet(entries, "");
 
@@ -99,27 +103,43 @@ public class HomeFragment extends Fragment {
         labels.add("Janvier");
         labels.add("Fevrier");
         labels.add("Mars");
+        labels.add("Avril");
+        labels.add("Mai");
+        labels.add("Juin");
 
         BarChart chart = (BarChart) view.findViewById(R.id.mainChart);
         BarChartCustom barCustom = new BarChartCustom(chart, entries, "", labels, null);
 
-        labels.add("Avril");
-        labels.add("Mai");
-        labels.add("Juin");
+
 
         ArrayList<Entry> entriesPie = new ArrayList<>();
         entriesPie.add(new Entry(37.5f, 0));
         entriesPie.add(new Entry(18.0f, 1));
         entriesPie.add(new Entry(26.3f, 2));
-        entriesPie.add(new Entry(10f, 0));
-        entriesPie.add(new Entry(15.0f, 1));
-        entriesPie.add(new Entry(19.3f, 2));
+        entriesPie.add(new Entry(10f, 3));
+        entriesPie.add(new Entry(15.0f, 4));
+        entriesPie.add(new Entry(19.3f, 5));
         PieChart pie = (PieChart) view.findViewById(R.id.mainChartPie);
         PieChartCustom pieCustom = new PieChartCustom(pie, entriesPie, "", labels, null);
 
+
+        ArrayList<Entry> oldEntries = new ArrayList<>();
+        oldEntries.add(new Entry(17.5f, 0));
+        oldEntries.add(new Entry(38.0f, 1));
+        oldEntries.add(new Entry(26.3f, 2));
+        oldEntries.add(new Entry(30f, 3));
+        oldEntries.add(new Entry(19.0f, 4));
+        oldEntries.add(new Entry(39.3f, 5));
+
         RadarChart radar =(RadarChart) view.findViewById(R.id.radar);
         RadarChartCustom radarCustom = new RadarChartCustom(radar, entriesPie, "", labels, null);
+        radarCustom.addEntries(oldEntries);
         TextView tv = (TextView) view.findViewById(R.id.main_text);
+
+
+        LineChart line = (LineChart) view.findViewById(R.id.line);
+        LineChartCustom lineCustom = new LineChartCustom(line, entriesPie, "", labels, null);
+        //lineCustom.addEntries(oldEntries);
 
         tv.setText("Home car: "+currentCar.getPlateNum());
 

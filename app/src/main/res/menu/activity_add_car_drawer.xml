@@ -8,6 +8,4 @@
         android:icon="@drawable/ic_search_white_24dp"
         android:orderInCategory="200"
         app:showAsAction="always" />
-    <item android:id="@+id/action_settings" android:title="Settings"
-        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

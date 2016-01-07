@@ -1,57 +1,49 @@
 package me.alpha12.ecarnet.charts;
 
 import android.graphics.Color;
-import android.view.View;
 
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.RadarDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.alpha12.ecarnet.R;
-
 /**
- * Created by guilhem on 06/01/2016.
+ * Created by guilhem on 07/01/2016.
  */
-public class BarChartCustom {
+public class LineChartCustom {
 
-    private BarChart chart;
+    private LineChart chart;
     private XAxis xAxis;
     private YAxis yLeftAxis;
     private YAxis yRightAxis;
     private Legend legend;
-    private BarDataSet dataset;
+    private LineDataSet dataset;
     private List<Integer> colors;
-    private BarData data;
-    private LimitLine average;
-    private ArrayList<BarEntry> entries;
+    private LineData data;
+    private ArrayList<Entry> entries;
     private boolean averageBar = false;
 
 
-    public BarChartCustom(BarChart graphical, ArrayList<BarEntry> entries, String entriesLegend, ArrayList<String> labels, String chartDecription)
+    public LineChartCustom(LineChart graphical, ArrayList<Entry> entries, String entriesLegend, ArrayList<String> labels, String chartDecription)
     {
         this.entries = entries;
         this.chart = graphical;
-        this.dataset = new BarDataSet(entries, entriesLegend);
-        this.data = new BarData(labels, this.dataset);
+        this.dataset = new LineDataSet(entries, entriesLegend);
+        this.data = new LineData(labels, this.dataset);
         this.colors = new ArrayList<>();
         this.yLeftAxis = chart.getAxisLeft();
         this.yRightAxis = chart.getAxisRight();
         this.xAxis = chart.getXAxis();
-        chart.setTouchEnabled(false);
-        this.average = new LimitLine(getAverage(), String.format("%1$s : %2$.2f", "Moyenne", getAverage()));
-        this.average.setTextSize(10);
-        this.average.setLineColor(Color.RED);
-        this.average.setLineWidth(1.5f);
-        this.yLeftAxis.addLimitLine(average);
-        this.average.setEnabled(false);
         this.legend = chart.getLegend();
         if(chartDecription!= null)
             chart.setDescription(chartDecription);
@@ -61,37 +53,28 @@ public class BarChartCustom {
         setDefaultAxes();
     }
 
-
-    public void setAverageBar(boolean result)
+    public void addEntries(ArrayList<Entry> entries)
     {
-        if(result)
-        {
-            this.average.setEnabled(true);
-        }
-        else
-        {
-            this.average.setEnabled(false);
-        }
-    }
-
-    public float getAverage()
-    {
-        float value = 0f;
-        for(BarEntry entry : this.entries)
-        {
-            value += entry.getVal();
-        }
-        return value / this.entries.size();
+        LineDataSet addData = new LineDataSet(entries, "");
+        this.data.addDataSet(addData);
+        addData.setDrawFilled(true);
+        addData.setDrawValues(false);
+        addData.setColor(0xFFFF5722);
     }
 
     public void setDefaultChart()
     {
+        this.dataset.setDrawValues(false);
         this.data.setValueTextSize(18f);
         this.data.setValueTextColor(Color.WHITE);
         this.chart.setDrawGridBackground(false);
         this.chart.setData(data);
         setColor(0xFFF44336);
-        chart.setDrawValueAboveBar(false);
+        this.dataset.setDrawFilled(true);
+        this.dataset.setColor(0xFFF44336);
+        this.dataset.setCircleColorHole(0xFFF44336);
+        this.dataset.setCircleColor(0xFFF44336);
+        this.dataset.setFillColor(0xFFF44336);
     }
 
     public void setDefaultLegend()
@@ -101,7 +84,7 @@ public class BarChartCustom {
 
     public void setDefaultAxes() {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        yLeftAxis.setEnabled(false);
+        yLeftAxis.setEnabled(true);
         yRightAxis.setEnabled(false);
         xAxis.setGridColor(Color.WHITE);
         chart.animateY(2000);

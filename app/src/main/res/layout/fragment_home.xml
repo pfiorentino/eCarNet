@@ -19,6 +19,24 @@
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Home fragment" android:id="@+id/main_text" />
 
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/lineChart"
+            android:elevation="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            card_view:cardCornerRadius="4dp">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"/>
+
+        </android.support.v7.widget.CardView>
+
+
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/radarChart"
