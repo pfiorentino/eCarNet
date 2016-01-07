@@ -12,7 +12,12 @@
     <string name="title_fragment_share">Partages</string>
     <string name="title_fragment_tags">Mes tags NFC</string>
     <string name="add">Ajouter</string>
+    <string name="title_activity_add_car_personalise">AddCarPersonaliseActivity</string>
     <string name="title_activity_add_car">AddCarActivity</string>
     <string name="title_activity_cars_management">CarsManagementActivity</string>
     <string name="title_activity_cars_mgmt">CarsMgmtActivity</string>
+    <string name="title_activity_add_user">AddUserActivity</string>
+    <string name="title_activity_car_search">CarSearchActivity</string>
+    <string name="site_url">www.ecarnet.fr</string>
 </resources>
+

@@ -24,10 +24,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.database.EcarnetHelper;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
@@ -36,6 +38,7 @@ import me.alpha12.ecarnet.fragments.TagsFragment;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Model;
+import me.alpha12.ecarnet.models.User;
 
 
 public class MainActivity extends AppCompatActivity
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity
 
     public HashMap<String, Car> cars = new HashMap<>();
     public Car currentCar;
+
+    private EcarnetHelper ecarnetHelper;
 
     NavigationView navigationView;
     FloatingActionButton fab;
@@ -59,17 +64,16 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        //------------database set--------------
+        ecarnetHelper = new EcarnetHelper(this);
+        ecarnetHelper.open();
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_fragment_home);
         setSupportActionBar(toolbar);
 
-        Model model1 = new Model("Renault", "Clio 2.2", "1.5l DCI 65ch");
-        Model model2 = new Model("Peugeot", "206+", "1.4l 70ch");
-        Model model3 = new Model("Citroën", "Saxo", "1.0l 50ch");
-
-        cars.put("uuid_101", new Car(101, "71 AFB 34", model1));
-        cars.put("uuid_102", new Car(102, "CT 091 DQ", model2));
-        cars.put("uuid_203", new Car(203, "XX 180 TG", model3));
+        cars = Car.getAllCars(ecarnetHelper.bdd);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -90,8 +94,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
-        for(Map.Entry<String, Car> carEntry : cars.entrySet()) {
-            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().uuid, 0, carEntry.getValue().getPlateNum() + " - " + carEntry.getValue().model.getEngine());
+        for (Map.Entry<String, Car> carEntry : cars.entrySet()) {
+            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().uuid, 0, carEntry.getValue().getPlateNum()); //+ " - " + carEntry.getValue().model.getEngine());
             navigationView.getMenu().findItem(carEntry.getValue().uuid).setIcon(R.drawable.ic_car_circle);
         }
 
@@ -114,9 +118,9 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
                     public void onBackStackChanged() {
-                        Log.d("fragment", "On back fragment - stack: "+getSupportFragmentManager().getBackStackEntryCount());
+                        Log.d("fragment", "On back fragment - stack: " + getSupportFragmentManager().getBackStackEntryCount());
 
-                        if (getSupportFragmentManager().getBackStackEntryCount() == 0){
+                        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                             onBackPressed();
                         } else {
                             Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
@@ -130,7 +134,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         int savedCarId = settings.getInt(PREFS_SAVED_CAR_KEY, -1);
         Car savedCar = cars.get("uuid_" + savedCarId);
-        if (savedCar != null){
+        if (savedCar != null) {
             Log.d("savedCar", "CurrentCarFound");
             changeCar(savedCar, true);
         } else {
