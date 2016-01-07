@@ -10,16 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +98,7 @@ public class AddCarActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Model model = (Model) modelListView.getItemAtPosition(position);
                 Log.d("Model debug", model.toString());
-                Intent intent = new Intent(AddCarActivity.this, AddCarPersonaliseActivity.class);
+                Intent intent = new Intent(AddCarActivity.this, CustomizeCarActivity.class);
                 intent.putExtra("id", model.getId());
                 AddCarActivity.this.startActivity(intent);
             }

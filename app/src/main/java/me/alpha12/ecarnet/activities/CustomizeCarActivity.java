@@ -19,7 +19,7 @@ import me.alpha12.ecarnet.models.User;
 /**
  * Created by guilhem on 04/01/2016.
  */
-public class AddCarPersonaliseActivity extends AppCompatActivity {
+public class CustomizeCarActivity extends AppCompatActivity {
 
     //affiliated to search bar
     private EditText imat;
@@ -31,9 +31,7 @@ public class AddCarPersonaliseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_car_personalise);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_customize_car);
 
         int idModel = getIntent().getExtras().getInt("id");
         Log.d("idModel", idModel+"");
@@ -51,10 +49,9 @@ public class AddCarPersonaliseActivity extends AppCompatActivity {
                 Car.addCar(new Car(0, imat.getText().toString(), selectedCar), EcarnetHelper.bdd);
                 User.activateUser(EcarnetHelper.bdd);
                 Toast.makeText(getBaseContext(), "added car : " + selectedCar.getBrand() + " - " + selectedCar.getModel(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(AddCarPersonaliseActivity.this, MainActivity.class);
-                AddCarPersonaliseActivity.this.startActivity(intent);
+                Intent intent = new Intent(CustomizeCarActivity.this, MainActivity.class);
+                CustomizeCarActivity.this.startActivity(intent);
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }
