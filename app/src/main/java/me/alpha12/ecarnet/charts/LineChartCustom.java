@@ -4,15 +4,11 @@ import android.graphics.Color;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.RadarDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +27,6 @@ public class LineChartCustom {
     private List<Integer> colors;
     private LineData data;
     private ArrayList<Entry> entries;
-    private boolean averageBar = false;
 
 
     public LineChartCustom(LineChart graphical, ArrayList<Entry> entries, String entriesLegend, ArrayList<String> labels, String chartDecription)
@@ -70,7 +65,7 @@ public class LineChartCustom {
         this.chart.setDrawGridBackground(false);
         this.chart.setData(data);
         setColor(0xFFF44336);
-        this.dataset.setDrawFilled(true);
+        this.dataset.setDrawFilled(false);
         this.dataset.setColor(0xFFF44336);
         this.dataset.setCircleColorHole(0xFFF44336);
         this.dataset.setCircleColor(0xFFF44336);
@@ -84,7 +79,8 @@ public class LineChartCustom {
 
     public void setDefaultAxes() {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        yLeftAxis.setEnabled(true);
+        xAxis.setEnabled(false);
+        yLeftAxis.setEnabled(false);
         yRightAxis.setEnabled(false);
         xAxis.setGridColor(Color.WHITE);
         chart.animateY(2000);

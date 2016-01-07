@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -88,6 +89,53 @@ public class HomeFragment extends Fragment {
 
         mainChart = (LineChart) view.findViewById(R.id.chart);
 
+        TextView title = (TextView) view.findViewById(R.id.titleCar);
+        title.setText(currentCar.getModel().getBrand() + " " + currentCar.getModel().getModel());
+
+
+
+        ArrayList<String> labels = new ArrayList<String>();
+        labels.add("Janvier");
+        labels.add("Fevrier");
+        labels.add("Mars");
+        labels.add("Avril");
+        labels.add("Mai");
+        labels.add("Juin");
+        labels.add("Juillet");
+        labels.add("Aout");
+        labels.add("Septembre");
+        labels.add("Octobre");
+        labels.add("Novembre");
+        labels.add("Décembre");
+
+        ArrayList<Entry> entriesPie = new ArrayList<>();
+        entriesPie.add(new Entry(250, 0));
+        entriesPie.add(new Entry(480, 2));
+        entriesPie.add(new Entry(120, 3));
+        entriesPie.add(new Entry(150, 4));
+        entriesPie.add(new Entry(233, 5));
+        entriesPie.add(new Entry(120, 6));
+        entriesPie.add(new Entry(280, 7));
+        entriesPie.add(new Entry(310, 8));
+        entriesPie.add(new Entry(300, 9));
+        entriesPie.add(new Entry(150, 10));
+        entriesPie.add(new Entry(133, 11));
+
+        if(entriesPie.size() != 0) {
+            LineChart line = (LineChart) view.findViewById(R.id.kilometersChart);
+            LineChartCustom lineCustom = new LineChartCustom(line, entriesPie, "", labels, null);
+
+            TextView kilometers = (TextView) view.findViewById(R.id.kilometersData);
+            int sum = 0;
+            for (Entry value : entriesPie)
+            {
+                sum += (int)value.getVal();
+            }
+            kilometers.setText(Integer.toString(sum) + " KM");
+            kilometers.setTextSize(16);
+        }
+
+        /*
         //fake data ----------------------------------------
         ArrayList<BarEntry> entries = new ArrayList<>();
         entries.add(new BarEntry(37.5f, 0));
@@ -142,6 +190,7 @@ public class HomeFragment extends Fragment {
         //lineCustom.addEntries(oldEntries);
 
         tv.setText("Home car: "+currentCar.getPlateNum());
+        */
 
         return view;
     }

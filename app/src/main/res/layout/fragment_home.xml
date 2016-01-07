@@ -11,76 +11,187 @@
         android:orientation="vertical"
         android:layout_height="wrap_content">
 
-    <!-- TODO: Update blank fragment layout -->
 
-    <!-- TODO: Update blank fragment layout -->
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:orientation="horizontal">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/cars_icon_layout">
+
+                <ImageView android:layout_width="wrap_content" android:layout_height="72dp"
+                    android:src="@drawable/ic_car_profile_picture"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:id="@+id/brand_image_view" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/titleCar"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:text="votre véhicule"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:paddingTop="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:gravity="center_vertical"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/backgroundCar"
+                    android:padding="0dp"
+                    android:adjustViewBounds="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/default_car_background"
+                    />
+
+            <TextView
+                android:id="@+id/contentCar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ici, un petit descriptif qui résume la voiture\navec les kilomètres"
+                android:padding="16dp"
+                android:textSize="14sp"
+                />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
 
 
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Home fragment" android:id="@+id/main_text" />
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/lineChart"
+            android:id="@+id/kilometerscard"
             android:elevation="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_marginRight="4dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
             card_view:cardCornerRadius="4dp">
 
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/line"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="16dp"/>
+                android:orientation="vertical">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/kilometersChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/kilometersData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Aucune données"
+                android:gravity="bottom"
+                android:textAlignment="center"
+                android:layout_marginBottom="16dp"/>
+            </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
 
 
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/radarChart"
+            android:id="@+id/consumptionCard"
             android:elevation="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             card_view:cardCornerRadius="4dp">
 
-            <com.github.mikephil.charting.charts.RadarChart
-                android:id="@+id/radar"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/consumptionValue"
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:text="0"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="32sp"
+                android:textAlignment="center"
+                android:layout_height="80dp" />
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:text="Consommation"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                android:layout_height="wrap_content" />
+
+            </LinearLayout>
         </android.support.v7.widget.CardView>
 
+    </LinearLayout>
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/mainCard2"
+        android:id="@+id/costCard"
         android:elevation="8dp"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:paddingBottom="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="8dp"
         card_view:cardCornerRadius="4dp">
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/mainChartPie"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"/>
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/mainCard"
-        android:elevation="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        card_view:cardCornerRadius="4dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
 
         <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/mainChart"
+            android:id="@+id/costChart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="140dp"
             android:layout_margin="16dp"/>
+
+        <TextView
+            android:id="@+id/costData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Aucune données"
+            android:gravity="bottom"
+            android:textAlignment="center"
+            android:layout_marginBottom="16dp"/>
+    </LinearLayout>
+
     </android.support.v7.widget.CardView>
 
     </LinearLayout>
