@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -148,7 +149,7 @@ public class Model implements Parcelable{
         }
         catch (Exception e)
         {
-            System.out.println(e);
+            Log.e("Exception", e.getMessage());
             return 0;
         }
     }

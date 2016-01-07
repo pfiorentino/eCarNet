@@ -68,101 +68,78 @@ public class MainActivity extends AppCompatActivity
         //------------database set--------------
         ecarnetHelper = new EcarnetHelper(this);
         ecarnetHelper.open();
-        if(!ecarnetHelper.isInitialized())
-        {
-            System.out.println("init bdd");
-            ecarnetHelper.init(this, false);
-        }
-        else System.out.println("non init");
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.title_fragment_home);
+        setSupportActionBar(toolbar);
 
-        User currentUser = User.getUser(ecarnetHelper.bdd);
-        if(currentUser == null)
-        {
-            Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
-            MainActivity.this.startActivity(intent);
-        }
-        else {
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            toolbar.setTitle(R.string.title_fragment_home);
-            setSupportActionBar(toolbar);
+        cars = Car.getAllCars(ecarnetHelper.bdd);
 
-            Model model1 = new Model("Renault", "Clio 2.2", "1.5l DCI 65ch");
-            Model model2 = new Model("Peugeot", "206+", "1.4l 70ch");
-            Model model3 = new Model("Citroën", "Saxo", "1.0l 50ch");
-
-            //cars.put("uuid_102", new Car(102, "CT 091 DQ", model2));
-            //cars.put("uuid_203", new Car(203, "XX 180 TG", model3));
-
-            cars = Car.getAllCars(ecarnetHelper.bdd);
-            //cars.put("uuid_101", new Car(101, "71 AFB 34", model1));
-
-            fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), FillUpActivity.class);
-                    startActivity(intent);
-                }
-            });
-
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
-
-            navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-            navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
-
-            for (Map.Entry<String, Car> carEntry : cars.entrySet()) {
-                navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().uuid, 0, carEntry.getValue().getPlateNum()); //+ " - " + carEntry.getValue().model.getEngine());
-                navigationView.getMenu().findItem(carEntry.getValue().uuid).setIcon(R.drawable.ic_car_circle);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), FillUpActivity.class);
+                startActivity(intent);
             }
+        });
 
-            navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, false);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-            LinearLayout profileSpinner = (LinearLayout) findViewById(R.id.profile_spinner);
-            profileSpinner.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    isProfilesMenuOpen = !isProfilesMenuOpen;
-                    refreshProfilesMenu();
-                }
-            });
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
-            /*getSupportFragmentManager().beginTransaction()
-                                       .add(R.id.fragment_container, HomeFragment.newInstance(R.id.nav_home), "CURRENT_FRAGMENT")
-                                       .addToBackStack("FIRST_FRAGMENT")
-                                       .commit();*/
+        for (Map.Entry<String, Car> carEntry : cars.entrySet()) {
+            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().uuid, 0, carEntry.getValue().getPlateNum()); //+ " - " + carEntry.getValue().model.getEngine());
+            navigationView.getMenu().findItem(carEntry.getValue().uuid).setIcon(R.drawable.ic_car_circle);
+        }
 
-            getSupportFragmentManager().addOnBackStackChangedListener(
-                    new FragmentManager.OnBackStackChangedListener() {
-                        public void onBackStackChanged() {
-                            Log.d("fragment", "On back fragment - stack: " + getSupportFragmentManager().getBackStackEntryCount());
+        navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, false);
 
-                            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                                onBackPressed();
-                            } else {
-                                Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
-                                if (navigationView != null && currentFragment != null && currentFragment.isVisible()) {
-                                    fragmentSelected(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID));
-                                }
+        LinearLayout profileSpinner = (LinearLayout) findViewById(R.id.profile_spinner);
+        profileSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isProfilesMenuOpen = !isProfilesMenuOpen;
+                refreshProfilesMenu();
+            }
+        });
+
+        /*getSupportFragmentManager().beginTransaction()
+                                   .add(R.id.fragment_container, HomeFragment.newInstance(R.id.nav_home), "CURRENT_FRAGMENT")
+                                   .addToBackStack("FIRST_FRAGMENT")
+                                   .commit();*/
+
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    public void onBackStackChanged() {
+                        Log.d("fragment", "On back fragment - stack: " + getSupportFragmentManager().getBackStackEntryCount());
+
+                        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                            onBackPressed();
+                        } else {
+                            Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
+                            if (navigationView != null && currentFragment != null && currentFragment.isVisible()) {
+                                fragmentSelected(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID));
                             }
                         }
-                    });
+                    }
+                });
 
-            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-            int savedCarId = settings.getInt(PREFS_SAVED_CAR_KEY, -1);
-            Car savedCar = cars.get("uuid_" + savedCarId);
-            if (savedCar != null) {
-                Log.d("savedCar", "CurrentCarFound");
-                changeCar(savedCar, true);
-            } else {
-                Log.d("savedCar", "CurrentCarNotFound");
-                changeCar(cars.entrySet().iterator().next().getValue(), true);
-            }
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        int savedCarId = settings.getInt(PREFS_SAVED_CAR_KEY, -1);
+        Car savedCar = cars.get("uuid_" + savedCarId);
+        if (savedCar != null) {
+            Log.d("savedCar", "CurrentCarFound");
+            changeCar(savedCar, true);
+        } else {
+            Log.d("savedCar", "CurrentCarNotFound");
+            changeCar(cars.entrySet().iterator().next().getValue(), true);
         }
     }
 

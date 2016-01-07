@@ -8,4 +8,6 @@
     <color name="color500">#F44336</color>
     <color name="color700">#D32F2F</color>
     <color name="color900">#B71C1C</color>
+
+    <color name="buttonActiveState">#E0E0E0</color>
 </resources>

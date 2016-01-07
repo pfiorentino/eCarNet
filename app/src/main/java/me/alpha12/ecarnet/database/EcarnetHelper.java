@@ -10,6 +10,7 @@ package me.alpha12.ecarnet.database;
     import android.database.SQLException;
     import android.database.sqlite.SQLiteDatabase;
     import android.database.sqlite.SQLiteOpenHelper;
+    import android.util.Log;
 
     import org.json.JSONArray;
     import org.json.JSONException;
@@ -82,27 +83,28 @@ package me.alpha12.ecarnet.database;
                     model.setSubModel((current.getString("submodel")));
                     Model.add(model, bdd);
                 } catch (JSONException e) {
-                    System.out.println("##### JSONException (for): " + e.getMessage());
+                    Log.e("database", "JSONException (for): " + e.getMessage());
                 }
             }
         } catch (IOException e) {
-            System.out.println("##### IOException (init): " + e.getMessage());
+            Log.e("database", "IOException (init): " + e.getMessage());
         } catch (JSONException e) {
-            System.out.println("##### JSONException (init): " + e.getMessage());
+            Log.e("database", "JSONException (init): " + e.getMessage());
         } finally {
             try {
                 if (inputStream != null) inputStream.close();
             } catch (Exception e) {
-                System.out.println("##### Exception (init): " + e.getMessage());
+                Log.e("database", "Exception (init): " + e.getMessage());
             }
         }
-        System.out.println("---------" + Model.getNumOfModel(bdd) + " présents en bdd");
+
+        Log.d("database", Model.getNumOfModel(bdd) + " présents en bdd");
     }
 
 
     public boolean isInitialized()
         {
-            System.out.println("---------" + Model.getNumOfModel(bdd) + " présents en bdd");
+            Log.d("database", Model.getNumOfModel(bdd) + " présents en bdd");
             return Model.getNumOfModel(bdd) > 0;
         }
 
