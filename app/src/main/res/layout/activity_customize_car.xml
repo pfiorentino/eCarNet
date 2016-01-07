@@ -50,9 +50,9 @@
                 android:paddingTop="16dp" android:paddingBottom="8dp" android:paddingLeft="4dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" android:textSize="12sp"/>
 
-            <TextView android:id="@+id/date"
+            <TextView android:id="@+id/dateTextView"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="lun. 9 nov. 2015"
+                android:text="Cliquez pour définir la date"
                 android:paddingLeft="5dp"
                 style="@style/Widget.AppCompat.Spinner"/>
         </LinearLayout>
@@ -61,20 +61,20 @@
             android:layout_width="match_parent" android:layout_height="52dp"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true" android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-            android:background="#EEEEEE">
+            android:background="#E0E0E0">
 
             <Button android:id="@+id/backButton"
-                android:layout_width="wrap_content" android:layout_height="fill_parent"
+                android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"
                 android:paddingLeft="16dp" android:paddingRight="16dp"
                 android:text="&lt; Étape précédente"
                 android:background="@drawable/selector_transparent_button" />
 
-            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+            <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#BDBDBD" />
 
-            <Button android:id="@+id/addUser" android:enabled="false"
-                android:layout_width="wrap_content" android:layout_height="fill_parent"
+            <Button android:id="@+id/finishButton" android:enabled="false"
+                android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"
                 android:paddingLeft="16dp" android:paddingRight="16dp"
-                android:text="Étape suivante &gt;"
+                android:text="Terminer"
                 android:background="@drawable/selector_transparent_button" />
         </LinearLayout>
     </RelativeLayout>

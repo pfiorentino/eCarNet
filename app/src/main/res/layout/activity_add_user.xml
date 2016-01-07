@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:fitsSystemWindows="true"
-    tools:context="me.alpha12.ecarnet.activities.AddUserActivity"
-    android:background="@android:color/white">
+    tools:context="me.alpha12.ecarnet.activities.AddUserActivity">
 
     <RelativeLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -64,14 +63,14 @@
             <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight=".5"/>
         </LinearLayout>
 
-        <LinearLayout
+        <LinearLayout android:orientation="horizontal"
             android:layout_width="match_parent" android:layout_height="52dp"
-            android:orientation="horizontal" android:gravity="end"
             android:layout_alignParentBottom="true" android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-            android:background="#EEEEEE">
+            android:background="#E0E0E0">
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
 
             <Button android:id="@+id/addUser" android:enabled="false"
-                android:layout_width="wrap_content" android:layout_height="fill_parent"
+                android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"
                 android:paddingLeft="16dp" android:paddingRight="16dp"
                 android:text="Étape suivante &gt;"
                 android:background="@drawable/selector_transparent_button" />
