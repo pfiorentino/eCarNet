@@ -60,7 +60,9 @@ public class AddUserActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         User.addUser(new User(0,firstNameText.getText().toString(),lastNameText.getText().toString(),emailText.getText().toString(), "azerty"), EcarnetHelper.bdd);
+        User.activateUser(EcarnetHelper.bdd);
         Intent intent = new Intent(this, AddCarActivity.class);
-        this.startActivity(intent);
+        startActivityForResult(intent, 0);
+        finish();
     }
 }

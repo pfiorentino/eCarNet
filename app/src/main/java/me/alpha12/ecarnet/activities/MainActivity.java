@@ -43,6 +43,8 @@ import me.alpha12.ecarnet.models.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
+    public static final int RESULT_CLOSE_ALL = 123;
+
     public static final String PREFS_NAME = "user_prefs_file";
     public static final String PREFS_SAVED_CAR_KEY = "current_car";
     public static final String FRAGMENT_MENU_ENTRY_ID = "fmei";

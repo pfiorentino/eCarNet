@@ -97,10 +97,10 @@ public class AddCarActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Model model = (Model) modelListView.getItemAtPosition(position);
-                Log.d("Model debug", model.toString());
+
                 Intent intent = new Intent(AddCarActivity.this, CustomizeCarActivity.class);
                 intent.putExtra("id", model.getId());
-                AddCarActivity.this.startActivity(intent);
+                AddCarActivity.this.startActivityForResult(intent, 0);
             }
         });
     }
@@ -235,5 +235,15 @@ public class AddCarActivity extends AppCompatActivity {
             }
         }
         return modelsFiltered;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(resultCode) {
+            case MainActivity.RESULT_CLOSE_ALL:
+                setResult(MainActivity.RESULT_CLOSE_ALL);
+                finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -82,9 +82,9 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
             @Override
             public void onClick(View v) {
                 Car.addCar(new Car(0, imat.getText().toString(), selectedCar), EcarnetHelper.bdd);
-                User.activateUser(EcarnetHelper.bdd);
                 Intent intent = new Intent(CustomizeCarActivity.this, MainActivity.class);
                 CustomizeCarActivity.this.startActivity(intent);
+                setResult(MainActivity.RESULT_CLOSE_ALL);
                 finish();
             }
         });
@@ -159,5 +159,15 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         private void setOnDateSetListener(OnDateSetListener listener) {
             this.onDateSetListener = listener;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(resultCode) {
+            case MainActivity.RESULT_CLOSE_ALL:
+                setResult(MainActivity.RESULT_CLOSE_ALL);
+                finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
