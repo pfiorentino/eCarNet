@@ -24,6 +24,7 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
         <activity
             android:name=".activities.FillUpActivity"
             android:label="@string/title_activity_fill_up"
@@ -33,15 +34,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
-        <activity
-            android:name=".activities.AddCarPersonaliseActivity"
-            android:label="@string/title_activity_add_car_personalise"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.alpha12.ecarnet.activities.MainActivity" />
-        </activity>
+
         <activity
             android:name=".activities.AddCarActivity"
             android:label="@string/title_activity_add_car"
@@ -60,6 +53,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
+
         <activity
             android:name=".activities.AddUserActivity"
             android:label="@string/title_activity_add_user"
@@ -71,10 +65,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
+
         <activity
             android:name=".activities.CarSearchActivity"
             android:label="@string/title_activity_car_search"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -85,6 +82,18 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/search_bar" />
+        </activity>
+
+        <activity
+            android:name=".activities.CustomizeCarActivity"
+            android:label="@string/title_activity_customize_car"
+            android:parentActivityName=".activities.CarSearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.alpha12.ecarnet.activities.CarSearchActivity" />
         </activity>
     </application>
 

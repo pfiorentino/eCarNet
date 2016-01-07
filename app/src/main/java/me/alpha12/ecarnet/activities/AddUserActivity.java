@@ -3,6 +3,9 @@ package me.alpha12.ecarnet.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,18 +35,32 @@ public class AddUserActivity extends AppCompatActivity implements View.OnClickLi
         addUserButton.setOnClickListener(this);
 
         firstNameText = (TextView) findViewById(R.id.firstname);
+        firstNameText.addTextChangedListener(mTextWatcher);
         lastNameText = (TextView) findViewById(R.id.lastname);
+        lastNameText.addTextChangedListener(mTextWatcher);
         emailText = (TextView) findViewById(R.id.email);
+        emailText.addTextChangedListener(mTextWatcher);
     }
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+        @Override
+        public void afterTextChanged(Editable editable) {
+            addUserButton.setEnabled(
+                    !firstNameText.getText().toString().matches("") &&
+                    !lastNameText.getText().toString().matches("") &&
+                    !emailText.getText().toString().matches("")
+            );
+        }
+    };
 
     @Override
     public void onClick(View v) {
-        if(firstNameText.getText() != null && lastNameText.getText() != null && emailText.getText() != null)
-        {
-            User.addUser(new User(0,firstNameText.getText().toString(),lastNameText.getText().toString(),emailText.getText().toString(), "azerty"), EcarnetHelper.bdd);
-            Toast.makeText(getBaseContext(), "Added user : " + firstNameText.getText().toString() + "  " + lastNameText.getText().toString(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(AddUserActivity.this, AddCarActivity.class);
-            AddUserActivity.this.startActivity(intent);
-        }
+        User.addUser(new User(0,firstNameText.getText().toString(),lastNameText.getText().toString(),emailText.getText().toString(), "azerty"), EcarnetHelper.bdd);
+        Intent intent = new Intent(this, AddCarActivity.class);
+        this.startActivity(intent);
     }
 }
