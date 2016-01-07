@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
@@ -31,6 +32,7 @@ import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
 import me.alpha12.ecarnet.charts.BarChartCustom;
 import me.alpha12.ecarnet.charts.PieChartCustom;
+import me.alpha12.ecarnet.charts.RadarChartCustom;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
 
@@ -94,20 +96,29 @@ public class HomeFragment extends Fragment {
         BarDataSet dataset = new BarDataSet(entries, "");
 
         ArrayList<String> labels = new ArrayList<String>();
-        labels.add("Janv");
-        labels.add("Fevr");
+        labels.add("Janvier");
+        labels.add("Fevrier");
         labels.add("Mars");
 
         BarChart chart = (BarChart) view.findViewById(R.id.mainChart);
         BarChartCustom barCustom = new BarChartCustom(chart, entries, "", labels, null);
 
+        labels.add("Avril");
+        labels.add("Mai");
+        labels.add("Juin");
+
         ArrayList<Entry> entriesPie = new ArrayList<>();
-        entriesPie.add(new Entry(7.5f, 0));
-        entriesPie.add(new Entry(8.0f, 1));
-        entriesPie.add(new Entry(6.3f, 2));
+        entriesPie.add(new Entry(37.5f, 0));
+        entriesPie.add(new Entry(18.0f, 1));
+        entriesPie.add(new Entry(26.3f, 2));
+        entriesPie.add(new Entry(10f, 0));
+        entriesPie.add(new Entry(15.0f, 1));
+        entriesPie.add(new Entry(19.3f, 2));
         PieChart pie = (PieChart) view.findViewById(R.id.mainChartPie);
         PieChartCustom pieCustom = new PieChartCustom(pie, entriesPie, "", labels, null);
 
+        RadarChart radar =(RadarChart) view.findViewById(R.id.radar);
+        RadarChartCustom radarCustom = new RadarChartCustom(radar, entriesPie, "", labels, null);
         TextView tv = (TextView) view.findViewById(R.id.main_text);
 
         tv.setText("Home car: "+currentCar.getPlateNum());

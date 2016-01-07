@@ -4,16 +4,9 @@ import android.graphics.Color;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +36,14 @@ public class PieChartCustom {
         if(chartDecription!= null)
             chart.setDescription(chartDecription);
         else chart.setDescription("");
+        this.dataset.setSliceSpace(8f);
         setDefaultChart();
         setDefaultLegend();
     }
 
     public void setDefaultChart()
     {
-        this.data.setValueTextSize(18f);
+        this.data.setValueTextSize(14f);
         this.data.setValueTextColor(Color.WHITE);
         this.chart.setData(data);
         this.chart.setDrawHoleEnabled(false);

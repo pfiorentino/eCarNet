@@ -32,6 +32,7 @@ public class BarChartCustom {
     private BarData data;
     private LimitLine average;
     private ArrayList<BarEntry> entries;
+    private boolean averageBar = false;
 
 
     public BarChartCustom(BarChart graphical, ArrayList<BarEntry> entries, String entriesLegend, ArrayList<String> labels, String chartDecription)
@@ -50,6 +51,7 @@ public class BarChartCustom {
         this.average.setLineColor(Color.RED);
         this.average.setLineWidth(1.5f);
         this.yLeftAxis.addLimitLine(average);
+        this.average.setEnabled(false);
         this.legend = chart.getLegend();
         if(chartDecription!= null)
             chart.setDescription(chartDecription);
@@ -57,6 +59,19 @@ public class BarChartCustom {
         setDefaultChart();
         setDefaultLegend();
         setDefaultAxes();
+    }
+
+
+    public void setAverageBar(boolean result)
+    {
+        if(result)
+        {
+            this.average.setEnabled(true);
+        }
+        else
+        {
+            this.average.setEnabled(false);
+        }
     }
 
     public float getAverage()
