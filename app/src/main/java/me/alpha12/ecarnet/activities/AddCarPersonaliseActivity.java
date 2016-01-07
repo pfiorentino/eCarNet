@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,7 +36,7 @@ public class AddCarPersonaliseActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         int idModel = getIntent().getExtras().getInt("id");
-        System.out.println(idModel);
+        Log.d("idModel", idModel+"");
         selectedCar = Model.getModelById(EcarnetHelper.bdd, idModel);
 
         imat = (EditText) findViewById(R.id.imat);

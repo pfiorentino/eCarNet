@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -225,10 +226,8 @@ public class Car {
             exq = bdd.rawQuery("SELECT COUNT (*) FROM Car;", null);
             exq.moveToFirst();
             return exq.getInt(0);
-        }
-        catch (Exception e)
-        {
-            System.out.println(e);
+        } catch (Exception e) {
+            Log.e("Exception", e.getMessage());
             return 0;
         }
     }

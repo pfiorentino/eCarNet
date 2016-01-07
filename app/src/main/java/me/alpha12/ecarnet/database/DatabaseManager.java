@@ -5,6 +5,7 @@ package me.alpha12.ecarnet.database; /**
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseManager extends SQLiteOpenHelper {
 
@@ -126,7 +127,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase bdd) {
-        System.out.println("##### INIT_BDD");
+        Log.d("database", "Database Initialisation");
         bdd.execSQL(INIT_BDD_CAR);
         bdd.execSQL(INIT_BDD_INTERVENTION);
         bdd.execSQL(INIT_BDD_MODEL);

@@ -100,7 +100,7 @@ public class AddCarActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Model model = (Model) modelListView.getItemAtPosition(position);
-                System.out.println(model.toString());
+                Log.d("Model debug", model.toString());
                 Intent intent = new Intent(AddCarActivity.this, AddCarPersonaliseActivity.class);
                 intent.putExtra("id", model.getId());
                 AddCarActivity.this.startActivity(intent);
