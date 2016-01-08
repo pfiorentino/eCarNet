@@ -38,6 +38,10 @@ public class Operation {
     }
 
 
+    public Operation()
+    {
+
+    }
     public Operation(int id, String name, String type, String piece, int kilometersCycle, int dateCycle) {
         this.id = id;
         this.name = name;

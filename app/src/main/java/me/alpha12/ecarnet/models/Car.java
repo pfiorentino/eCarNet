@@ -60,6 +60,7 @@ public class Car {
     public Car(int uuid, String plateNum, Model model) {
         this.uuid = uuid;
         this.plateNum = plateNum;
+        this.kilometers = 10000;
         this.model = model;
     }
 
@@ -284,6 +285,11 @@ public class Car {
 
     public void setAverageConsumption(double averageConsumption) {
         this.averageConsumption = averageConsumption;
+    }
+
+    public int getUuid()
+    {
+        return this.uuid;
     }
 
     public ArrayList<User> getSharedPeople() {

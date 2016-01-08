@@ -11,6 +11,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +86,17 @@ public class BarChartCustom {
         return value / this.entries.size();
     }
 
+    public void addEntries(ArrayList<BarEntry> entries)
+    {
+        BarDataSet addData = new BarDataSet(entries, "");
+        addData.setDrawValues(false);
+        addData.setColor(0xFF2196F3);
+        this.data.addDataSet(addData);
+    }
+
     public void setDefaultChart()
     {
+        this.data.setDrawValues(false);
         this.data.setValueTextSize(18f);
         this.data.setValueTextColor(Color.WHITE);
         this.chart.setDrawGridBackground(false);
@@ -101,6 +112,11 @@ public class BarChartCustom {
 
     public void setDefaultAxes() {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setLabelRotationAngle(60);
+        xAxis.setDrawLimitLinesBehindData(false);
+        xAxis.setDrawGridLines(false);
+        xAxis.setLabelsToSkip(0);
+        xAxis.setTextSize(8);
         yLeftAxis.setEnabled(false);
         yRightAxis.setEnabled(false);
         xAxis.setGridColor(Color.WHITE);
