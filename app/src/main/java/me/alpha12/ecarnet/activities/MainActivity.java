@@ -327,7 +327,6 @@ public class MainActivity extends AppCompatActivity
                             case MotionEvent.ACTION_UP: {
                                 Car associatedCar = (Car) v.getTag();
                                 changeCar(associatedCar, true);
-                                break;
                             }
                             case MotionEvent.ACTION_CANCEL: {
                                 ImageView view = (ImageView) v;

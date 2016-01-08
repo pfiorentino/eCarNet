@@ -80,8 +80,10 @@ public class HomeFragment extends Fragment {
         mainChart = (LineChart) view.findViewById(R.id.chart);
 
         TextView title = (TextView) view.findViewById(R.id.titleCar);
-        TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
+
+
         title.setText(currentCar.getModel().getBrand() + " " + currentCar.getModel().getModel());
+        TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
 
         HashMap<Integer, String> months = new HashMap<>();
         months.put(0, "Jan");
@@ -113,8 +115,8 @@ public class HomeFragment extends Fragment {
         interventions.add(new Intervention(currentCar.getUuid(), 12780, 100.33, new java.util.Date(2015, 8, 12), new ArrayList<Operation>(), 0));
         interventions.add(new Intervention(currentCar.getUuid(), 13332, 130, new java.util.Date(2015, 10, 12), new ArrayList<Operation>(), 45.3));
         interventions.add(new Intervention(currentCar.getUuid(), 13782, 130, new java.util.Date(2015, 11, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 13702, 130, new java.util.Date(2016, 0, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 14070, 130, new java.util.Date(2016, 0, 12), new ArrayList<Operation>(), 45.3));
+        interventions.add(new Intervention(currentCar.getUuid(), 14600, 130, new java.util.Date(2016, 0, 12), new ArrayList<Operation>(), 45.3));
+        interventions.add(new Intervention(currentCar.getUuid(), 15770, 130, new java.util.Date(2016, 0, 12), new ArrayList<Operation>(), 45.3));
 
         if(interventions.size() != 0) {
             ArrayList<Intervention>interventionsUpToDate = getCars(interventions);
@@ -169,6 +171,7 @@ public class HomeFragment extends Fragment {
                 totalConsumption +=currentConsumption;
                 numberOfInters++;
                 oldKilometers = value.getKilometers();
+                Log.d("consommation mens", ""+currentConsumption);
             }
         }
         return totalConsumption/numberOfInters;
@@ -316,7 +319,6 @@ public class HomeFragment extends Fragment {
         ArrayList<Entry> sumOfkilmeters = new ArrayList<>();
         int[] fillUpTab = getSumKilometers(inters, current);
         for(int i=0; i<fillUpTab.length; i++) {
-            Log.d("value of tab" + i, "" + fillUpTab[i]);
             if(fillUpTab[i]!=0 || i==0 || i==11)
                 sumOfkilmeters.add(new BarEntry(fillUpTab[i], i));
         }
