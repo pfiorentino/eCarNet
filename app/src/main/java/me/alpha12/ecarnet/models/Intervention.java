@@ -3,7 +3,7 @@ package me.alpha12.ecarnet.models;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +21,7 @@ public class Intervention {
     private static Cursor exq;
 
 
-    private static ArrayList<Intervention> getAllIntervention(SQLiteDatabase bdd, int carId)
+    public static ArrayList<Intervention> getAllIntervention(SQLiteDatabase bdd, int carId)
     {
         ArrayList<Intervention> inters = new ArrayList<>();
         exq = bdd.rawQuery("SELECT * FROM Intervention WHERE id_car = " + carId, null);

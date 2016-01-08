@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity
 
         if (toolbar != null) {
             if (fragmentId == R.id.nav_home) {
-                toolbar.setTitle(currentCar.getModel().getModel() + " - " + currentCar.getPlateNum());
+                toolbar.setTitle(currentCar.getModel().getModel() + "  " + currentCar.getPlateNum());
                 fab.show();
             } else if (fragmentId == R.id.nav_gas) {
                 toolbar.setTitle(R.string.title_fragment_gas);
@@ -281,12 +281,11 @@ public class MainActivity extends AppCompatActivity
         refreshProfilesMenu();
 
         currentCar = newCar;
-
         TextView drawerTitle = (TextView) findViewById(R.id.car_name);
         drawerTitle.setText(currentCar.model.getBrand() + " " + currentCar.model.getModel());
 
         TextView drawerDesc = (TextView) findViewById(R.id.car_desc);
-        drawerDesc.setText(currentCar.getPlateNum() + " - " + currentCar.model.getEngine());
+        drawerDesc.setText(currentCar.getPlateNum() + "   " + currentCar.model.getEngine());
         brandImageView.setImageDrawable(currentCar.getCarPicture(getBaseContext()));
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentapiVersion >= Build.VERSION_CODES.JELLY_BEAN){
@@ -328,6 +327,7 @@ public class MainActivity extends AppCompatActivity
                             case MotionEvent.ACTION_UP: {
                                 Car associatedCar = (Car) v.getTag();
                                 changeCar(associatedCar, true);
+                                break;
                             }
                             case MotionEvent.ACTION_CANCEL: {
                                 ImageView view = (ImageView) v;
