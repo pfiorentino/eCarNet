@@ -5,9 +5,13 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
+import java.util.HashMap;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.EcarnetHelper;
+import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.User;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -26,6 +30,7 @@ public class SplashScreenActivity extends AppCompatActivity {
      */
     private class PrefetchData extends AsyncTask<Void, Void, Void> {
         private User currentUser;
+        private HashMap<String, Car> cars;
 
         private Handler handler = new Handler();
         private Runnable runnable = new Runnable() {
@@ -34,12 +39,17 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Intent i;
                 if(currentUser == null) {
                     i = new Intent(SplashScreenActivity.this, AddUserActivity.class);
+                    startActivity(i);
+                    finish();
+                } else if (cars == null || cars.size() == 0) {
+                    i = new Intent(SplashScreenActivity.this, IncompleteConfigActivity.class);
+                    startActivityForResult(i, 0);
+                    finish();
                 } else {
                     i = new Intent(SplashScreenActivity.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
                 }
-
-                startActivity(i);
-                finish();
             }
         };
 
@@ -58,6 +68,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
 
             this.currentUser = User.getUser(ecarnetHelper.bdd);
+            this.cars = Car.getAllCars(ecarnetHelper.bdd);
+
             return null;
         }
 

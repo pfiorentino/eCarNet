@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,12 +36,12 @@ import me.alpha12.ecarnet.fragments.ShareFragment;
 import me.alpha12.ecarnet.fragments.TagsFragment;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
-import me.alpha12.ecarnet.models.Model;
-import me.alpha12.ecarnet.models.User;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
+    public static final int RESULT_CLOSE_ALL = 123;
+
     public static final String PREFS_NAME = "user_prefs_file";
     public static final String PREFS_SAVED_CAR_KEY = "current_car";
     public static final String FRAGMENT_MENU_ENTRY_ID = "fmei";
@@ -195,7 +194,7 @@ public class MainActivity extends AppCompatActivity
                 openMainFragment(TagsFragment.newInstance(menuItemId), menuItemId);
                 break;
             case R.id.nav_add_car:
-                openActivity(AddCarActivity.class);
+                openActivity(SearchCarActivity.class);
                 break;
             case R.id.nav_manage_car:
                 openActivity(CarsMgmtActivity.class);
