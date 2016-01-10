@@ -4,11 +4,14 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -128,6 +131,16 @@ public class HomeFragment extends Fragment {
             LineChart kilometersLine = (LineChart) view.findViewById(R.id.kilometersChart);
             LineChartCustom kilometersLineCustom = new LineChartCustom(kilometersLine, kilometersChart, "", labels, null);
 
+            CardView kilometersCard = (CardView) view.findViewById(R.id.kilometerscard);
+            kilometersCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ChartDialogFragment frag = new ChartDialogFragment();
+                    frag.show(ft, "tag");
+                }
+            });
+
             TextView kilometersText = (TextView) view.findViewById(R.id.kilometersData);
             int sum = 0;
             for (Entry value : kilometersChart)
@@ -171,7 +184,6 @@ public class HomeFragment extends Fragment {
                 totalConsumption +=currentConsumption;
                 numberOfInters++;
                 oldKilometers = value.getKilometers();
-                Log.d("consommation mens", ""+currentConsumption);
             }
         }
         return totalConsumption/numberOfInters;

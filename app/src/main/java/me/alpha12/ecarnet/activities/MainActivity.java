@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("MainActivity", "OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
