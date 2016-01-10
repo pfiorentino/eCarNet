@@ -1,7 +1,6 @@
-package me.alpha12.ecarnet.Adapters;
+package me.alpha12.ecarnet.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Model;
 
 

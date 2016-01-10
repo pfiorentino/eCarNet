@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.EcarnetHelper;
@@ -59,7 +57,7 @@ public class AddUserActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        User.addUser(new User(0,firstNameText.getText().toString(),lastNameText.getText().toString(),emailText.getText().toString(), "azerty"), EcarnetHelper.bdd);
+        User.addUser(new User(0, firstNameText.getText().toString(), lastNameText.getText().toString(), emailText.getText().toString(), "azerty"), EcarnetHelper.bdd);
         User.activateUser(EcarnetHelper.bdd);
         Intent intent = new Intent(this, AddCarActivity.class);
         startActivityForResult(intent, 0);

@@ -10,21 +10,18 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.SplashScreenActivity"
-            android:theme="@style/AppTheme.SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.FillUpActivity"
             android:label="@string/title_activity_fill_up"
@@ -36,15 +33,6 @@
         </activity>
 
         <activity
-            android:name=".activities.AddCarActivity"
-            android:label="@string/title_activity_add_car"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.alpha12.ecarnet.activities.MainActivity" />
-        </activity>
-        <activity
             android:name=".activities.CarsMgmtActivity"
             android:label="@string/title_activity_cars_management"
             android:parentActivityName=".activities.MainActivity"
@@ -53,47 +41,49 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
-
         <activity
             android:name=".activities.AddUserActivity"
             android:label="@string/title_activity_add_user"
             android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.IncompleteConfigActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"></activity>
 
         <activity
-            android:name=".activities.CarSearchActivity"
-            android:label="@string/title_activity_car_search"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
+            android:name=".activities.AddCarActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"></activity>
 
+        <activity
+            android:name=".activities.SearchCarActivity"
+            android:label="@string/title_activity_add_car"
+            android:parentActivityName=".activities.AddCarActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/search_bar" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.alpha12.ecarnet.activities.AddCarActivity" />
         </activity>
 
         <activity
             android:name=".activities.CustomizeCarActivity"
             android:label="@string/title_activity_customize_car"
-            android:parentActivityName=".activities.CarSearchActivity"
+            android:parentActivityName=".activities.SearchCarActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.alpha12.ecarnet.activities.CarSearchActivity" />
+                android:value="me.alpha12.ecarnet.activities.SearchCarActivity" />
         </activity>
     </application>
 

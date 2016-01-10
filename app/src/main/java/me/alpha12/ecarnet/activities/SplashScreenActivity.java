@@ -42,7 +42,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     startActivity(i);
                     finish();
                 } else if (cars == null || cars.size() == 0) {
-                    i = new Intent(SplashScreenActivity.this, AddCarActivity.class);
+                    i = new Intent(SplashScreenActivity.this, IncompleteConfigActivity.class);
                     startActivityForResult(i, 0);
                     finish();
                 } else {
