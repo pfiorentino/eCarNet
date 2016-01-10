@@ -1,4 +1,4 @@
-package me.alpha12.ecarnet.Adapters;
+package me.alpha12.ecarnet.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

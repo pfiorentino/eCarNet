@@ -8,15 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.SplashTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
+    <style name="AppTheme.SplashTheme" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">#212121</item>
         <item name="colorPrimaryDark">#111111</item>
         <item name="colorAccent">#263238</item>

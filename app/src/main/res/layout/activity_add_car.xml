@@ -1,22 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:fitsSystemWindows="true"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:fitsSystemWindows="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="me.alpha12.ecarnet.activities.AddCarActivity">
 
-    <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
-        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay"
-        >
+    <TextView android:id="@+id/titleTextView"
+        android:layout_width="match_parent" android:layout_height="120dp" android:gravity="center_vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin" android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="Aidez-nous à trouver votre véhicule"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"/>
 
-        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
-            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay">
-        </android.support.v7.widget.Toolbar>
+    <LinearLayout android:id="@+id/bottomButtonBar" android:orientation="horizontal"
+        android:layout_width="match_parent" android:layout_height="52dp"
+        android:layout_alignParentBottom="true" android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+        android:background="#E0E0E0">
+    </LinearLayout>
 
-    </android.support.design.widget.AppBarLayout>
+    <ScrollView
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:layout_below="@id/titleTextView"
+        android:layout_above="@id/bottomButtonBar">
+        <LinearLayout android:orientation="vertical"
+            android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <include layout="@layout/content_add_car" />
+            <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+            <LinearLayout
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
 
-</android.support.design.widget.CoordinatorLayout>
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Par véhicule" />
+
+            <LinearLayout android:orientation="horizontal"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+                <LinearLayout android:orientation="vertical"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <Spinner android:id="@+id/brandSpinner"
+                        android:layout_width="match_parent" android:layout_height="48dp"
+                        android:spinnerMode="dialog"/>
+
+                    <Spinner android:id="@+id/modelSpinner" android:enabled="false"
+                        android:layout_width="match_parent" android:layout_height="48dp"
+                        android:spinnerMode="dialog"/>
+                </LinearLayout>
+
+                <Button android:id="@+id/vehicleButton" style="?android:attr/buttonStyleSmall" android:enabled="false"
+                    android:layout_width="wrap_content" android:layout_height="36dp" android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:text="OK" android:textColor="@android:color/white"
+                    android:background="@drawable/small_raised_button" />
+            </LinearLayout>
+
+            <LinearLayout android:orientation="horizontal"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:gravity="center">
+                <View
+                    android:layout_width="0dp" android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/darker_gray" />
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="ou" android:textAppearance="?android:attr/textAppearanceMedium"/>
+                <View
+                    android:layout_width="0dp" android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/darker_gray" />
+            </LinearLayout>" />
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Par carte grise" />
+
+            <LinearLayout android:orientation="horizontal"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <EditText android:id="@+id/mineTypeEditText"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:hint="Type mine"
+                        android:inputType="text|textFilter|textNoSuggestions"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <Button android:id="@+id/mineButton" style="?android:attr/buttonStyleSmall" android:enabled="false"
+                    android:layout_width="wrap_content" android:layout_height="36dp" android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:text="Ok" android:textColor="@android:color/white"
+                    android:background="@drawable/small_raised_button" />
+            </LinearLayout>
+
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
