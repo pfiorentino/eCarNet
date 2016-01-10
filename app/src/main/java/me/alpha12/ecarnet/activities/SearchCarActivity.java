@@ -69,7 +69,11 @@ public class SearchCarActivity extends AppCompatActivity {
         }
 
         if (savedInstanceState == null) {
-            allModels = Model.getAllModel(EcarnetHelper.bdd);
+            Intent intent = getIntent();
+            if(intent.getStringExtra("brand") != null && intent.getStringExtra("model") != null)
+            {
+                allModels = Model.getModelFromBrandModel(EcarnetHelper.bdd, intent.getStringExtra("brand"), intent.getStringExtra("model"));
+            }
             filteredModels = allModels;
             isSearchOpened = false;
             currentQuery = "";
@@ -216,7 +220,7 @@ public class SearchCarActivity extends AppCompatActivity {
             // Content to search through (in lower case).
             String content = (
                     model.getBrand() + " " + model.getModel() + " " + String.valueOf(model.getYear()) + " " + model.getEngine() + " " +
-                            model.getRatedHP() + " " + model.getEnergy() + model.getSubModel())
+                            model.getRatedHP()+"CV" + " " + model.getEnergy() + model.getSubModel())
                     .toLowerCase();
 
             int numberOfMatches = queryByWords.length;
