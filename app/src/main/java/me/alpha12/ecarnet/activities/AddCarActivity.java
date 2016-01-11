@@ -30,7 +30,8 @@ public class AddCarActivity extends AppCompatActivity {
     private Button mineButton;
 
     private ArrayList<String> brandList;
-    private ArrayList<String> modelList;
+    private ArrayList<String> modelList = new ArrayList<>();
+    private ArrayAdapter<String> modelListAdapter;
 
 
     @Override
@@ -40,21 +41,18 @@ public class AddCarActivity extends AppCompatActivity {
 
         brandSpinner = (Spinner) findViewById(R.id.brandSpinner);
         brandList = Model.getBrands(EcarnetHelper.bdd);
-        final ArrayAdapter<String> brandAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, brandList);
+        final ArrayAdapter<String> brandAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, brandList);
         brandAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         brandSpinner.setAdapter(new DefaultSpinnerValueAdapter(brandAdapter, R.layout.default_spinner_value, "Sélectionnez une marque", this));
-        modelSpinner = (Spinner) findViewById(R.id.modelSpinner);
-
         brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(brandSpinner.getSelectedItemPosition() > 0) {
-                    modelList = Model.getModelFromBrand(EcarnetHelper.bdd, (String) brandSpinner.getSelectedItem().toString());
-                    ArrayAdapter<String> modelAdapter = new ArrayAdapter<String>(parent.getContext(), android.R.layout.simple_spinner_item, modelList);
-                    modelSpinner.setAdapter(modelAdapter);
-                    modelSpinner.setAdapter(new DefaultSpinnerValueAdapter(modelAdapter, R.layout.default_spinner_value, "Sélectionnez un modèle", parent.getContext()));
-                    modelSpinner.setEnabled(position > 0);
+                modelSpinner.setEnabled(position > 0);
+                if (position > 0) {
+                    modelList.clear();
+                    modelList.addAll(Model.getModelFromBrand(EcarnetHelper.bdd, brandList.get(position - 1)));
+                    modelListAdapter.notifyDataSetChanged();
+                    modelSpinner.setSelection(0);
                 }
             }
 
@@ -64,6 +62,11 @@ public class AddCarActivity extends AppCompatActivity {
             }
         });
 
+        modelSpinner = (Spinner) findViewById(R.id.modelSpinner);
+        modelList.add("Dummy model");
+        modelListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, modelList);
+        modelListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        modelSpinner.setAdapter(new DefaultSpinnerValueAdapter(modelListAdapter, R.layout.default_spinner_value, "Sélectionnez un modèle", this));
         modelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
