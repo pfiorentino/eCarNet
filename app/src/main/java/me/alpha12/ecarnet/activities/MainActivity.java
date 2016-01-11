@@ -27,6 +27,7 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
@@ -39,8 +40,6 @@ import me.alpha12.ecarnet.models.Car;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
-    public static final String PREFS_NAME = "user_prefs_file";
-    public static final String PREFS_SAVED_CAR_KEY = "current_car";
     public static final String FRAGMENT_MENU_ENTRY_ID = "fmei";
 
     public HashMap<Integer, Car> cars = new HashMap<>();
@@ -112,9 +111,9 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        int savedCarId = settings.getInt(PREFS_SAVED_CAR_KEY, -1);
-        Car savedCar = cars.get("uuid_" + savedCarId);
+
+        int savedCarId = GlobalContext.getCurrentCar();
+        Car savedCar = cars.get(savedCarId);
         if (savedCar != null) {
             changeCar(savedCar, true);
         } else {
@@ -243,9 +242,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void changeCar(Car newCar, boolean openFragment) {
-        Log.d("fragment", "Change car ("+openFragment+")");
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        settings.edit().putInt(PREFS_SAVED_CAR_KEY, newCar.getId()).commit();
+        Log.d("fragment", "Change car (" + openFragment + ")");
+        GlobalContext.setCurrentCar(newCar.getId());
 
         LinearLayout header = (LinearLayout) findViewById(R.id.drawer_header);
         ImageView brandImageView = (ImageView) findViewById(R.id.brand_image_view);

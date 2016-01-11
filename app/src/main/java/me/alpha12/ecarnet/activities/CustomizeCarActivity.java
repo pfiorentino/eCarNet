@@ -83,6 +83,8 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
                 Car car = new Car(imat.getText().toString(), selectedCar);
                 car.persist();
 
+                GlobalContext.setCurrentCar(car.getId());
+
                 Intent intent = new Intent(CustomizeCarActivity.this, MainActivity.class);
                 CustomizeCarActivity.this.startActivity(intent);
                 setResult(GlobalContext.RESULT_CLOSE_ALL);
