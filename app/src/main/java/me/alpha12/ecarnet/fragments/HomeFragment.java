@@ -6,31 +6,27 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
 import me.alpha12.ecarnet.charts.BarChartCustom;
 import me.alpha12.ecarnet.charts.LineChartCustom;
-import me.alpha12.ecarnet.database.EcarnetHelper;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
-import me.alpha12.ecarnet.models.Operation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,7 +81,7 @@ public class HomeFragment extends Fragment {
         TextView title = (TextView) view.findViewById(R.id.titleCar);
 
 
-        title.setText(currentCar.getModel().getBrand() + " " + currentCar.getModel().getModel());
+        title.setText(currentCar.getCarModel().getBrand() + " " + currentCar.getCarModel().getModel());
         TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
 
         HashMap<Integer, String> months = new HashMap<>();
@@ -103,23 +99,27 @@ public class HomeFragment extends Fragment {
         months.put(11, "Dec");
 
 
-        ArrayList<Intervention> interventions = Intervention.getAllIntervention(EcarnetHelper.bdd, currentCar.getUuid());
+        ArrayList<Intervention> interventions = Intervention.findAllByCar(currentCar.getId());
 
         //fake data
-        interventions.add(new Intervention(currentCar.getUuid(), 10123, 5, new java.util.Date(2014, 11, 12), new ArrayList<Operation>(), 12.5));
-        interventions.add(new Intervention(currentCar.getUuid(), 10223, 50.25, new java.util.Date(2015, 0, 12), new ArrayList<Operation>(), 15.5));
-        interventions.add(new Intervention(currentCar.getUuid(), 10456, 50.25, new java.util.Date(2015, 2, 12), new ArrayList<Operation>(), 18.5));
-        interventions.add(new Intervention(currentCar.getUuid(), 10710, 200.43, new java.util.Date(2015, 3, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 11070, 50.90, new java.util.Date(2015, 3, 12), new ArrayList<Operation>(), 15));
-        interventions.add(new Intervention(currentCar.getUuid(), 11340, 108.23, new java.util.Date(2015, 4, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 11390, 200, new java.util.Date(2015, 5, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 11701, 60.83, new java.util.Date(2015, 6, 12), new ArrayList<Operation>(), 25.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 11925, 120, new java.util.Date(2015, 6, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 12780, 100.33, new java.util.Date(2015, 8, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 13332, 130, new java.util.Date(2015, 10, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 13782, 130, new java.util.Date(2015, 11, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 14600, 130, new java.util.Date(2016, 0, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 15770, 130, new java.util.Date(2016, 0, 12), new ArrayList<Operation>(), 45.3));
+        interventions.add(new Intervention(currentCar.getId(), 10123, 5, 12.5, new Date(114, 11, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 10223, 50.25, 15.5, new Date(115, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 10456, 50.25, 18.5, new Date(115, 2, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 10710, 200.43, 0, new Date(115, 3, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 11070, 50.90, 15, new Date(115, 3, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 11340, 108.23, 0, new Date(115, 4, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 11390, 200, 0, new Date(115, 5, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 11701, 60.83, 25.3, new Date(115, 6, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 11925, 120, 0, new Date(115, 6, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 12780, 100.33, 0, new Date(115, 8, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 13332, 130, 45.3, new Date(115, 10, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 13782, 130, 45.3, new Date(115, 11, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 14600, 130, 45.3, new Date(116, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 15770, 130, 45.3, new Date(116, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 15970, 130, 45.3, new Date(116, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 16500, 130, 45.3, new Date(116, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 16990, 130, 45.3, new Date(116, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 16990, 130, 45.3, new Date(116, 0, 12)));
 
         if(interventions.size() != 0) {
             ArrayList<Intervention>interventionsUpToDate = getCars(interventions);
@@ -179,8 +179,8 @@ public class HomeFragment extends Fragment {
         int numberOfInters = 0;
         int oldKilometers = current.getKilometers();
         for(Intervention value : inters) {
-            if(value.getAmount()!=0) {
-                currentConsumption = (float)value.getAmount() * 100 / (value.getKilometers() - oldKilometers);
+            if(value.getQuantity()!=0) {
+                currentConsumption = (float)value.getQuantity() * 100 / (value.getKilometers() - oldKilometers);
                 totalConsumption +=currentConsumption;
                 numberOfInters++;
                 oldKilometers = value.getKilometers();
@@ -232,7 +232,6 @@ public class HomeFragment extends Fragment {
     }
 
     public void animateTextView(float initialValue, float finalValue, final TextView  textview) {
-
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(initialValue, finalValue);
         valueAnimator.setDuration(1800);
 
@@ -286,7 +285,7 @@ public class HomeFragment extends Fragment {
         //-----------this function will regroup prices of interventions monthly and return into a Hashmap
         float[] values = new float[12];
         for(int i =0; i<inters.size(); i++)
-            if(inters.get(i).getAmount()==0) {
+            if(inters.get(i).getQuantity()==0) {
                 int indice = inters.get(i).getDateIntervention().getMonth();
                 values[indice] += (float) inters.get(i).getPrice();
             }
@@ -299,7 +298,7 @@ public class HomeFragment extends Fragment {
         //-----------this function will regroup prices of fills up monthly and return into a Hashmap
         float[] values = new float[12];
         for(int i =0; i<inters.size(); i++)
-            if(inters.get(i).getAmount()!=0) {
+            if(inters.get(i).getQuantity()!=0) {
                 int indice = inters.get(i).getDateIntervention().getMonth();
                 values[indice] += (float) inters.get(i).getPrice();
             }

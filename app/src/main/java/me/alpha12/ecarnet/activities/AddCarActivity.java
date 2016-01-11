@@ -1,11 +1,10 @@
 package me.alpha12.ecarnet.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,12 +13,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.adapters.DefaultSpinnerValueAdapter;
-import me.alpha12.ecarnet.database.EcarnetHelper;
-import me.alpha12.ecarnet.models.Model;
+import me.alpha12.ecarnet.models.CarModel;
 
 public class AddCarActivity extends AppCompatActivity {
     private Spinner brandSpinner;
@@ -40,7 +37,7 @@ public class AddCarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_car);
 
         brandSpinner = (Spinner) findViewById(R.id.brandSpinner);
-        brandList = Model.getBrands(EcarnetHelper.bdd);
+        brandList = CarModel.findBrands();
         final ArrayAdapter<String> brandAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, brandList);
         brandAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         brandSpinner.setAdapter(new DefaultSpinnerValueAdapter(brandAdapter, R.layout.default_spinner_value, "Sélectionnez une marque", this));
@@ -50,7 +47,7 @@ public class AddCarActivity extends AppCompatActivity {
                 modelSpinner.setEnabled(position > 0);
                 if (position > 0) {
                     modelList.clear();
-                    modelList.addAll(Model.getModelFromBrand(EcarnetHelper.bdd, brandList.get(position - 1)));
+                    modelList.addAll(CarModel.findModelsByBrand(brandList.get(position - 1)));
                     modelListAdapter.notifyDataSetChanged();
                     modelSpinner.setSelection(0);
                 }

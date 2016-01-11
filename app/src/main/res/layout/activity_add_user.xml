@@ -38,7 +38,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1" >
-                    <EditText android:id="@+id/lastname" android:inputType="text"
+                    <EditText android:id="@+id/firstname" android:inputType="text"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="" android:hint="Prénom" />
                 </android.support.design.widget.TextInputLayout>
@@ -47,7 +47,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1" >
-                    <EditText android:id="@+id/firstname" android:inputType="text"
+                    <EditText android:id="@+id/lastname" android:inputType="text"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="" android:hint="Nom" />
                 </android.support.design.widget.TextInputLayout>

@@ -10,18 +10,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.models.Model;
+import me.alpha12.ecarnet.models.CarModel;
 
 
-public class ModelAdapter extends ArrayAdapter<Model> {
+public class ModelAdapter extends ArrayAdapter<CarModel> {
 
-    List<Model> modelList;
+    List<CarModel> modelList;
 
     public ModelAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
     }
 
-    public ModelAdapter(Context context, int resource, List<Model> items) {
+    public ModelAdapter(Context context, int resource, List<CarModel> items) {
         super(context, resource, items);
         modelList = items;
     }
@@ -42,7 +42,7 @@ public class ModelAdapter extends ArrayAdapter<Model> {
             v = vi.inflate(R.layout.custom_model_listview, null);
         }
 
-        Model currentModel = getItem(position);
+        CarModel currentModel = getItem(position);
 
         if (currentModel != null) {
             TextView brand = (TextView) v.findViewById(R.id.title);
@@ -67,7 +67,7 @@ public class ModelAdapter extends ArrayAdapter<Model> {
     }
 
 
-    public void update(List<Model> newModelList)
+    public void update(List<CarModel> newModelList)
     {
         modelList = newModelList;
     }
