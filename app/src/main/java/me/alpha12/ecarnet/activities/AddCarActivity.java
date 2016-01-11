@@ -18,6 +18,8 @@ import java.util.List;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.adapters.DefaultSpinnerValueAdapter;
+import me.alpha12.ecarnet.database.EcarnetHelper;
+import me.alpha12.ecarnet.models.Model;
 
 public class AddCarActivity extends AppCompatActivity {
     private Spinner brandSpinner;
@@ -27,6 +29,9 @@ public class AddCarActivity extends AppCompatActivity {
     private Button vehicleButton;
     private Button mineButton;
 
+    private ArrayList<String> brandList;
+    private ArrayList<String> modelList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +39,23 @@ public class AddCarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_car);
 
         brandSpinner = (Spinner) findViewById(R.id.brandSpinner);
-        List<String> brandList = new ArrayList<String>();
-        brandList.add("Renault");
-        brandList.add("Audi");
-        brandList.add("BMW");
-        ArrayAdapter<String> brandAdapter = new ArrayAdapter<String>(this,
+        brandList = Model.getBrands(EcarnetHelper.bdd);
+        final ArrayAdapter<String> brandAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, brandList);
         brandAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         brandSpinner.setAdapter(new DefaultSpinnerValueAdapter(brandAdapter, R.layout.default_spinner_value, "Sélectionnez une marque", this));
+        modelSpinner = (Spinner) findViewById(R.id.modelSpinner);
+
         brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                modelSpinner.setEnabled(position > 0);
+                if(brandSpinner.getSelectedItemPosition() > 0) {
+                    modelList = Model.getModelFromBrand(EcarnetHelper.bdd, (String) brandSpinner.getSelectedItem().toString());
+                    ArrayAdapter<String> modelAdapter = new ArrayAdapter<String>(parent.getContext(), android.R.layout.simple_spinner_item, modelList);
+                    modelSpinner.setAdapter(modelAdapter);
+                    modelSpinner.setAdapter(new DefaultSpinnerValueAdapter(modelAdapter, R.layout.default_spinner_value, "Sélectionnez un modèle", parent.getContext()));
+                    modelSpinner.setEnabled(position > 0);
+                }
             }
 
             @Override
@@ -54,15 +64,6 @@ public class AddCarActivity extends AppCompatActivity {
             }
         });
 
-        modelSpinner = (Spinner) findViewById(R.id.modelSpinner);
-        List<String> modelList = new ArrayList<String>();
-        modelList.add("Clio 2");
-        modelList.add("Clio IV");
-        modelList.add("Captur");
-        ArrayAdapter<String> modelAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, modelList);
-        modelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        modelSpinner.setAdapter(new DefaultSpinnerValueAdapter(modelAdapter, R.layout.default_spinner_value, "Sélectionnez un modèle", this));
         modelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -83,7 +84,8 @@ public class AddCarActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddCarActivity.this, SearchCarActivity.class);
-                intent.putExtra("search", brandSpinner.getSelectedItem().toString()+" "+modelSpinner.getSelectedItem().toString());
+                intent.putExtra("brand", brandSpinner.getSelectedItem().toString());
+                intent.putExtra("model", modelSpinner.getSelectedItem().toString());
                 startActivityForResult(intent, 0);
             }
         });
@@ -93,7 +95,7 @@ public class AddCarActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddCarActivity.this, SearchCarActivity.class);
-                intent.putExtra("search", mineTypeEditText.getText().toString());
+                intent.putExtra("mine", mineTypeEditText.getText().toString());
                 startActivityForResult(intent, 0);
             }
         });

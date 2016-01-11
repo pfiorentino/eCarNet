@@ -28,6 +28,77 @@ public class LineChartCustom {
     private LineData data;
     private ArrayList<Entry> entries;
 
+    public LineChart getChart() {
+        return chart;
+    }
+
+    public void setChart(LineChart chart) {
+        this.chart = chart;
+    }
+
+    public XAxis getxAxis() {
+        return xAxis;
+    }
+
+    public void setxAxis(XAxis xAxis) {
+        this.xAxis = xAxis;
+    }
+
+    public YAxis getyLeftAxis() {
+        return yLeftAxis;
+    }
+
+    public void setyLeftAxis(YAxis yLeftAxis) {
+        this.yLeftAxis = yLeftAxis;
+    }
+
+    public YAxis getyRightAxis() {
+        return yRightAxis;
+    }
+
+    public void setyRightAxis(YAxis yRightAxis) {
+        this.yRightAxis = yRightAxis;
+    }
+
+    public Legend getLegend() {
+        return legend;
+    }
+
+    public void setLegend(Legend legend) {
+        this.legend = legend;
+    }
+
+    public LineDataSet getDataset() {
+        return dataset;
+    }
+
+    public void setDataset(LineDataSet dataset) {
+        this.dataset = dataset;
+    }
+
+    public List<Integer> getColors() {
+        return colors;
+    }
+
+    public void setColors(List<Integer> colors) {
+        this.colors = colors;
+    }
+
+    public LineData getData() {
+        return data;
+    }
+
+    public void setData(LineData data) {
+        this.data = data;
+    }
+
+    public ArrayList<Entry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(ArrayList<Entry> entries) {
+        this.entries = entries;
+    }
 
     public LineChartCustom(LineChart graphical, ArrayList<Entry> entries, String entriesLegend, ArrayList<String> labels, String chartDecription)
     {

@@ -4,8 +4,6 @@
         xmlns:tools="http://schemas.android.com/tools" tools:context="AddCarActivity">
 
     <item android:id="@+id/action_search"
-        android:title="Rechercher votre véhicule"
         android:icon="@drawable/ic_search_white_24dp"
-        android:orderInCategory="200"
         app:showAsAction="always" />
 </menu>
