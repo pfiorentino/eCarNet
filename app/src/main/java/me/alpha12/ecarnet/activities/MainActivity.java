@@ -27,6 +27,7 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
@@ -39,10 +40,6 @@ import me.alpha12.ecarnet.models.Car;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
-    public static final int RESULT_CLOSE_ALL = 123;
-
-    public static final String PREFS_NAME = "user_prefs_file";
-    public static final String PREFS_SAVED_CAR_KEY = "current_car";
     public static final String FRAGMENT_MENU_ENTRY_ID = "fmei";
 
     public HashMap<Integer, Car> cars = new HashMap<>();
@@ -103,8 +100,6 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
                     public void onBackStackChanged() {
-                        Log.d("fragment", "On back fragment - stack: " + getSupportFragmentManager().getBackStackEntryCount());
-
                         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                             onBackPressed();
                         } else {
@@ -116,21 +111,18 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        int savedCarId = settings.getInt(PREFS_SAVED_CAR_KEY, -1);
-        Car savedCar = cars.get("uuid_" + savedCarId);
+
+        int savedCarId = GlobalContext.getCurrentCar();
+        Car savedCar = cars.get(savedCarId);
         if (savedCar != null) {
-            Log.d("savedCar", "CurrentCarFound");
             changeCar(savedCar, true);
         } else {
-            Log.d("savedCar", "CurrentCarNotFound");
             changeCar(cars.entrySet().iterator().next().getValue(), true);
         }
     }
 
     @Override
     public void onBackPressed() {
-        Log.d("fragment", "On back - stack: "+getSupportFragmentManager().getBackStackEntryCount());
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -181,6 +173,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_add_car:
                 Intent intent = new Intent(this, AddCarActivity.class);
+                intent.putExtra(AddCarActivity.FROM_MAIN_ACTIVITY, true);
                 startActivityForResult(intent, 0);
                 break;
             case R.id.nav_manage_car:
@@ -212,7 +205,6 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
             if (getSupportFragmentManager().getBackStackEntryCount() == 0){
-                Log.d("fragment", "This is the first fragment");
                 transaction.add(R.id.fragment_container, fragment, "CURRENT_FRAGMENT");
                 transaction.addToBackStack("FIRST_FRAGMENT");
             } else {
@@ -250,9 +242,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void changeCar(Car newCar, boolean openFragment) {
-        Log.d("fragment", "Change car ("+openFragment+")");
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        settings.edit().putInt(PREFS_SAVED_CAR_KEY, newCar.getId()).commit();
+        Log.d("fragment", "Change car (" + openFragment + ")");
+        GlobalContext.setCurrentCar(newCar.getId());
 
         LinearLayout header = (LinearLayout) findViewById(R.id.drawer_header);
         ImageView brandImageView = (ImageView) findViewById(R.id.brand_image_view);
