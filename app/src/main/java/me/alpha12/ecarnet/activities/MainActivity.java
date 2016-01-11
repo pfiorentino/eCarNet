@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.database.EcarnetHelper;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
@@ -46,10 +45,8 @@ public class MainActivity extends AppCompatActivity
     public static final String PREFS_SAVED_CAR_KEY = "current_car";
     public static final String FRAGMENT_MENU_ENTRY_ID = "fmei";
 
-    public HashMap<String, Car> cars = new HashMap<>();
+    public HashMap<Integer, Car> cars = new HashMap<>();
     public Car currentCar;
-
-    private EcarnetHelper ecarnetHelper;
 
     NavigationView navigationView;
     FloatingActionButton fab;
@@ -62,16 +59,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        //------------database set--------------
-        ecarnetHelper = new EcarnetHelper(this);
-        ecarnetHelper.open();
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_fragment_home);
         setSupportActionBar(toolbar);
 
-        cars = Car.getAllCars(ecarnetHelper.bdd);
+        cars = Car.findAll();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -92,9 +84,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
-        for (Map.Entry<String, Car> carEntry : cars.entrySet()) {
-            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().uuid, 0, carEntry.getValue().getPlateNum()); //+ " - " + carEntry.getValue().model.getEngine());
-            navigationView.getMenu().findItem(carEntry.getValue().uuid).setIcon(R.drawable.ic_car_circle);
+        for (Map.Entry<Integer, Car> carEntry : cars.entrySet()) {
+            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().getId(), 0, carEntry.getValue().getPlateNum());
+            navigationView.getMenu().findItem(carEntry.getValue().getId()).setIcon(R.drawable.ic_car_circle);
         }
 
         navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, false);
@@ -107,11 +99,6 @@ public class MainActivity extends AppCompatActivity
                 refreshProfilesMenu();
             }
         });
-
-        /*getSupportFragmentManager().beginTransaction()
-                                   .add(R.id.fragment_container, HomeFragment.newInstance(R.id.nav_home), "CURRENT_FRAGMENT")
-                                   .addToBackStack("FIRST_FRAGMENT")
-                                   .commit();*/
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
@@ -193,13 +180,14 @@ public class MainActivity extends AppCompatActivity
                 openMainFragment(TagsFragment.newInstance(menuItemId), menuItemId);
                 break;
             case R.id.nav_add_car:
-                openActivity(SearchCarActivity.class);
+                Intent intent = new Intent(this, AddCarActivity.class);
+                startActivityForResult(intent, 0);
                 break;
             case R.id.nav_manage_car:
                 openActivity(CarsMgmtActivity.class);
                 break;
             default:
-                Car selectedCar = cars.get("uuid_"+menuItemId);
+                Car selectedCar = cars.get(menuItemId);
                 if (selectedCar != null){
                     changeCar(selectedCar, true);
                 }
@@ -243,7 +231,7 @@ public class MainActivity extends AppCompatActivity
 
         if (toolbar != null) {
             if (fragmentId == R.id.nav_home) {
-                toolbar.setTitle(currentCar.getModel().getModel() + "  " + currentCar.getPlateNum());
+                toolbar.setTitle(currentCar.getCarModel().getModel() + "  " + currentCar.getPlateNum());
                 fab.show();
             } else if (fragmentId == R.id.nav_gas) {
                 toolbar.setTitle(R.string.title_fragment_gas);
@@ -264,26 +252,26 @@ public class MainActivity extends AppCompatActivity
     public void changeCar(Car newCar, boolean openFragment) {
         Log.d("fragment", "Change car ("+openFragment+")");
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        settings.edit().putInt(PREFS_SAVED_CAR_KEY, newCar.uuid).commit();
+        settings.edit().putInt(PREFS_SAVED_CAR_KEY, newCar.getId()).commit();
 
         LinearLayout header = (LinearLayout) findViewById(R.id.drawer_header);
         ImageView brandImageView = (ImageView) findViewById(R.id.brand_image_view);
 
         if (currentCar != null){
-            navigationView.getMenu().add(R.id.cars_mgmt_group, currentCar.uuid, 0, currentCar.getPlateNum() + " - " + currentCar.model.getEngine());
-            navigationView.getMenu().findItem(currentCar.uuid).setIcon(R.drawable.ic_car_circle);
+            navigationView.getMenu().add(R.id.cars_mgmt_group, currentCar.getId(), 0, currentCar.getPlateNum() + " - " + currentCar.getCarModel().getEngine());
+            navigationView.getMenu().findItem(currentCar.getId()).setIcon(R.drawable.ic_car_circle);
         }
-        navigationView.getMenu().removeItem(newCar.uuid);
+        navigationView.getMenu().removeItem(newCar.getId());
 
         isProfilesMenuOpen = false;
         refreshProfilesMenu();
 
         currentCar = newCar;
         TextView drawerTitle = (TextView) findViewById(R.id.car_name);
-        drawerTitle.setText(currentCar.model.getBrand() + " " + currentCar.model.getModel());
+        drawerTitle.setText(currentCar.getCarModel().getBrand() + " " + currentCar.getCarModel().getModel());
 
         TextView drawerDesc = (TextView) findViewById(R.id.car_desc);
-        drawerDesc.setText(currentCar.getPlateNum() + "   " + currentCar.model.getEngine());
+        drawerDesc.setText(currentCar.getPlateNum() + "   " + currentCar.getCarModel().getEngine());
         brandImageView.setImageDrawable(currentCar.getCarPicture(getBaseContext()));
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentapiVersion >= Build.VERSION_CODES.JELLY_BEAN){
@@ -295,10 +283,10 @@ public class MainActivity extends AppCompatActivity
         LinearLayout carsLayout = (LinearLayout) findViewById(R.id.cars_icon_layout);
         carsLayout.removeViews(2, carsLayout.getChildCount() - 2);
 
-        for(Map.Entry<String, Car> carEntry : cars.entrySet()) {
+        for(Map.Entry<Integer, Car> carEntry : cars.entrySet()) {
             Car car = carEntry.getValue();
 
-            if (currentCar != null && car.uuid != currentCar.uuid) {
+            if (currentCar != null && car.getId() != currentCar.getId()) {
                 ImageView carImage = new ImageView(getBaseContext());
                 carImage.setImageDrawable(car.getCarPicture(getBaseContext()));
 

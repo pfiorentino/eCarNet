@@ -21,17 +21,16 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.alpha12.ecarnet.adapters.ModelAdapter;
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.database.EcarnetHelper;
-import me.alpha12.ecarnet.models.Model;
+import me.alpha12.ecarnet.adapters.ModelAdapter;
+import me.alpha12.ecarnet.models.CarModel;
 
 public class SearchCarActivity extends AppCompatActivity {
 
 
     //affiliated to search bar
-    private List<Model> allModels;
-    private List<Model> filteredModels;
+    private List<CarModel> allCarModels;
+    private List<CarModel> filteredCarModels;
     private boolean isSearchOpened = false;
     private EditText searchTextEdit;
     private MenuItem searchAction;
@@ -40,7 +39,7 @@ public class SearchCarActivity extends AppCompatActivity {
     private ListView modelListView;
     private Drawable iconOpenSearch;
     private Drawable iconCloseSearch;
-    private Model selectedCar;
+    private CarModel selectedCar;
 
 
     private final static String MODEL = "model";
@@ -62,34 +61,27 @@ public class SearchCarActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String sentSearch = getIntent().getExtras().getString("search");
-        if (sentSearch != null && !sentSearch.equals("")) {
-            Log.d("Sent Search", sentSearch);
-            // @Guilhem : il faut ajouter ici la recherche reçue dans sentSearch et filtrer les modèles directement
-        }
-
         if (savedInstanceState == null) {
             Intent intent = getIntent();
-            if(intent.getStringExtra("brand") != null && intent.getStringExtra("model") != null)
-            {
-                allModels = Model.getModelFromBrandModel(EcarnetHelper.bdd, intent.getStringExtra("brand"), intent.getStringExtra("model"));
+            if(intent.getStringExtra("brand") != null && intent.getStringExtra("model") != null) {
+                allCarModels = CarModel.findByBrandModel(intent.getStringExtra("brand"), intent.getStringExtra("model"));
             }
-            filteredModels = allModels;
+            filteredCarModels = allCarModels;
             isSearchOpened = false;
             currentQuery = "";
         } else {
-            allModels = savedInstanceState.getParcelableArrayList(MODEL);
-            filteredModels = savedInstanceState.getParcelableArrayList(MODEL_FILTERED);
+            allCarModels = savedInstanceState.getParcelableArrayList(MODEL);
+            filteredCarModels = savedInstanceState.getParcelableArrayList(MODEL_FILTERED);
             isSearchOpened = savedInstanceState.getBoolean(SEARCH_OPENED);
             currentQuery = savedInstanceState.getString(SEARCH_QUERY);
         }
 
-        for (int i = 0; i < filteredModels.size(); i++)
+        for (int i = 0; i < filteredCarModels.size(); i++)
         {
-            if(!years.contains(new Integer(filteredModels.get(i).getYear())))
-                years.add(filteredModels.get(i).getYear());
-            if(!ratedHP.contains(new Integer(filteredModels.get(i).getRatedHP())))
-                ratedHP.add(filteredModels.get(i).getRatedHP());
+            if(!years.contains(new Integer(filteredCarModels.get(i).getYear())))
+                years.add(filteredCarModels.get(i).getYear());
+            if(!ratedHP.contains(new Integer(filteredCarModels.get(i).getRatedHP())))
+                ratedHP.add(filteredCarModels.get(i).getRatedHP());
         }
 
         iconOpenSearch = getResources().getDrawable(R.drawable.ic_search_white_24dp);
@@ -97,7 +89,7 @@ public class SearchCarActivity extends AppCompatActivity {
 
         modelListView = (ListView) findViewById(R.id.modelList);
 
-        this.adapter = new ModelAdapter(this, R.id.modelList, filteredModels);
+        this.adapter = new ModelAdapter(this, R.id.modelList, filteredCarModels);
         modelListView.setAdapter(adapter);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -105,7 +97,7 @@ public class SearchCarActivity extends AppCompatActivity {
         modelListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Model model = (Model) modelListView.getItemAtPosition(position);
+                CarModel model = (CarModel) modelListView.getItemAtPosition(position);
 
                 Intent intent = new Intent(SearchCarActivity.this, CustomizeCarActivity.class);
                 intent.putExtra("id", model.getId());
@@ -118,8 +110,8 @@ public class SearchCarActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(MODEL, (ArrayList<Model>) allModels);
-        outState.putParcelableArrayList(MODEL_FILTERED, (ArrayList<Model>) filteredModels);
+        outState.putParcelableArrayList(MODEL, (ArrayList<CarModel>) allCarModels);
+        outState.putParcelableArrayList(MODEL_FILTERED, (ArrayList<CarModel>) filteredCarModels);
         outState.putBoolean(SEARCH_OPENED, isSearchOpened);
         outState.putString(SEARCH_QUERY, currentQuery);
     }
@@ -164,8 +156,8 @@ public class SearchCarActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
             searchTextEdit = (EditText)action.getCustomView().findViewById(R.id.etSearch);
-            filteredModels = allModels;
-            adapter = new ModelAdapter(getBaseContext(), R.id.modelList, filteredModels);
+            filteredCarModels = allCarModels;
+            adapter = new ModelAdapter(getBaseContext(), R.id.modelList, filteredCarModels);
             modelListView.setAdapter(adapter);
 
 
@@ -191,8 +183,8 @@ public class SearchCarActivity extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable s) {
                     currentQuery = searchTextEdit.getText().toString();
-                    filteredModels = performSearch(currentQuery);
-                    adapter = new ModelAdapter(getBaseContext(), R.id.modelList, filteredModels);
+                    filteredCarModels = performSearch(currentQuery);
+                    adapter = new ModelAdapter(getBaseContext(), R.id.modelList, filteredCarModels);
                     modelListView.setAdapter(adapter);
                 }
             });
@@ -205,17 +197,17 @@ public class SearchCarActivity extends AppCompatActivity {
     }
 
 
-    private List<Model> performSearch(String query) {
+    private List<CarModel> performSearch(String query) {
 
         // First we split the query so that we're able
         // to search word by word (in lower case).
         String[] queryByWords = query.toLowerCase().split(" ");
 
         // Empty list to fill with matches.
-        List<Model> modelsFiltered = new ArrayList<Model>();
+        List<CarModel> modelsFiltered = new ArrayList<CarModel>();
 
         // Go through initial releases and perform search.
-        for (Model model : allModels) {
+        for (CarModel model : allCarModels) {
 
             // Content to search through (in lower case).
             String content = (

@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.database.EcarnetHelper;
 import me.alpha12.ecarnet.models.User;
 
 /**
@@ -57,8 +56,9 @@ public class AddUserActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        User.addUser(new User(0, firstNameText.getText().toString(), lastNameText.getText().toString(), emailText.getText().toString(), "azerty"), EcarnetHelper.bdd);
-        User.activateUser(EcarnetHelper.bdd);
+        User user = new User(firstNameText.getText().toString(), lastNameText.getText().toString(), emailText.getText().toString(), "azerty");
+        user.persist();
+
         Intent intent = new Intent(this, AddCarActivity.class);
         startActivityForResult(intent, 0);
         finish();

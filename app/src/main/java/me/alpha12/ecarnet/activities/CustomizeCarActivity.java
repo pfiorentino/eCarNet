@@ -20,16 +20,14 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.database.EcarnetHelper;
 import me.alpha12.ecarnet.models.Car;
-import me.alpha12.ecarnet.models.Model;
-import me.alpha12.ecarnet.models.User;
+import me.alpha12.ecarnet.models.CarModel;
 
 /**
  * Created by guilhem on 04/01/2016.
  */
 public class CustomizeCarActivity extends AppCompatActivity implements OnDateSetListener {
-    private Model selectedCar;
+    private CarModel selectedCar;
     private Calendar selectedDate;
 
     private TextView titleTextView;
@@ -47,7 +45,7 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         setContentView(R.layout.activity_customize_car);
 
         int idModel = getIntent().getExtras().getInt("id");
-        selectedCar = Model.getModelById(EcarnetHelper.bdd, idModel);
+        selectedCar = CarModel.findById(idModel);
 
         titleTextView = (TextView) findViewById(R.id.titleTextView);
         titleTextView.append(" "+selectedCar.getBrand()+" "+selectedCar.getModel());
@@ -81,7 +79,9 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Car.addCar(new Car(0, imat.getText().toString(), selectedCar), EcarnetHelper.bdd);
+                Car car = new Car(imat.getText().toString(), selectedCar);
+                car.persist();
+
                 Intent intent = new Intent(CustomizeCarActivity.this, MainActivity.class);
                 CustomizeCarActivity.this.startActivity(intent);
                 setResult(MainActivity.RESULT_CLOSE_ALL);

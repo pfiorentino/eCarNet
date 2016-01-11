@@ -26,10 +26,8 @@ import java.util.Locale;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
-import me.alpha12.ecarnet.database.EcarnetHelper;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
-import me.alpha12.ecarnet.models.Operation;
 
 /**
  * Created by guilhem on 09/01/2016.
@@ -82,7 +80,7 @@ public class ChartDialogFragment extends DialogFragment implements AdapterView.O
         this.durations.add("12 derniers mois");
         this.durations.add("Tous");
         currentCar = ((MainActivity) getActivity()).currentCar;
-        this.interventions = Intervention.getAllIntervention(EcarnetHelper.bdd, currentCar.getUuid());
+        this.interventions = Intervention.findAllByCar(currentCar.getId());
         this.interventionsUpToDate = new ArrayList<>();
         Spinner durationSelector = (Spinner) view.findViewById(R.id.positionSelector);
         ArrayAdapter<String> adapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, durations);
@@ -99,24 +97,24 @@ public class ChartDialogFragment extends DialogFragment implements AdapterView.O
 
 
         //fake data
-        interventions.add(new Intervention(currentCar.getUuid(), 10123, 5, new Date(114, 11, 12), new ArrayList<Operation>(), 12.5));
-        interventions.add(new Intervention(currentCar.getUuid(), 10223, 50.25, new java.util.Date(115, 0, 12), new ArrayList<Operation>(), 15.5));
-        interventions.add(new Intervention(currentCar.getUuid(), 10456, 50.25, new java.util.Date(115, 2, 12), new ArrayList<Operation>(), 18.5));
-        interventions.add(new Intervention(currentCar.getUuid(), 10710, 200.43, new java.util.Date(115, 3, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 11070, 50.90, new java.util.Date(115, 3, 12), new ArrayList<Operation>(), 15));
-        interventions.add(new Intervention(currentCar.getUuid(), 11340, 108.23, new java.util.Date(115, 4, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 11390, 200, new java.util.Date(115, 5, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 11701, 60.83, new java.util.Date(115, 6, 12), new ArrayList<Operation>(), 25.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 11925, 120, new java.util.Date(115, 6, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 12780, 100.33, new java.util.Date(115, 8, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 13332, 130, new java.util.Date(115, 10, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 13782, 130, new java.util.Date(115, 11, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 14600, 130, new java.util.Date(116, 0, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 15770, 130, new java.util.Date(116, 0, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 15970, 130, new java.util.Date(116, 0, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 16500, 130, new java.util.Date(116, 0, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 16990, 130, new java.util.Date(116, 0, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 16990, 130, new java.util.Date(116, 0, 12), new ArrayList<Operation>(), 45.3));
+        interventions.add(new Intervention(currentCar.getId(), 10123, 5, 12.5, new Date(114, 11, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 10223, 50.25, 15.5, new Date(115, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 10456, 50.25, 18.5, new Date(115, 2, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 10710, 200.43, 0, new Date(115, 3, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 11070, 50.90, 15, new Date(115, 3, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 11340, 108.23, 0, new Date(115, 4, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 11390, 200, 0, new Date(115, 5, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 11701, 60.83, 25.3, new Date(115, 6, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 11925, 120, 0, new Date(115, 6, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 12780, 100.33, 0, new Date(115, 8, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 13332, 130, 45.3, new Date(115, 10, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 13782, 130, 45.3, new Date(115, 11, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 14600, 130, 45.3, new Date(116, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 15770, 130, 45.3, new Date(116, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 15970, 130, 45.3, new Date(116, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 16500, 130, 45.3, new Date(116, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 16990, 130, 45.3, new Date(116, 0, 12)));
+        interventions.add(new Intervention(currentCar.getId(), 16990, 130, 45.3, new Date(116, 0, 12)));
 
 
 

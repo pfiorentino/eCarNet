@@ -1,113 +1,94 @@
 package me.alpha12.ecarnet.models;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 
-/**
- * Created by guilhem on 25/10/2015.
- */
+import me.alpha12.ecarnet.database.DatabaseManager;
+
 public class Intervention {
 
     private int id;
     private int kilometers;
     private double price;
     private Date dateIntervention;
-    private ArrayList<Operation> myOperations;
-    private double amount;
+    private double quantity;
 
-    private static Cursor exq;
+    /* Constructors */
 
-
-    public static ArrayList<Intervention> getAllIntervention(SQLiteDatabase bdd, int carId)
-    {
-        ArrayList<Intervention> inters = new ArrayList<>();
-        exq = bdd.rawQuery("SELECT * FROM Intervention WHERE id_car = " + carId, null);
-        while(exq.moveToNext())
-        {
-            int id = getInt("id");
-            int kilometers = getInt("kilometers");
-            double price = getDouble("price");
-            double amount = getDouble("quantity");
-            Date dateIntervention = getDate("date_intervention");
-            inters.add(new Intervention(id, kilometers, price, dateIntervention, Operation.getAllOperation(bdd, id), amount));
-        }
-        return inters;
-    }
-
-
-    public static int getInt(String ColumnName)
-    {
-        return exq.getInt(exq.getColumnIndex(ColumnName));
-    }
-
-
-    public static String getString(String ColumnName)
-    {
-        return exq.getString(exq.getColumnIndex(ColumnName));
-    }
-
-    public static double getDouble(String ColumnName)
-    {
-        return exq.getDouble((exq.getColumnIndex(ColumnName)));
-    }
-
-    public static Date getDate(String ColumnName)
-    {
-        return new Date(exq.getLong(exq.getColumnIndex(ColumnName))*1000);
-    }
-
-
-    public Intervention(int id, int kilometers, double price, Date dateIntervention, ArrayList<Operation> myOperations, double amount)
-    {
+    public Intervention(int id, int kilometers, double price, double quantity, Date dateIntervention) {
         this.id = id;
         this.kilometers = kilometers;
         this.price = price;
         this.dateIntervention = dateIntervention;
-        this.myOperations = myOperations;
-        this.amount = amount;
+        this.quantity = quantity;
     }
 
+    /* Static methods */
 
+    public static ArrayList<Intervention> findAllByCar(int carId) {
+        ArrayList<Intervention> result = new ArrayList<>();
+
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId,
+                null
+        );
+
+        while(cursor.moveToNext()) {
+            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
+            result.add(new Intervention(
+                    id,
+                    DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_PRICE),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_QUANTITY),
+                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION)
+            ));
+        }
+
+        return result;
+    }
+
+    /* Database Model */
+    public static abstract class DBModel implements BaseColumns {
+        public static final String TABLE_NAME = "intervention";
+        public static final String C_ID = "id";
+        public static final String C_KILOMETERS = "kilometers";
+        public static final String C_PRICE = "price";
+        public static final String C_DATE_INTERVENTION = "date_intervention";
+        public static final String C_OPERATION = "operation";
+        public static final String C_QUANTITY = "quantity";
+        public static final String C_TYPE = "type";
+        public static final String C_CAR_ID = "car_id";
+
+        public static final String SQL_CREATE_TABLE =
+            "CREATE TABLE " + TABLE_NAME + "("
+                + C_ID + " INTEGER PRIMARY KEY,"
+                + C_KILOMETERS + " INTEGER NOT NULL,"
+                + C_PRICE + " REAL NOT NULL,"
+                + C_DATE_INTERVENTION + " NUMERIC NOT NULL,"
+                + C_OPERATION + " TEXT NOT NULL,"
+                + C_TYPE + " NUMERIC NOT NULL,"
+                + C_QUANTITY + " REAL,"
+                + C_CAR_ID + " INTEGER NOT NULL"
+                + ");";
+    }
+
+    /* Getters & Setters */
     public int getKilometers() {
-        return kilometers;
-    }
-
-    public void setKilometers(int kilometers) {
-        this.kilometers = kilometers;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+        return this.kilometers;
     }
 
     public Date getDateIntervention() {
-        return dateIntervention;
+        return this.dateIntervention;
     }
 
-    public void setDateIntervention(Date dateIntervention) {
-        this.dateIntervention = dateIntervention;
+    public double getQuantity() {
+        return this.quantity;
     }
 
-    public ArrayList<Operation> getMyOperations() {
-        return myOperations;
-    }
-
-    public void setMyOperations(ArrayList<Operation> myOperations) {
-        this.myOperations = myOperations;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public double getPrice() {
+        return this.price;
     }
 }

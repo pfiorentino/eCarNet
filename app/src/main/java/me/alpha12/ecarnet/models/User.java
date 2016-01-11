@@ -3,15 +3,14 @@ package me.alpha12.ecarnet.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
-
-import java.util.ArrayList;
+import android.provider.BaseColumns;
 
 import me.alpha12.ecarnet.database.DatabaseManager;
 
 /**
- * Created by guilhem on 25/10/2015.
+ * Classe à refactorer complètement (ne contiendra toujours qu'un seul user)
  */
+
 public class User {
 
     private int id;
@@ -20,8 +19,7 @@ public class User {
     private String email;
     private String password;
 
-
-    private static Cursor exq;
+    /* Contructors */
 
     public User(int id, String firstName, String lastName, String email, String password) {
         this.id = id;
@@ -31,107 +29,78 @@ public class User {
         this.password = password;
     }
 
-
-
-    public User()
-    {
-
-    }
-
-
-    public static User getUser(SQLiteDatabase bdd)
-    {
-        exq = bdd.rawQuery("SELECT * FROM User WHERE activate = 1;", null);
-        if (exq.moveToNext()) {
-            int id = getInt(DatabaseManager.C_USER_ID);
-            String firstName = getString(DatabaseManager.C_USER_FIRSTNAME);
-            String lastName = getString(DatabaseManager.C_USER_LASTNAME);
-            String email = getString(DatabaseManager.C_USER_EMAIL);
-            return new User(id, firstName, lastName, email, null);
-        }
-        return null;
-    }
-
-
-    public static void addUser(User user, SQLiteDatabase bdd) {
-        if (user.getId() == 0){
-            int id = 0;
-            user.setId(id+1);
-        }
-        ContentValues newValues = new ContentValues();
-        newValues.put(DatabaseManager.C_USER_ID, user.getId());
-        newValues.put(DatabaseManager.C_USER_FIRSTNAME, user.getFirstName());
-        newValues.put(DatabaseManager.C_USER_LASTNAME, user.getLastName());
-        newValues.put(DatabaseManager.C_USER_EMAIL, user.getEmail());
-        newValues.put(DatabaseManager.C_USER_PASSWORD, user.getPassword());
-        newValues.put(DatabaseManager.C_USER_ACTIVATE, 0);
-
-        bdd.insert(DatabaseManager.T_USER, null, newValues);
-    }
-
-
-    public static boolean activateUser(SQLiteDatabase bdd)
-    {
-        exq = bdd.rawQuery("SELECT id FROM User WHERE activate = 0;", null);
-        if (exq.moveToNext()) {
-            String[] args = new String[1];
-            args[0] = Integer.toString(getInt(DatabaseManager.C_USER_ID));
-            ContentValues cv = new ContentValues();
-            cv.put("activate",1);
-            bdd.update(DatabaseManager.T_USER, cv, "id=?", args);
-            return true;
-        }
-        else
-            return false;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
+    public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
-    }
-
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-
-    public int getId()
-    {
-        return id;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
     }
 
-    public static int getInt(String ColumnName) {
-        return exq.getInt(exq.getColumnIndex(ColumnName));
+    /* Public methods */
+
+    public void persist() {
+        SQLiteDatabase db = DatabaseManager.getCurrentDatabase();
+
+        db.rawQuery("DELETE FROM " + DBModel.TABLE_NAME, null);
+        db.rawQuery("DELETE FROM SQLITE_SEQUENCE WHERE name='" + DBModel.TABLE_NAME + "'", null);
+
+        ContentValues newValues = new ContentValues();
+
+        if (this.id > 0)
+            newValues.put(DBModel.C_ID, this.id);
+
+        newValues.put(DBModel.C_FIRSTNAME, this.firstName);
+        newValues.put(DBModel.C_LASTNAME, this.lastName);
+        newValues.put(DBModel.C_EMAIL, this.email);
+        newValues.put(DBModel.C_PASSWORD, this.password);
+
+        db.insert(DBModel.TABLE_NAME, null, newValues);
     }
 
-    public static String getString(String ColumnName) {
-        return exq.getString(exq.getColumnIndex(ColumnName));
+    /* Static methods */
+
+    public static User getUser() {
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBModel.TABLE_NAME, null);
+
+        if (cursor.moveToNext()) {
+            return new User(
+                    DatabaseManager.extractInt(cursor, DBModel.C_ID),
+                    DatabaseManager.extractString(cursor, DBModel.C_FIRSTNAME),
+                    DatabaseManager.extractString(cursor, DBModel.C_LASTNAME),
+                    DatabaseManager.extractString(cursor, DBModel.C_EMAIL),
+                    null);
+        }
+
+        return null;
+    }
+
+    /* Database Model */
+
+    public static abstract class DBModel implements BaseColumns {
+        public static final String TABLE_NAME = "user";
+        public static final String C_ID = "id";
+        public static final String C_EMAIL = "email";
+        public static final String C_FIRSTNAME = "firstname";
+        public static final String C_LASTNAME = "lastname";
+        public static final String C_PASSWORD = "password";
+
+        public static final String SQL_CREATE_TABLE =
+                "CREATE TABLE " + TABLE_NAME + " ("
+                        + C_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + C_EMAIL + " TEXT NOT NULL,"
+                        + C_FIRSTNAME + " TEXT NOT NULL,"
+                        + C_LASTNAME + " TEXT NOT NULL,"
+                        + C_PASSWORD + " TEXT NOT NULL"
+                        + ");";
+    }
+
+    /* Getters & Setters */
+
+    public int getId() {
+        return this.id;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
     }
 }
