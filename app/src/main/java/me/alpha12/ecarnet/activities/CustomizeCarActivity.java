@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.CarModel;
@@ -84,7 +85,7 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
 
                 Intent intent = new Intent(CustomizeCarActivity.this, MainActivity.class);
                 CustomizeCarActivity.this.startActivity(intent);
-                setResult(MainActivity.RESULT_CLOSE_ALL);
+                setResult(GlobalContext.RESULT_CLOSE_ALL);
                 finish();
             }
         });
@@ -164,8 +165,8 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(resultCode) {
-            case MainActivity.RESULT_CLOSE_ALL:
-                setResult(MainActivity.RESULT_CLOSE_ALL);
+            case GlobalContext.RESULT_CLOSE_ALL:
+                setResult(GlobalContext.RESULT_CLOSE_ALL);
                 finish();
         }
         super.onActivityResult(requestCode, resultCode, data);

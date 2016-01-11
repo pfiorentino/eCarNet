@@ -14,17 +14,21 @@ import android.widget.Spinner;
 
 import java.util.ArrayList;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.adapters.DefaultSpinnerValueAdapter;
 import me.alpha12.ecarnet.models.CarModel;
 
 public class AddCarActivity extends AppCompatActivity {
+    public static final String FROM_MAIN_ACTIVITY = "fma";
+
     private Spinner brandSpinner;
     private Spinner modelSpinner;
     private EditText mineTypeEditText;
 
     private Button vehicleButton;
     private Button mineButton;
+    private Button cancelButton;
 
     private ArrayList<String> brandList;
     private ArrayList<String> modelList = new ArrayList<>();
@@ -99,6 +103,17 @@ public class AddCarActivity extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
         });
+
+        cancelButton = (Button) findViewById(R.id.cancelButton);
+        if (getIntent().getBooleanExtra(FROM_MAIN_ACTIVITY, false))
+            cancelButton.setVisibility(View.VISIBLE);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddCarActivity.this.setResult(GlobalContext.RESULT_CLOSE_ALL);
+                AddCarActivity.this.finish();
+            }
+        });
     }
 
     private TextWatcher mTextWatcher = new TextWatcher() {
@@ -117,8 +132,8 @@ public class AddCarActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(resultCode) {
-            case MainActivity.RESULT_CLOSE_ALL:
-                setResult(MainActivity.RESULT_CLOSE_ALL);
+            case GlobalContext.RESULT_CLOSE_ALL:
+                setResult(GlobalContext.RESULT_CLOSE_ALL);
                 finish();
         }
         super.onActivityResult(requestCode, resultCode, data);

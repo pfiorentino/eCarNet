@@ -7,6 +7,8 @@ import android.content.Context;
  * Created by paul on 11/01/2016.
  */
 public class GlobalContext extends Application {
+    public static final int RESULT_CLOSE_ALL = 123;
+
     private static GlobalContext instance;
 
     public static GlobalContext getInstance() {
