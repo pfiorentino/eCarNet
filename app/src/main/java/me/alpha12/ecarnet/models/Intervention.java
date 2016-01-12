@@ -50,6 +50,79 @@ public class Intervention {
         return result;
     }
 
+    public static ArrayList<Intervention> find10ByCar(int carId) {
+        ArrayList<Intervention> result = new ArrayList<>();
+
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId +" ORDER BY " +DBModel.C_DATE_INTERVENTION+ " DESC LIMIT 10",
+                null
+        );
+
+        while(cursor.moveToNext()) {
+            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
+            result.add(new Intervention(
+                    id,
+                    DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_PRICE),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_QUANTITY),
+                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION)
+            ));
+        }
+
+        return result;
+    }
+
+
+    public static ArrayList<Intervention> findFillUpByLimit(int carId, Date limit) {
+        ArrayList<Intervention> result = new ArrayList<>();
+
+        java.sql.Date sqlLimit = new java.sql.Date(limit.getTime());
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId +" AND " +DBModel.C_QUANTITY +" > 0 AND " +DBModel.C_DATE_INTERVENTION + " > " +sqlLimit ,
+                null
+        );
+
+        while(cursor.moveToNext()) {
+            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
+            result.add(new Intervention(
+                    id,
+                    DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_PRICE),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_QUANTITY),
+                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION)
+            ));
+        }
+
+        return result;
+    }
+
+
+    public static ArrayList<Intervention> findFixesByLimit(int carId, Date limit) {
+        ArrayList<Intervention> result = new ArrayList<>();
+        java.sql.Date sqlLimit = new java.sql.Date(limit.getTime());
+
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId +" AND " +DBModel.C_QUANTITY +" = 0 AND " +DBModel.C_DATE_INTERVENTION + " > " +sqlLimit ,
+                null
+        );
+
+        while(cursor.moveToNext()) {
+            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
+            result.add(new Intervention(
+                    id,
+                    DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_PRICE),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_QUANTITY),
+                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION)
+            ));
+        }
+
+        return result;
+    }
+
+
+
+
     /* Database Model */
     public static abstract class DBModel implements BaseColumns {
         public static final String TABLE_NAME = "intervention";
