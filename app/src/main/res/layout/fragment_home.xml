@@ -5,7 +5,8 @@
     tools:context="me.alpha12.ecarnet.fragments.HomeFragment">
 
     <LinearLayout android:orientation="vertical"
-        android:layout_width="match_parent" android:layout_height="wrap_content" >
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp">
         <android.support.v7.widget.CardView
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/cards_margin" android:layout_marginBottom="@dimen/cards_half_margin"
@@ -65,7 +66,7 @@
 
             <android.support.v7.widget.CardView android:id="@+id/consumptionCard"
                 android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
+                android:layout_marginTop="@dimen/cards_half_margin"
                 android:layout_marginRight="@dimen/cards_margin" android:layout_marginLeft="@dimen/cards_half_margin">
 
                 <LinearLayout android:orientation="vertical"
@@ -117,6 +118,78 @@
                     android:gravity="bottom"
                     android:textAlignment="center"
                     android:layout_marginBottom="16dp"/>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView android:id="@+id/noteCard"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/cards_margin"
+            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin"
+            android:paddingBottom="8dp">
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="match_parent" android:layout_height="wrap_content" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Prochaine intervention"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:layout_marginTop="16dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/titleNote"
+                        android:text="Intitulé" />
+                    <TextView
+                        android:layout_marginTop="2dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/dateNote"
+                        android:text="21 Janvier 2016"/>
+                    <TextView
+                        android:layout_marginTop="2dp"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/kilometersNote"
+                        android:text="120000 km"/>
+                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:orientation="horizontal">
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_notifications_black_24dp"
+                        android:background="@color/cardview_light_background"/>
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/ic_edit_black_24dp"
+                        android:background="@color/cardview_light_background"/>
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_delete_black_24dp"
+                        android:layout_margin="8dp"
+                        android:background="@color/cardview_light_background"/>
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/ic_done_grey_600_24dp"
+                        android:background="@color/cardview_light_background"/>
+
+                </LinearLayout>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
