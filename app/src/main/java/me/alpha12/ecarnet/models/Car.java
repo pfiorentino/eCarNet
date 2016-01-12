@@ -89,9 +89,9 @@ public class Car {
         if(imgFile.exists()){
             return Drawable.createFromPath(imgFile.getAbsolutePath());
         }
-
         return ContextCompat.getDrawable(ctx, R.drawable.ic_car_profile_picture);
     }
+
 
     public Drawable getCarBanner(Context ctx) {
         String filePath = "/sdcard/Images/test_image.jpg";
@@ -115,7 +115,6 @@ public class Car {
                 "SELECT * FROM " + DBModel.TABLE_NAME,
                 null
         );
-
         while(cursor.moveToNext()) {
             result.put(
                     DatabaseManager.extractInt(cursor, DBModel.C_ID),
@@ -130,7 +129,6 @@ public class Car {
                     )
             );
         }
-
         return result;
     }
 
