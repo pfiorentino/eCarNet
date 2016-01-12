@@ -22,6 +22,7 @@ import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.DatabaseManager;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.CarModel;
+import me.alpha12.ecarnet.models.CarModelOld;
 import me.alpha12.ecarnet.models.User;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -71,7 +72,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... arg0) {
             DatabaseManager.initialize();
-            importCarModels();
+            //System.exit(0);
+            //importCarModels();
 
             this.currentUser = User.getUser();
             this.cars = Car.findAll();
@@ -90,7 +92,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             InputStream inputStream = null;
             try {
-                inputStream = GlobalContext.getInstance().getAssets().open("models.json");
+                //inputStream = GlobalContext.getInstance().getAssets().open("models.json");
+                inputStream = GlobalContext.getInstance().getAssets().open("cars_full.json");
 
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 StringBuilder stringBuilder = new StringBuilder();
@@ -102,14 +105,15 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 String result = stringBuilder.toString();
                 JSONObject jsonResult = new JSONObject(result);
-                JSONObject jsonObject = jsonResult.getJSONObject("document");
-                JSONArray jsonArray = jsonObject.getJSONArray("model");
+                /*JSONObject jsonObject = jsonResult.getJSONObject("document");
+                JSONArray jsonArray = jsonObject.getJSONArray("model");*/
+                JSONArray jsonArray = jsonResult.getJSONArray("models");
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     try {
                         JSONObject current = jsonArray.getJSONObject(i);
 
-                        CarModel carModel = new CarModel(
+                        /*CarModel carModel = new CarModel(
                                 current.getInt("id"),
                                 current.getString("brand"),
                                 current.getString("model"),
@@ -120,6 +124,19 @@ public class SplashScreenActivity extends AppCompatActivity {
                                 current.getInt("ratedHP"),
                                 current.getDouble("consumption"),
                                 current.getString("submodel")
+                        );*/
+
+                        CarModelOld carModel = new CarModelOld(
+                                current.getInt("id"),
+                                current.getString("brand"),
+                                current.getString("model"),
+                                0,
+                                current.getString("fuel_type"),
+                                current.getString("version"),
+                                0,
+                                current.getInt("rated_hp"),
+                                0,
+                                ""
                         );
                         carModel.persist();
                     } catch (JSONException e) {
