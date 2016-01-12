@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 
@@ -12,42 +13,68 @@ import me.alpha12.ecarnet.database.DatabaseManager;
 
 public class CarModel implements Parcelable {
 
-    private int id;
+    private int id = -1;
+    private String internalId;
     private String brand;
     private String model;
-    private int year;
+    private String version;
+    private int generation = -1;
     private String energy;
-    private String engine;
-    private int ratedHP;
-    private double consumption;
-    private int doors;
-    private String subModel;
+    private String body;
+    private String gearboxType;
+    private int gears = -1;
+    private int ratedHP = -1;
+    private String minesType;
 
     /* Constructors */
 
-    public CarModel(String brand, String model, String engine) {
-        this.brand = brand;
-        this.model = model;
-        this.engine = engine;
-    }
+    public CarModel(int id, String internalId, String brand, String model, String version, int generation,
+                    String energy, String body, String gearboxType, int gears, int ratedHP, String minesType ) {
+        if (id > 0)
+            this.id = id;
 
-    public CarModel(int id, String brand, String model, int year, String energy, String engine, int ratedHP, int doors, double consumption, String subModel) {
-        this.id = id;
+        this.internalId = internalId;
         this.brand = brand;
         this.model = model;
-        this.year = year;
+        this.version = version;
+
+        if (generation > 0)
+            this.generation = generation;
+
         this.energy = energy;
-        this.engine = engine;
-        this.ratedHP = ratedHP;
-        this.consumption = consumption;
-        this.doors = doors;
-        this.subModel = subModel;
+        this.body = body;
+        this.gearboxType = gearboxType;
+
+        if (gears > 0)
+            this.gears = gears;
+
+        if (ratedHP > 0)
+            this.ratedHP = ratedHP;
+
+        this.minesType = minesType;
     }
 
     /* Public methods */
 
     public String toString() {
-        return subModel + " " + engine + " - " + doors + " portes - " + energy;
+        return brand + " " + model + " " + generation + " - " + version + " - " + energy;
+    }
+
+    public String getSearchableString() {
+        String[] array = new String[] {
+                this.brand,
+                this.model,
+                this.version,
+                String.valueOf(this.generation),
+                this.energy,
+                this.body,
+                this.gearboxType,
+                String.valueOf(this.gears),
+                String.valueOf(this.ratedHP),
+                this.minesType
+        };
+
+        return TextUtils.join(" ", array).toLowerCase();
     }
 
     public void persist() {
@@ -56,15 +83,20 @@ public class CarModel implements Parcelable {
         if (this.id > 0)
             newValues.put(DBModel.C_ID, this.id);
 
+        newValues.put(DBModel.C_INTERNAL_ID, this.internalId);
         newValues.put(DBModel.C_BRAND, this.brand);
         newValues.put(DBModel.C_MODEL, this.model);
-        newValues.put(DBModel.C_CONSUMPTION, this.consumption);
+        newValues.put(DBModel.C_VERSION, this.version);
+        if (this.generation > 0)
+            newValues.put(DBModel.C_GENERATION, this.generation);
         newValues.put(DBModel.C_ENERGY, this.energy);
-        newValues.put(DBModel.C_YEAR, this.year);
-        newValues.put(DBModel.C_RATED_HP, this.ratedHP);
-        newValues.put(DBModel.C_ENGINE, this.engine);
-        newValues.put(DBModel.C_DOORS, this.doors);
-        newValues.put(DBModel.C_SUB_MODEL, this.subModel);
+        newValues.put(DBModel.C_BODY, this.body);
+        newValues.put(DBModel.C_GEARBOX_TYPE, this.gearboxType);
+        if (this.gears > 0)
+            newValues.put(DBModel.C_GEARS, this.gears);
+        if (this.ratedHP > 0)
+            newValues.put(DBModel.C_RATED_HP, this.ratedHP);
+        newValues.put(DBModel.C_MINES_TYPE, this.minesType);
 
         DatabaseManager.getCurrentDatabase().insert(DBModel.TABLE_NAME, null, newValues);
     }
@@ -110,20 +142,7 @@ public class CarModel implements Parcelable {
         );
 
         while(cursor.moveToNext()) {
-            result.add(
-                    new CarModel(
-                            DatabaseManager.extractInt(cursor, DBModel.C_ID),
-                            DatabaseManager.extractString(cursor, DBModel.C_BRAND),
-                            DatabaseManager.extractString(cursor, DBModel.C_MODEL),
-                            DatabaseManager.extractInt(cursor, DBModel.C_YEAR),
-                            DatabaseManager.extractString(cursor, DBModel.C_ENERGY),
-                            DatabaseManager.extractString(cursor, DBModel.C_ENGINE),
-                            DatabaseManager.extractInt(cursor, DBModel.C_RATED_HP),
-                            DatabaseManager.extractInt(cursor, DBModel.C_DOORS),
-                            DatabaseManager.extractDouble(cursor, DBModel.C_CONSUMPTION),
-                            DatabaseManager.extractString(cursor, DBModel.C_SUB_MODEL)
-                    )
-            );
+            result.add(DBModel.extractFromCursor(cursor));
         }
 
         return result;
@@ -138,18 +157,7 @@ public class CarModel implements Parcelable {
         );
 
         if(cursor.moveToNext()) {
-            return new CarModel(
-                    DatabaseManager.extractInt(cursor, DBModel.C_ID),
-                    DatabaseManager.extractString(cursor, DBModel.C_BRAND),
-                    DatabaseManager.extractString(cursor, DBModel.C_MODEL),
-                    DatabaseManager.extractInt(cursor, DBModel.C_YEAR),
-                    DatabaseManager.extractString(cursor, DBModel.C_ENERGY),
-                    DatabaseManager.extractString(cursor, DBModel.C_ENGINE),
-                    DatabaseManager.extractInt(cursor, DBModel.C_RATED_HP),
-                    DatabaseManager.extractInt(cursor, DBModel.C_DOORS),
-                    DatabaseManager.extractDouble(cursor, DBModel.C_CONSUMPTION),
-                    DatabaseManager.extractString(cursor, DBModel.C_SUB_MODEL)
-            );
+            return DBModel.extractFromCursor(cursor);
         }
 
         return null;
@@ -171,15 +179,17 @@ public class CarModel implements Parcelable {
 
     protected CarModel(Parcel in) {
         id = in.readInt();
+        internalId = in.readString();
         brand = in.readString();
         model = in.readString();
-        year = in.readInt();
+        version = in.readString();
+        generation = in.readInt();
         energy = in.readString();
-        engine = in.readString();
+        body = in.readString();
+        gearboxType = in.readString();
+        gears = in.readInt();
         ratedHP = in.readInt();
-        consumption = in.readDouble();
-        doors = in.readInt();
-        subModel = in.readString();
+        minesType = in.readString();
     }
 
     @Override
@@ -190,70 +200,84 @@ public class CarModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
+        dest.writeString(this.internalId);
         dest.writeString(this.brand);
         dest.writeString(this.model);
-        dest.writeInt(this.year);
+        dest.writeString(this.version);
+        dest.writeInt(this.generation);
         dest.writeString(this.energy);
-        dest.writeString(this.engine);
+        dest.writeString(this.body);
+        dest.writeString(this.gearboxType);
+        dest.writeInt(this.gears);
         dest.writeInt(this.ratedHP);
-        dest.writeDouble(this.consumption);
-        dest.writeInt(this.doors);
-        dest.writeString(this.subModel);
+        dest.writeString(this.minesType);
     }
 
     /* Database Model */
     public static abstract class DBModel implements BaseColumns {
-        public static final String TABLE_NAME = "car_model";
+        public static final String TABLE_NAME = "car_models";
         public static final String C_ID = "id";
+        public static final String C_INTERNAL_ID = "internal_id";
         public static final String C_BRAND = "brand";
         public static final String C_MODEL = "model";
-        public static final String C_YEAR = "year";
-        public static final String C_ENERGY = "energy";
-        public static final String C_ENGINE = "engine";
+        public static final String C_VERSION = "version";
+        public static final String C_GENERATION = "generation";
+        public static final String C_ENERGY = "fuel_type";
+        public static final String C_BODY = "body";
+        public static final String C_GEARBOX_TYPE = "gearbox_type";
+        public static final String C_GEARS = "gears";
         public static final String C_RATED_HP = "rated_hp";
-        public static final String C_CONSUMPTION = "consumption";
-        public static final String C_DOORS = "doors";
-        public static final String C_SUB_MODEL = "sub_model";
+        public static final String C_MINES_TYPE = "mines_type";
 
-        public static final String SQL_CREATE_TABLE =
-                "CREATE TABLE " + TABLE_NAME + "("
-                        + C_ID + " INTEGER PRIMARY KEY,"
-                        + C_BRAND + " TEXT NOT NULL,"
-                        + C_MODEL + " TEXT NOT NULL,"
-                        + C_YEAR + " INTEGER NOT NULL,"
-                        + C_ENERGY + " TEXT NOT NULL,"
-                        + C_ENGINE + " TEXT NOT NULL,"
-                        + C_RATED_HP + " INTEGER NOT NULL,"
-                        + C_CONSUMPTION + " REAL,"
-                        + C_DOORS + " INTEGER NOT NULL,"
-                        + C_SUB_MODEL + " TEXT"
-                        + ");";
+        public static CarModel extractFromCursor(Cursor cursor) {
+            return new CarModel(
+                    DatabaseManager.extractInt(cursor, DBModel.C_ID),
+                    DatabaseManager.extractString(cursor, DBModel.C_INTERNAL_ID),
+                    DatabaseManager.extractString(cursor, DBModel.C_BRAND),
+                    DatabaseManager.extractString(cursor, DBModel.C_MODEL),
+                    DatabaseManager.extractString(cursor, DBModel.C_VERSION),
+                    DatabaseManager.extractInt(cursor, DBModel.C_GENERATION),
+                    DatabaseManager.extractString(cursor, DBModel.C_ENERGY),
+                    DatabaseManager.extractString(cursor, DBModel.C_BODY),
+                    DatabaseManager.extractString(cursor, DBModel.C_GEARBOX_TYPE),
+                    DatabaseManager.extractInt(cursor, DBModel.C_GEARS),
+                    DatabaseManager.extractInt(cursor, DBModel.C_RATED_HP),
+                    DatabaseManager.extractString(cursor, DBModel.C_MINES_TYPE)
+            );
+        }
     }
 
     /* Getters & setters */
 
     public int getId() {
-        return this.id;
+        return id;
     }
-    public int getYear() {
-        return this.year;
-    }
+
     public int getRatedHP() {
-        return this.ratedHP;
+        return ratedHP;
     }
+
     public String getBrand() {
-        return this.brand;
+        return brand;
     }
+
     public String getModel() {
-        return this.model;
+        return model;
     }
-    public String getEngine() {
-        return this.engine;
+
+    public String getVersion() {
+        return version;
     }
+
     public String getEnergy() {
-        return this.energy;
+        return energy;
     }
-    public String getSubModel() {
-        return this.subModel;
+
+    public String getBody() {
+        return body;
+    }
+
+    public String getGearboxType() {
+        return gearboxType;
     }
 }

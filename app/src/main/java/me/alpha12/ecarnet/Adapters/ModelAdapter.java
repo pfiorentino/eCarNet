@@ -55,12 +55,12 @@ public class ModelAdapter extends ArrayAdapter<CarModel> {
 
             if(year != null)
             {
-                year.setText(Integer.toString(currentModel.getYear()));
+                year.setText("0000");
             }
 
             if(subModel != null)
             {
-                subModel.setText(currentModel.getSubModel() + " - " + currentModel.getEngine() + " - " + currentModel.getRatedHP() + "CV");
+                subModel.setText(currentModel.getVersion() + " - " + currentModel.getEnergy() + " - " + currentModel.getBody() + " - " + currentModel.getGearboxType());
             }
         }
         return v;

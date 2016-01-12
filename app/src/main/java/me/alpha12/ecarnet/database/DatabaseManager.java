@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -13,12 +14,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
+import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.CarModel;
 import me.alpha12.ecarnet.models.Intervention;
@@ -38,7 +46,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + ");";
 
     private static final String BDD_NAME = "ecarnet.db";
-    private static final int BDD_VERSION = 2;
+    private static final int BDD_VERSION = 3;
 
     private SQLiteDatabase db;
 
@@ -83,9 +91,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        initializeCarModels();
+
         db.execSQL(Car.DBModel.SQL_CREATE_TABLE);
         db.execSQL(Intervention.DBModel.SQL_CREATE_TABLE);
-        db.execSQL(CarModel.DBModel.SQL_CREATE_TABLE);
+        // db.execSQL(CarModel.DBModel.SQL_CREATE_TABLE);
         db.execSQL(User.DBModel.SQL_CREATE_TABLE);
         db.execSQL(SQL_CREATE_TABLE_USE);
     }
@@ -96,10 +106,35 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + Car.DBModel.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + Intervention.DBModel.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CarModel.DBModel.TABLE_NAME);
+        // db.execSQL("DROP TABLE IF EXISTS " + CarModel.DBModel.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + User.DBModel.TABLE_NAME);
 
         onCreate(db);
+    }
+
+    private void initializeCarModels() {
+        String appDataPath = Environment.getDataDirectory()+ File.separator+"data"+File.separator+GlobalContext.getInstance().getPackageName();
+
+        if (this.db != null && this.db.isOpen())
+            this.db.close();
+
+        String dbPath = appDataPath+File.separator+"databases"+File.separator+BDD_NAME;
+        File appDB = new File(dbPath);
+
+        try {
+            InputStream src = GlobalContext.getInstance().getAssets().open("car_models.db");
+            ReadableByteChannel rbc = Channels.newChannel(src);
+            FileChannel dst = new FileOutputStream(appDB).getChannel();
+
+            Utils.fastChannelCopy(rbc, dst);
+
+            src.close();
+            dst.close();
+
+            GlobalContext.setCarModelsImported();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 
