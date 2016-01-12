@@ -77,10 +77,7 @@ public class SearchCarActivity extends AppCompatActivity {
             currentQuery = savedInstanceState.getString(SEARCH_QUERY);
         }
 
-        for (int i = 0; i < filteredCarModels.size(); i++)
-        {
-            if(!years.contains(new Integer(filteredCarModels.get(i).getYear())))
-                years.add(filteredCarModels.get(i).getYear());
+        for (int i = 0; i < filteredCarModels.size(); i++) {
             if(!ratedHP.contains(new Integer(filteredCarModels.get(i).getRatedHP())))
                 ratedHP.add(filteredCarModels.get(i).getRatedHP());
         }
@@ -211,10 +208,7 @@ public class SearchCarActivity extends AppCompatActivity {
         for (CarModel model : allCarModels) {
 
             // Content to search through (in lower case).
-            String content = (
-                    model.getBrand() + " " + model.getModel() + " " + String.valueOf(model.getYear()) + " " + model.getEngine() + " " +
-                            model.getRatedHP()+"CV" + " " + model.getEnergy() + model.getSubModel())
-                    .toLowerCase();
+            String content = model.getSearchableString();
 
             int numberOfMatches = queryByWords.length;
 

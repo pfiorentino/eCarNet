@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity
         ImageView brandImageView = (ImageView) findViewById(R.id.brand_image_view);
 
         if (currentCar != null){
-            navigationView.getMenu().add(R.id.cars_mgmt_group, currentCar.getId(), 0, currentCar.getPlateNum() + " - " + currentCar.getCarModel().getEngine());
+            navigationView.getMenu().add(R.id.cars_mgmt_group, currentCar.getId(), 0, currentCar.getPlateNum());
             navigationView.getMenu().findItem(currentCar.getId()).setIcon(R.drawable.ic_car_circle);
         }
         navigationView.getMenu().removeItem(newCar.getId());
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity
         drawerTitle.setText(currentCar.getCarModel().getBrand() + " " + currentCar.getCarModel().getModel());
 
         TextView drawerDesc = (TextView) findViewById(R.id.car_desc);
-        drawerDesc.setText(currentCar.getPlateNum() + "   " + currentCar.getCarModel().getEngine());
+        drawerDesc.setText(currentCar.getPlateNum());
         brandImageView.setImageDrawable(currentCar.getCarPicture(getBaseContext()));
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentapiVersion >= Build.VERSION_CODES.JELLY_BEAN){
