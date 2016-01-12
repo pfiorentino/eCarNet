@@ -147,7 +147,7 @@ public class ChartDialogFragment extends DialogFragment implements AdapterView.O
             i++;
             oldKilometers = value.getKilometers();
         }
-        Log.d("number of entries", ""+entries.size());
+        /*Log.d("number of entries", ""+entries.size());*/
         return entries;
     }
 
@@ -160,7 +160,7 @@ public class ChartDialogFragment extends DialogFragment implements AdapterView.O
                 String dateOutput = sdf.format(value.getDateIntervention());
                 labs.add(dateOutput);
         }
-        Log.d("number of labels", ""+labs.size());
+        /*Log.d("number of labels", ""+labs.size());*/
         return labs;
     }
 
@@ -170,8 +170,8 @@ public class ChartDialogFragment extends DialogFragment implements AdapterView.O
         this.interventionsUpToDate.clear();
         for(Intervention value : this.interventions)
         {
-            Log.d("date of intervention", "" + value.getDateIntervention().toString());
-            Log.d("limit date", "" + limit.toString());
+            /*Log.d("date of intervention", "" + value.getDateIntervention().toString());*/
+            /*Log.d("limit date", "" + limit.toString());*/
             if(value.getDateIntervention().after(limit))
             this.interventionsUpToDate.add(value);
         }

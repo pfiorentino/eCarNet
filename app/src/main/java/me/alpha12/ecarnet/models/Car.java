@@ -61,6 +61,11 @@ public class Car {
 
     /* Public methods */
 
+    @Override
+    public String toString() {
+        return this.id+": "+this.model.getBrand()+" "+this.model.getModel()+" "+this.plateNum+" "+this.kilometers;
+    }
+
     public void persist() {
         ContentValues newValues = new ContentValues();
 
@@ -79,7 +84,10 @@ public class Car {
         newValues.put(DBModel.C_PLATE_NUMBER, this.plateNum);
         newValues.put(DBModel.C_MODEL_ID, this.model.getId());
 
-        DatabaseManager.getCurrentDatabase().insert(DBModel.TABLE_NAME, null, newValues);
+        long insertedId = DatabaseManager.getCurrentDatabase().insert(DBModel.TABLE_NAME, null, newValues);
+
+        if (this.id <= 0)
+            this.id = (int) insertedId;
     }
 
     public Drawable getCarPicture(Context ctx) {

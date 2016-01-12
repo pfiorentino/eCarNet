@@ -46,7 +46,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public static DatabaseManager getInstance() {
         if (instance == null) {
-            Log.d("Database", "New Instance");
             instance = new DatabaseManager(GlobalContext.getInstance());
         }
 
@@ -84,20 +83,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("Database", "Database Initialisation");
-
         db.execSQL(Car.DBModel.SQL_CREATE_TABLE);
         db.execSQL(Intervention.DBModel.SQL_CREATE_TABLE);
         db.execSQL(CarModel.DBModel.SQL_CREATE_TABLE);
         db.execSQL(User.DBModel.SQL_CREATE_TABLE);
         db.execSQL(SQL_CREATE_TABLE_USE);
-
-        Log.d("Database", "Initialisation completed");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int prevVersion, int nextVersion) {
-        Log.d("database", "Database Upgrade");
+        Log.d("Database", "Database Upgrade");
 
         db.execSQL("DROP TABLE IF EXISTS " + Car.DBModel.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + Intervention.DBModel.TABLE_NAME);

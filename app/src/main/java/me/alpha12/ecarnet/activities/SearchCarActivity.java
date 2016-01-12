@@ -21,6 +21,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.adapters.ModelAdapter;
 import me.alpha12.ecarnet.models.CarModel;
@@ -241,8 +242,8 @@ public class SearchCarActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(resultCode) {
-            case MainActivity.RESULT_CLOSE_ALL:
-                setResult(MainActivity.RESULT_CLOSE_ALL);
+            case GlobalContext.RESULT_CLOSE_ALL:
+                setResult(GlobalContext.RESULT_CLOSE_ALL);
                 finish();
         }
         super.onActivityResult(requestCode, resultCode, data);

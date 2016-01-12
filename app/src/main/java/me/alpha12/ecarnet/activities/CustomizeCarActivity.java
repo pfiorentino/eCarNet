@@ -5,6 +5,7 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.Calendar;
+import java.util.Date;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.CarModel;
@@ -82,9 +85,11 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
                 Car car = new Car(imat.getText().toString(), selectedCar);
                 car.persist();
 
+                GlobalContext.setCurrentCar(car.getId());
+
                 Intent intent = new Intent(CustomizeCarActivity.this, MainActivity.class);
                 CustomizeCarActivity.this.startActivity(intent);
-                setResult(MainActivity.RESULT_CLOSE_ALL);
+                setResult(GlobalContext.RESULT_CLOSE_ALL);
                 finish();
             }
         });
@@ -153,7 +158,11 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
             int day = c.get(Calendar.DAY_OF_MONTH);
 
             // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), (CustomizeCarActivity) getActivity(), year, month, day);
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), (CustomizeCarActivity) getActivity(), year, month, day);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                dialog.getDatePicker().setMaxDate(new Date().getTime());
+            }
+            return dialog;
         }
 
         private void setOnDateSetListener(OnDateSetListener listener) {
@@ -164,8 +173,8 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(resultCode) {
-            case MainActivity.RESULT_CLOSE_ALL:
-                setResult(MainActivity.RESULT_CLOSE_ALL);
+            case GlobalContext.RESULT_CLOSE_ALL:
+                setResult(GlobalContext.RESULT_CLOSE_ALL);
                 finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
