@@ -5,22 +5,19 @@ package me.alpha12.ecarnet.database; /**
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
 import android.util.Log;
-
-import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
+
+import java.io.OutputStream;
 import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
-import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.User;
@@ -39,10 +36,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + C_USE_OWN + " NUMERIC NOT NULL"
                     + ");";
 
-    private static final String BDD_NAME = "ecarnet.db";
-    private static final int BDD_VERSION = 1;
+    private static final String DATABASE_NAME = "ecarnet.db";
+    private static final int DATABASE_VERSION = 1;
+    private String DATABASE_PATH; // Defined in constructor
 
     private SQLiteDatabase db;
+    private Context ctx;
 
     private static DatabaseManager instance;
 
@@ -75,6 +74,88 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return getInstance().db;
     }
 
+    private DatabaseManager(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.ctx = context;
+
+        String filesDir = context.getFilesDir().getPath();
+        DATABASE_PATH = filesDir.substring(0, filesDir.lastIndexOf("/")) + "/databases/";
+
+        if (!databaseExists()) {
+            initDatabase();
+        }
+
+        this.db = getWritableDatabase();
+    }
+
+
+    private boolean databaseExists() {
+        File dbfile = new File(DATABASE_PATH + DATABASE_NAME);
+        return dbfile.exists();
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        Log.d("Database", "This method isn't used anymore because Android smells like a shit");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int prevVersion, int nextVersion) {
+        if (prevVersion < nextVersion){
+            Log.d("Database", "Database Upgrade");
+            ctx.deleteDatabase(DATABASE_NAME);
+            initDatabase();
+        }
+    }
+
+    private void initDatabase() {
+        Log.d("Database", "Database initialization");
+        InputStream inputFile;
+        try {
+            inputFile = ctx.getAssets().open(DATABASE_NAME);
+
+            File pathFile = new File(DATABASE_PATH);
+            if(!pathFile.exists()) {
+                if(!pathFile.mkdirs()) {
+                    Log.e("DatabaseManager", "Error : copydatabase(), pathFile.mkdirs()");
+                    return;
+                }
+            }
+
+            OutputStream ouputFile = new FileOutputStream(DATABASE_PATH + DATABASE_NAME);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputFile.read(buffer)) > 0) {
+                ouputFile.write(buffer, 0, length);
+            }
+
+            ouputFile.flush();
+            ouputFile.close();
+            inputFile.close();
+        }
+        catch (IOException e) {
+            Log.e("DatabaseManager", "Error : copydatabase()");
+            e.printStackTrace();
+        }
+
+        try {
+            SQLiteDatabase checkdb = SQLiteDatabase.openDatabase(DATABASE_PATH + DATABASE_NAME, null, SQLiteDatabase.OPEN_READWRITE);
+            checkdb.setVersion(DATABASE_VERSION);
+        } catch(SQLiteException e) {
+            Log.e("DatabaseManager", "Error : Version number can't be set");
+            e.printStackTrace();
+        }
+
+        // Additional tables creation
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL(Car.DBModel.SQL_CREATE_TABLE);
+        db.execSQL(Intervention.DBModel.SQL_CREATE_TABLE);
+        db.execSQL(User.DBModel.SQL_CREATE_TABLE);
+        db.execSQL(SQL_CREATE_TABLE_USE);
+    }
+
+
     public static int extractInt(Cursor cur, String columnName){
         return cur.getInt(cur.getColumnIndex(columnName));
     }
@@ -89,58 +170,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public static Date extractDate(Cursor cur, String ColumnName) {
         return new Date(cur.getLong(cur.getColumnIndex(ColumnName))*1000);
-    }
-
-    private DatabaseManager(Context context) {
-        super(context, BDD_NAME, null, BDD_VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        initializeCarModels();
-
-        db.execSQL(Car.DBModel.SQL_CREATE_TABLE);
-        db.execSQL(Intervention.DBModel.SQL_CREATE_TABLE);
-        // db.execSQL(CarModel.DBModel.SQL_CREATE_TABLE);
-        db.execSQL(User.DBModel.SQL_CREATE_TABLE);
-        db.execSQL(SQL_CREATE_TABLE_USE);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int prevVersion, int nextVersion) {
-        Log.d("Database", "Database Upgrade");
-
-        //db.execSQL("DROP TABLE IF EXISTS " + Car.DBModel.TABLE_NAME);
-        //db.execSQL("DROP TABLE IF EXISTS " + Intervention.DBModel.TABLE_NAME);
-        //db.execSQL("DROP TABLE IF EXISTS " + CarModel.DBModel.TABLE_NAME);
-        //db.execSQL("DROP TABLE IF EXISTS " + User.DBModel.TABLE_NAME);
-
-        onCreate(db);
-    }
-
-    private void initializeCarModels() {
-        String appDataPath = Environment.getDataDirectory()+ File.separator+"data"+File.separator+GlobalContext.getInstance().getPackageName();
-
-        if (this.db != null && this.db.isOpen())
-            this.db.close();
-
-        String dbPath = appDataPath+File.separator+"databases"+File.separator+BDD_NAME;
-        File appDB = new File(dbPath);
-
-        try {
-            InputStream src = GlobalContext.getInstance().getAssets().open("databases/car_models.db");
-            ReadableByteChannel rbc = Channels.newChannel(src);
-            FileChannel dst = new FileOutputStream(appDB).getChannel();
-
-            Utils.fastChannelCopy(rbc, dst);
-
-            src.close();
-            dst.close();
-
-            GlobalContext.setCarModelsImported();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
 

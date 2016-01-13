@@ -1,37 +1,34 @@
 package me.alpha12.ecarnet;
 
-import android.util.Log;
+import android.text.TextUtils;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.WritableByteChannel;
+import java.util.Arrays;
 
 /**
- * Created by paul on 13/06/2015.
+ * Created by paul on 13/01/16.
  */
 public class Utils {
-    public static void fastChannelCopy(final ReadableByteChannel src, final WritableByteChannel dest) throws IOException {
-        final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
-        while (src.read(buffer) != -1) {
-            // prepare the buffer to be drained
-            buffer.flip();
-            // write to the channel, may block
-            dest.write(buffer);
-            // If partial transfer, shift remainder down
-            // If buffer is empty, same as doing clear()
-            buffer.compact();
-        }
-        // EOF will leave buffer in fill state
-        buffer.flip();
-        // make sure the buffer is fully drained.
-        while (buffer.hasRemaining()) {
-            dest.write(buffer);
-        }
-    }
+    public static final String[] ROMAN_DIGITS = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
 
-    public static String ucfirst(String str){
+    public static String ucFirst(String str) {
         return str.substring(0, 1).toUpperCase()+ str.substring(1).toLowerCase();
     }
 
+    public static String ucWords(String str) {
+        String[] array = str.split(" ");
+
+        for (int i = 0; i < array.length; i++) {
+            if (!Arrays.asList(ROMAN_DIGITS).contains(array[i]))
+                array[i] = ucFirst(array[i]);
+        }
+
+        return TextUtils.join(" ", array);
+    }
+
+    public static String toRoman(int value) {
+        if (value > 0 && value < 10)
+            return ROMAN_DIGITS[value];
+
+        return String.valueOf(value);
+    }
 }

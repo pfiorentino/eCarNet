@@ -4,9 +4,6 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +17,14 @@ import com.github.mikephil.charting.data.Entry;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.activities.MainActivity;
 import me.alpha12.ecarnet.charts.BarChartCustom;
 import me.alpha12.ecarnet.charts.LineChartCustom;
-import me.alpha12.ecarnet.database.DatabaseManager;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
@@ -100,7 +95,7 @@ public class HomeFragment extends Fragment {
         BarChart costLine = (BarChart) view.findViewById(R.id.costChart);
         TextView costText = (TextView) view.findViewById(R.id.costData);
 
-        title.setText(currentCar.getCarModel().getBrand() + " " + currentCar.getCarModel().getModel());
+        title.setText(currentCar.getCarModel().toString());
 
         Calendar c = Calendar.getInstance();
         Date limit = c.getTime();

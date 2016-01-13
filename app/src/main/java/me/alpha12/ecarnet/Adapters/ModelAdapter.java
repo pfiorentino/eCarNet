@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.CarModel;
 
 
@@ -50,17 +51,17 @@ public class ModelAdapter extends ArrayAdapter<CarModel> {
             TextView subModel = (TextView) v.findViewById(R.id.text);
 
             if (brand != null) {
-                brand.setText(currentModel.getBrand() + "  " + currentModel.getModel());
+                brand.setText(Utils.ucWords(currentModel.getBrand() + "  " + currentModel.getFullModel()));
             }
 
             if(year != null)
             {
-                year.setText("0000");
+                year.setText(Utils.ucWords(currentModel.getEnergy()));
             }
 
             if(subModel != null)
             {
-                subModel.setText(currentModel.getVersion() + " - " + currentModel.getEnergy() + " - " + currentModel.getBody() + " - " + currentModel.getGearboxType());
+                subModel.setText(Utils.ucWords(currentModel.getBody() + " - " + currentModel.getVersion() + " - " + currentModel.getGearboxType() + " " + currentModel.getGears()) + " rapports");
             }
         }
         return v;
