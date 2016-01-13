@@ -23,6 +23,7 @@ import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.CarModel;
 
@@ -51,7 +52,7 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         selectedCar = CarModel.findById(idModel);
 
         titleTextView = (TextView) findViewById(R.id.titleTextView);
-        titleTextView.append(" "+selectedCar.getBrand()+" "+selectedCar.getModel());
+        titleTextView.append(" "+ Utils.ucWords(selectedCar.getBrand()+" "+selectedCar.getFullModel()));
 
         imat = (EditText) findViewById(R.id.imat);
         imat.addTextChangedListener(mTextWatcher);

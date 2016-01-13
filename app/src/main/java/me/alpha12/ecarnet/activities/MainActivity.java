@@ -29,6 +29,7 @@ import java.util.Map;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
         for (Map.Entry<Integer, Car> carEntry : cars.entrySet()) {
-            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().getId(), 0, carEntry.getValue().getPlateNum());
+            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().getId(), 0, carEntry.getValue().toString());
             navigationView.getMenu().findItem(carEntry.getValue().getId()).setIcon(R.drawable.ic_car_circle);
         }
 
@@ -223,7 +224,7 @@ public class MainActivity extends AppCompatActivity
 
         if (toolbar != null) {
             if (fragmentId == R.id.nav_home) {
-                toolbar.setTitle(currentCar.getCarModel().getModel() + "  " + currentCar.getPlateNum());
+                toolbar.setTitle(Utils.ucWords(currentCar.getCarModel().getFullModel()) + " -  " + currentCar.getPlateNum());
                 fab.show();
             } else if (fragmentId == R.id.nav_gas) {
                 toolbar.setTitle(R.string.title_fragment_gas);
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity
         ImageView brandImageView = (ImageView) findViewById(R.id.brand_image_view);
 
         if (currentCar != null){
-            navigationView.getMenu().add(R.id.cars_mgmt_group, currentCar.getId(), 0, currentCar.getPlateNum());
+            navigationView.getMenu().add(R.id.cars_mgmt_group, currentCar.getId(), 0, currentCar.toString());
             navigationView.getMenu().findItem(currentCar.getId()).setIcon(R.drawable.ic_car_circle);
         }
         navigationView.getMenu().removeItem(newCar.getId());
@@ -259,13 +260,12 @@ public class MainActivity extends AppCompatActivity
 
         currentCar = newCar;
         TextView drawerTitle = (TextView) findViewById(R.id.car_name);
-        drawerTitle.setText(currentCar.getCarModel().getBrand() + " " + currentCar.getCarModel().getModel());
+        drawerTitle.setText(currentCar.getCarModel().toString());
 
         TextView drawerDesc = (TextView) findViewById(R.id.car_desc);
         drawerDesc.setText(currentCar.getPlateNum());
         brandImageView.setImageDrawable(currentCar.getCarPicture(getBaseContext()));
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.JELLY_BEAN){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             header.setBackground(currentCar.getCarBanner(getBaseContext()));
         } else{
             header.setBackgroundDrawable(currentCar.getCarBanner(getBaseContext()));

@@ -7,30 +7,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
-import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.Car;
-import me.alpha12.ecarnet.models.CarModel;
 import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.User;
 
