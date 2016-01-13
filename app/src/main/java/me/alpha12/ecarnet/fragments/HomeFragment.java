@@ -4,9 +4,13 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -21,13 +25,13 @@ import java.util.Date;
 import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.activities.MainActivity;
 import me.alpha12.ecarnet.charts.BarChartCustom;
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
+import me.alpha12.ecarnet.models.Note;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,11 +41,15 @@ import me.alpha12.ecarnet.models.Intervention;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     private int mMenuEntryId;
     private LineChart mainChart;
+
+    private boolean isDone;
+    private boolean isNotifSet;
+    private Note lastNote;
 
     private OnFragmentInteractionListener mListener;
 
@@ -52,6 +60,12 @@ public class HomeFragment extends Fragment {
     private ArrayList<Intervention> myFixes = new ArrayList<>();
     private ArrayList<String> barLabels = new ArrayList<>();
 
+
+    private ImageButton notifButton;
+    private ImageButton editButton;
+    private ImageButton deleteButton;
+    private ImageButton doneButton;
+    private ImageView flag;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -88,6 +102,16 @@ public class HomeFragment extends Fragment {
         mainChart = (LineChart) view.findViewById(R.id.chart);
         TextView title = (TextView) view.findViewById(R.id.titleCar);
 
+        //about notes
+        lastNote = Note.getLastNote(currentCar.getId());
+        notifButton = (ImageButton) view.findViewById(R.id.button_notification);
+        editButton = (ImageButton) view.findViewById(R.id.button_edit);
+        deleteButton = (ImageButton) view.findViewById(R.id.button_delete);
+        doneButton = (ImageButton) view.findViewById(R.id.button_done);
+        flag = (ImageView) view.findViewById(R.id.flagDone);
+
+
+
         TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
         LineChart kilometersLine = (LineChart) view.findViewById(R.id.kilometersChart);
         //CardView kilometersCard = (CardView) view.findViewById(R.id.kilometerscard);
@@ -110,6 +134,7 @@ public class HomeFragment extends Fragment {
         allMyInterventions = Intervention.findAllByCar(currentCar.getId());
 
         //fake data
+        lastNote = new Note(1, "Vidange", new Date(116, 0, 17), 13000, false, false, false, currentCar.getId());
         myInterventions.add(new Intervention(currentCar.getId(), 10123, 5, 12.5, new Date(114, 11, 12)));
         myInterventions.add(new Intervention(currentCar.getId(), 10223, 50.25, 15.5, new Date(115, 0, 12)));
         myInterventions.add(new Intervention(currentCar.getId(), 10456, 50.25, 18.5, new Date(115, 2, 12)));
@@ -129,6 +154,32 @@ public class HomeFragment extends Fragment {
 
         barLabels = getBarChartLabels(limit);
 
+        if(lastNote == null)
+        {
+            CardView card = (CardView)view.findViewById(R.id.noteCard);
+            card.setVisibility(View.GONE);
+        }
+        else
+        {
+            TextView titleNote = (TextView) view.findViewById(R.id.titleNote);
+            titleNote.setText(lastNote.getTitle());
+            TextView kilometerNote = (TextView) view.findViewById(R.id.kilometersNote);
+            kilometerNote.setText(lastNote.getKilometers() + " km");
+            TextView dateNote = (TextView) view.findViewById(R.id.dateNote);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
+            dateNote.setText(sdf.format(lastNote.getDateNote()));
+            if(!lastNote.isNotifSet())
+                notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_24dp);
+            if(lastNote.isDone()) {
+                doneButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+                flag.setBackgroundResource(R.drawable.ic_bookmark_green_400_24dp);
+            }
+            isNotifSet = lastNote.isNotifSet();
+            isDone = lastNote.isDone();
+            notifButton.setOnClickListener(this);
+            doneButton.setOnClickListener(this);
+        }
+
         if(myInterventions.size() != 0) {
             ArrayList<String> labels = getLineChartLabels();
             ArrayList<Entry> kilometersChart = getKilometers(myInterventions, currentCar);
@@ -138,16 +189,6 @@ public class HomeFragment extends Fragment {
             //tempory affectation
             LineChartCustom kilometersLineCustom = new LineChartCustom(kilometersLine, kilometersChart, "", labels, null);
 
-
-            /*        pas de dev prévu la dessus pour l'instant (DialogFragment sur CardsView)
-            kilometersCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ChartDialogFragment frag = new ChartDialogFragment();
-                    frag.show(ft, "tag");
-                }
-            });*/
 
             int sum = 0;
             for (Entry value : kilometersChart)
@@ -309,5 +350,42 @@ public class HomeFragment extends Fragment {
                 sumOfkilmeters.add(new BarEntry(fillUpTab[i], i));
         }
         return sumOfkilmeters;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.button_notification :
+                if(isNotifSet)
+                {
+                    notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_24dp);
+                    isNotifSet = false;
+                    //lastNote.setNotif(false);
+                }
+                else {
+                    notifButton.setBackgroundResource(R.drawable.ic_notifications_black_24dp);
+                    isNotifSet = true;
+                    //lastNote.setNotif(true);
+                }
+                break;
+            case R.id.button_done :
+                if(isDone)
+                {
+                    Log.d("ok", "button_done pressed");
+                    doneButton.setBackgroundResource(R.drawable.ic_done_grey_600_24dp);
+                    isDone = false;
+                    flag.setImageResource(R.drawable.ic_bookmark_red_400_24dp);
+                    //lastNote.setDone(false);
+                }
+                else
+                {
+                    Log.d("ko", "button_done pressed");
+                    doneButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+                    isDone = true;
+                    flag.setImageResource(R.drawable.ic_bookmark_green_400_24dp);
+                    //lastNote.setDone(true);
+                }
+        }
     }
 }

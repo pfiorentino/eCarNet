@@ -20,6 +20,7 @@ import java.util.Date;
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
+import me.alpha12.ecarnet.models.Note;
 import me.alpha12.ecarnet.models.User;
 
 public class DatabaseManager extends SQLiteOpenHelper {
@@ -153,6 +154,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(Intervention.DBModel.SQL_CREATE_TABLE);
         db.execSQL(User.DBModel.SQL_CREATE_TABLE);
         db.execSQL(SQL_CREATE_TABLE_USE);
+        db.execSQL(Note.DBModel.SQL_CREATE_TABLE);
     }
 
 
