@@ -65,8 +65,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
     }
 
-
-
     public static void initialize() {
         getInstance();
     }
@@ -102,10 +100,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int prevVersion, int nextVersion) {
+        Log.d("Database", "onUpgrade()");
         if (prevVersion < nextVersion){
-            Log.d("Database", "Database Upgrade");
-            ctx.deleteDatabase(DATABASE_NAME);
-            initDatabase();
+            Log.w("Database", "Warning: this manager doesn't support database upgrade. Please contact the dev team for more details.");
+            this.ctx.deleteDatabase(DATABASE_NAME);
+            System.exit(1);
         }
     }
 

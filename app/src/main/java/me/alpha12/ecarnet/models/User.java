@@ -77,7 +77,7 @@ public class User {
     /* Database Model */
 
     public static abstract class DBModel implements BaseColumns {
-        public static final String TABLE_NAME = "user";
+        public static final String TABLE_NAME = "users";
         public static final String C_ID = "id";
         public static final String C_EMAIL = "email";
         public static final String C_FIRSTNAME = "firstname";

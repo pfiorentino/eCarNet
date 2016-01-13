@@ -60,7 +60,7 @@ public class Note {
 
 
     public static abstract class DBModel implements BaseColumns {
-        public static final String TABLE_NAME = "note";
+        public static final String TABLE_NAME = "notes";
         public static final String C_ID = "id";
         public static final String C_TITLE = "title";
         public static final String C_DATE_SET = "date";
