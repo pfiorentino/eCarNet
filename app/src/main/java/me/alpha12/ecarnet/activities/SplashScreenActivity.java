@@ -70,7 +70,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... arg0) {
             DatabaseManager.initialize();
-
             this.currentUser = User.getUser();
             this.cars = Car.findAll();
 
