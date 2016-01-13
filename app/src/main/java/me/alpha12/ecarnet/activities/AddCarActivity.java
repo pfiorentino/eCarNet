@@ -41,7 +41,7 @@ public class AddCarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_car);
 
         brandSpinner = (Spinner) findViewById(R.id.brandSpinner);
-        brandList = CarModel.findBrands();
+        brandList = CarModel.findBrands(true);
         final ArrayAdapter<String> brandAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, brandList);
         brandAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         brandSpinner.setAdapter(new DefaultSpinnerValueAdapter(brandAdapter, R.layout.default_spinner_value, "Sélectionnez une marque", this));
@@ -51,7 +51,7 @@ public class AddCarActivity extends AppCompatActivity {
                 modelSpinner.setEnabled(position > 0);
                 if (position > 0) {
                     modelList.clear();
-                    modelList.addAll(CarModel.findModelsByBrand(brandList.get(position - 1)));
+                    modelList.addAll(CarModel.findModelsByBrand(brandList.get(position - 1).toUpperCase(), true));
                     modelListAdapter.notifyDataSetChanged();
                     modelSpinner.setSelection(0);
                 }
@@ -88,8 +88,8 @@ public class AddCarActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddCarActivity.this, SearchCarActivity.class);
-                intent.putExtra("brand", brandSpinner.getSelectedItem().toString());
-                intent.putExtra("model", modelSpinner.getSelectedItem().toString());
+                intent.putExtra("brand", brandSpinner.getSelectedItem().toString().toUpperCase());
+                intent.putExtra("model", modelSpinner.getSelectedItem().toString().toUpperCase());
                 startActivityForResult(intent, 0);
             }
         });

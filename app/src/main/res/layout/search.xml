@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:imeOptions="actionSearch"
-        android:inputType="text"/>
+        android:textColor="@android:color/white"
+        android:inputType="text|textFilter|textNoSuggestions"/>
 
 </LinearLayout>

@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
 public class Car {
@@ -63,7 +64,7 @@ public class Car {
 
     @Override
     public String toString() {
-        return this.id+": "+this.model.getBrand()+" "+this.model.getModel()+" "+this.plateNum+" "+this.kilometers;
+        return Utils.ucWords(this.model.getBrand()+" "+this.model.getFullModel())+" - "+this.plateNum;
     }
 
     public void persist() {

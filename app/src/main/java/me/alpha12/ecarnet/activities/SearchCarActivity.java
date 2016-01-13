@@ -214,7 +214,7 @@ public class SearchCarActivity extends AppCompatActivity {
 
             for (String word : queryByWords) {
 
-                Log.d("search_debug", content+" - "+word);
+                /*Log.d("search_debug", content+" - "+word);*/
                 // There is a match only if all of the words are contained.
 
 

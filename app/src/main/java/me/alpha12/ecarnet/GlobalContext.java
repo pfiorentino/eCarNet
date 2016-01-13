@@ -12,7 +12,6 @@ public class GlobalContext extends Application {
 
     public static final String PREFS_NAME = "user_prefs_file";
     public static final String PREFS_SAVED_CAR_KEY = "current_car";
-    public static final String PREFS_CAR_MODELS_IMPORTED = "are_car_models_imported";
 
     private static GlobalContext instance;
 
@@ -33,16 +32,6 @@ public class GlobalContext extends Application {
         SharedPreferences settings = getInstance().getSharedPreferences(PREFS_NAME, 0);
         settings.edit().putInt(PREFS_SAVED_CAR_KEY, newCarId).commit();
     }
-
-    /*public static boolean areCarModelsImported() {
-        SharedPreferences settings = getInstance().getSharedPreferences(PREFS_NAME, 0);
-        return settings.getBoolean(PREFS_CAR_MODELS_IMPORTED, false);
-    }
-
-    public static void setCarModelsImported() {
-        SharedPreferences settings = getInstance().getSharedPreferences(PREFS_NAME, 0);
-        settings.edit().putBoolean(PREFS_CAR_MODELS_IMPORTED, true).commit();
-    }*/
 
     @Override
     public void onCreate() {

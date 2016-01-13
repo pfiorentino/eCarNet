@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 
+import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
 public class CarModel implements Parcelable {
@@ -57,7 +58,7 @@ public class CarModel implements Parcelable {
     /* Public methods */
 
     public String toString() {
-        return brand + " " + model + " " + generation + " - " + version + " - " + energy;
+        return Utils.ucWords(brand + " " + getFullModel());
     }
 
     public String getSearchableString() {
@@ -69,9 +70,9 @@ public class CarModel implements Parcelable {
                 this.energy,
                 this.body,
                 this.gearboxType,
-                String.valueOf(this.gears),
-                String.valueOf(this.ratedHP),
-                this.minesType
+                String.valueOf(this.gears)
+                //String.valueOf(this.ratedHP)
+                //this.minesType
         };
 
         return TextUtils.join(" ", array).toLowerCase();
@@ -104,19 +105,29 @@ public class CarModel implements Parcelable {
     /* Static methods */
 
     public static ArrayList<String> findBrands() {
+        return findBrands(false);
+    }
+
+    public static ArrayList<String> findBrands(boolean formatString) {
         ArrayList<String> brands = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
                 "SELECT DISTINCT(" + DBModel.C_BRAND + ") FROM " + DBModel.TABLE_NAME + " ORDER BY " + DBModel.C_BRAND + ";",
                 null
         );
         while(cursor.moveToNext()) {
-            brands.add(DatabaseManager.extractString(cursor, DBModel.C_BRAND));
+            if (formatString)
+                brands.add(Utils.ucWords(DatabaseManager.extractString(cursor, DBModel.C_BRAND)));
+            else
+                brands.add(DatabaseManager.extractString(cursor, DBModel.C_BRAND));
         }
         return brands;
     }
 
-
     public static ArrayList<String> findModelsByBrand(String brand) {
+        return findModelsByBrand(brand, false);
+    }
+
+    public static ArrayList<String> findModelsByBrand(String brand, boolean formatString) {
         ArrayList<String>models = new ArrayList<>();
 
         String[] args = {brand};
@@ -126,7 +137,10 @@ public class CarModel implements Parcelable {
         );
 
         while(cursor.moveToNext()) {
-            models.add(DatabaseManager.extractString(cursor, DBModel.C_MODEL));
+            if (formatString)
+                models.add(Utils.ucWords(DatabaseManager.extractString(cursor, DBModel.C_MODEL)));
+            else
+                models.add(DatabaseManager.extractString(cursor, DBModel.C_MODEL));
         }
 
         return models;
@@ -137,7 +151,11 @@ public class CarModel implements Parcelable {
 
         String[] args = {brand, model};
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+ DBModel.TABLE_NAME +" WHERE "+ DBModel.C_BRAND +" = ? AND "+ DBModel.C_MODEL +" = ? ORDER BY "+ DBModel.C_MODEL +";",
+                "SELECT * "+
+                "FROM "+ DBModel.TABLE_NAME + " " +
+                "WHERE "+ DBModel.C_BRAND +" = ? AND "+ DBModel.C_MODEL +" = ? "+
+                "GROUP BY `brand`, `model`, `version`, `generation` " +
+                "ORDER BY "+ DBModel.C_MODEL +", "+ DBModel.C_GENERATION +", "+ DBModel.C_VERSION +";",
                 args
         );
 
@@ -265,6 +283,14 @@ public class CarModel implements Parcelable {
         return model;
     }
 
+    public String getFullModel() {
+        if (generation > 1) {
+            return model+" "+Utils.toRoman(generation);
+        }
+
+        return model;
+    }
+
     public String getVersion() {
         return version;
     }
@@ -279,5 +305,9 @@ public class CarModel implements Parcelable {
 
     public String getGearboxType() {
         return gearboxType;
+    }
+
+    public int getGears() {
+        return gears;
     }
 }
