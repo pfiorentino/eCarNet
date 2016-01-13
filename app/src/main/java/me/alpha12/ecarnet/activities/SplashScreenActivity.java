@@ -71,7 +71,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            DatabaseManager.initialize();
+            DatabaseManager db = DatabaseManager.getInstance();
             //System.exit(0);
             //importCarModels();
 

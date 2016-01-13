@@ -9,31 +9,25 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
-import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.Car;
-import me.alpha12.ecarnet.models.CarModel;
 import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.User;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     //Table Use
+
     public static final String T_USE = "use";
     public static final String C_USE_CAR_ID = "car_id";
     public static final String C_USE_USER_ID = "user_id";
@@ -46,19 +40,32 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + ");";
 
     private static final String BDD_NAME = "ecarnet.db";
-    private static final int BDD_VERSION = 3;
+    private static final int BDD_VERSION = 1;
 
     private SQLiteDatabase db;
 
     private static DatabaseManager instance;
 
+
     public static DatabaseManager getInstance() {
         if (instance == null) {
             instance = new DatabaseManager(GlobalContext.getInstance());
         }
-
         return instance;
     }
+
+
+    public void open() {
+        this.db = getInstance().getWritableDatabase();
+    }
+
+    public void close() {
+        if (getInstance() != null) {
+            this.getInstance().close();
+        }
+    }
+
+
 
     public static void initialize() {
         getInstance();
@@ -86,7 +93,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     private DatabaseManager(Context context) {
         super(context, BDD_NAME, null, BDD_VERSION);
-        this.db = getWritableDatabase();
     }
 
     @Override
@@ -104,10 +110,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int prevVersion, int nextVersion) {
         Log.d("Database", "Database Upgrade");
 
-        db.execSQL("DROP TABLE IF EXISTS " + Car.DBModel.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + Intervention.DBModel.TABLE_NAME);
-        // db.execSQL("DROP TABLE IF EXISTS " + CarModel.DBModel.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + User.DBModel.TABLE_NAME);
+        //db.execSQL("DROP TABLE IF EXISTS " + Car.DBModel.TABLE_NAME);
+        //db.execSQL("DROP TABLE IF EXISTS " + Intervention.DBModel.TABLE_NAME);
+        //db.execSQL("DROP TABLE IF EXISTS " + CarModel.DBModel.TABLE_NAME);
+        //db.execSQL("DROP TABLE IF EXISTS " + User.DBModel.TABLE_NAME);
 
         onCreate(db);
     }
@@ -122,7 +128,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         File appDB = new File(dbPath);
 
         try {
-            InputStream src = GlobalContext.getInstance().getAssets().open("car_models.db");
+            InputStream src = GlobalContext.getInstance().getAssets().open("databases/car_models.db");
             ReadableByteChannel rbc = Channels.newChannel(src);
             FileChannel dst = new FileOutputStream(appDB).getChannel();
 
