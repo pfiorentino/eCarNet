@@ -13,16 +13,19 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.io.OutputStream;
 import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
+import me.alpha12.ecarnet.models.Note;
 import me.alpha12.ecarnet.models.User;
 
 public class DatabaseManager extends SQLiteOpenHelper {
     //Table Use
+
     public static final String T_USE = "use";
     public static final String C_USE_CAR_ID = "car_id";
     public static final String C_USE_USER_ID = "user_id";
@@ -43,13 +46,26 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     private static DatabaseManager instance;
 
+
     public static DatabaseManager getInstance() {
         if (instance == null) {
             instance = new DatabaseManager(GlobalContext.getInstance());
         }
-
         return instance;
     }
+
+
+    public void open() {
+        this.db = getInstance().getWritableDatabase();
+    }
+
+    public void close() {
+        if (getInstance() != null) {
+            this.getInstance().close();
+        }
+    }
+
+
 
     public static void initialize() {
         getInstance();
@@ -72,6 +88,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         this.db = getWritableDatabase();
     }
+
 
     private boolean databaseExists() {
         File dbfile = new File(DATABASE_PATH + DATABASE_NAME);
@@ -137,7 +154,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(Intervention.DBModel.SQL_CREATE_TABLE);
         db.execSQL(User.DBModel.SQL_CREATE_TABLE);
         db.execSQL(SQL_CREATE_TABLE_USE);
+        db.execSQL(Note.DBModel.SQL_CREATE_TABLE);
     }
+
 
     public static int extractInt(Cursor cur, String columnName){
         return cur.getInt(cur.getColumnIndex(columnName));
