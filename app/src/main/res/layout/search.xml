@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
+    <EditText android:ems="12"
         android:id="@+id/etSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:imeOptions="actionSearch"
         android:textColor="@android:color/white"
+        android:textCursorDrawable="@null"
         android:inputType="text|textFilter|textNoSuggestions"/>
 
 </LinearLayout>
