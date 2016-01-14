@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.zip.ZipInputStream;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.models.Car;
@@ -110,9 +112,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     private void initDatabase() {
         Log.d("Database", "Database initialization");
-        InputStream inputFile;
+        ZipInputStream zipInputFile;
         try {
-            inputFile = ctx.getAssets().open(DATABASE_NAME);
+            InputStream inputFile = ctx.getAssets().open(DATABASE_NAME+".zip");
+            zipInputFile = new ZipInputStream(new BufferedInputStream(inputFile));
+            zipInputFile.getNextEntry();
 
             File pathFile = new File(DATABASE_PATH);
             if(!pathFile.exists()) {
@@ -126,13 +130,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             byte[] buffer = new byte[1024];
             int length;
-            while ((length = inputFile.read(buffer)) > 0) {
+            while ((length = zipInputFile.read(buffer)) > 0) {
                 ouputFile.write(buffer, 0, length);
             }
 
             ouputFile.flush();
             ouputFile.close();
             inputFile.close();
+            zipInputFile.close();
         }
         catch (IOException e) {
             Log.e("DatabaseManager", "Error : copydatabase()");
