@@ -94,7 +94,7 @@ public class ChartDialogFragment extends DialogFragment implements AdapterView.O
         kilometersLine = (LineChart) view.findViewById(R.id.kilometersChart);
 
 
-
+/*
 
         //fake data
         interventions.add(new Intervention(currentCar.getId(), 10123, 5, 12.5, new Date(114, 11, 12)));
@@ -117,7 +117,7 @@ public class ChartDialogFragment extends DialogFragment implements AdapterView.O
         interventions.add(new Intervention(currentCar.getId(), 16990, 130, 45.3, new Date(116, 0, 12)));
 
 
-
+*/
 
 
 

@@ -16,7 +16,6 @@
                 android:layout_width="match_parent" android:layout_height="wrap_content" >
                 <LinearLayout android:orientation="horizontal"
                     android:layout_width="match_parent" android:layout_height="72dp" >
-
                     <ImageView android:id="@+id/brand_image_view"
                         android:layout_width="wrap_content" android:layout_height="72dp"
                         android:paddingTop="16dp" android:paddingBottom="16dp"
@@ -54,9 +53,7 @@
                         android:layout_width="match_parent" android:layout_height="80dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="16dp" android:layout_marginBottom="8dp"/>
-
-                    <TextView android:id="@+id/kilometersData"
-                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                    <TextView android:id="@+id/kilometersData" android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:text="Aucune données"
                         android:gravity="bottom"
@@ -81,8 +78,7 @@
                             android:text="0"
                             android:textStyle="bold" android:textSize="32sp" android:textAlignment="center"  />
 
-                        <TextView
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:layout_marginLeft="4dp"
                             android:layout_gravity="bottom"
@@ -91,8 +87,7 @@
                             android:text="l/100km"/>
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:layout_marginTop="8dp" android:layout_marginBottom="16dp"
                         android:textAlignment="center"
                         android:text="Consommation"
@@ -104,22 +99,20 @@
         <android.support.v7.widget.CardView android:id="@+id/costCard"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin"
-            >
+            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin">
             <LinearLayout android:orientation="vertical"
                 android:layout_width="match_parent" android:layout_height="wrap_content" >
-                <com.github.mikephil.charting.charts.BarChart android:id="@+id/costChart"
-                    android:layout_width="match_parent" android:layout_height="140dp"
-                    android:layout_margin="16dp"/>
-
+                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/costChart"
+                        android:layout_width="match_parent" android:layout_height="140dp"
+                        android:layout_margin="16dp"/>
                 <TextView android:id="@+id/costData"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_width="match_parent" android:layout_height="24dp"
                     android:text="Aucune données"
+                    android:textAlignment="center"
                     android:textSize="16sp"
                     android:gravity="bottom"
-                    android:textAlignment="center"
                     android:layout_marginBottom="16dp"/>
-            </LinearLayout>
+                </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
@@ -132,39 +125,33 @@
 
             <LinearLayout android:orientation="vertical"
                 android:layout_width="match_parent" android:layout_height="wrap_content" >
-
+                <FrameLayout android:id="@+id/flagFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:background="#EF9A9A"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:orientation="vertical">
-                    <LinearLayout android:orientation="horizontal"
-                        android:layout_width="match_parent" android:layout_height="wrap_content" >
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:id="@+id/flagDone"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_bookmark_red_400_24dp"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+
+                   <TextView android:layout_width="match_parent" android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:layout_marginLeft="8dp"
                         android:text="Prochaine intervention"
-                        android:textSize="16sp"/>
-                        </LinearLayout>
+                        android:textSize="24sp"/>
                     <TextView
                         android:layout_marginTop="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/titleNote"
+                        android:textSize="16sp"
                         android:text="Intitulé" />
                     <TextView
                         android:layout_marginTop="2dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/dateNote"
+                        android:textSize="16sp"
                         android:text="21 Janvier 2016"/>
                     <TextView
                         android:layout_marginTop="2dp"
@@ -172,6 +159,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/kilometersNote"
+                        android:textSize="16sp"
                         android:text="120000 km"/>
                     </LinearLayout>
                 <LinearLayout
@@ -183,30 +171,21 @@
                         android:layout_width="wrap_content"
                         android:layout_margin="8dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_notifications_black_24dp"
+                        android:src="@drawable/ic_notifications_black_36dp"
                         android:background="@color/cardview_light_background"/>
                     <ImageButton
                         android:id="@+id/button_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
-                        android:src="@drawable/ic_edit_black_24dp"
-                        android:background="@color/cardview_light_background"/>
-                    <ImageButton
-                        android:id="@+id/button_delete"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_delete_black_24dp"
-                        android:layout_margin="8dp"
+                        android:src="@drawable/ic_create_black_36dp"
                         android:background="@color/cardview_light_background"/>
                     <ImageButton
                         android:id="@+id/button_done"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
-                        android:src="@drawable/ic_done_grey_600_24dp"
                         android:background="@color/cardview_light_background"/>
-
                 </LinearLayout>
             </LinearLayout>
 
