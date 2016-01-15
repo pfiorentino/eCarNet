@@ -52,7 +52,7 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         selectedCar = CarModel.findById(idModel);
 
         titleTextView = (TextView) findViewById(R.id.titleTextView);
-        titleTextView.append(" "+ Utils.ucWords(selectedCar.getBrand()+" "+selectedCar.getFullModel()));
+        titleTextView.append(" "+ Utils.ucWords(selectedCar.getBrand()+" "+selectedCar.getModel()));
 
         imat = (EditText) findViewById(R.id.imat);
         imat.addTextChangedListener(mTextWatcher);

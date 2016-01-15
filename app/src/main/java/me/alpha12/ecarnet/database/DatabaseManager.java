@@ -40,7 +40,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + ");";
 
     private static final String DATABASE_NAME = "ecarnet.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private String DATABASE_PATH; // Defined in constructor
 
     private SQLiteDatabase db;

@@ -64,7 +64,7 @@ public class Car {
 
     @Override
     public String toString() {
-        return Utils.ucWords(this.model.getBrand()+" "+this.model.getFullModel())+" - "+this.plateNum;
+        return Utils.ucWords(this.model.getBrand()+" "+this.model.getModel())+" - "+this.plateNum;
     }
 
     public void persist() {
