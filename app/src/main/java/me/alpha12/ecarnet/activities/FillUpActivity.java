@@ -2,37 +2,47 @@ package me.alpha12.ecarnet.activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.models.Car;
+import me.alpha12.ecarnet.models.Intervention;
 
-public class FillUpActivity extends AppCompatActivity {
-    private static TextView mTimeTextView;
+public class FillUpActivity extends AppCompatActivity implements View.OnClickListener {
     private static TextView mDateTextView;
-    private static Calendar mCurrentDate;
+    private Calendar mCurrentDate;
+    private TextView kilometers;
+    private TextView amount;
+    private TextView price;
+    private Button addButton;
+    private Button backButton;
+    private Car currentCar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        int idModel = getIntent().getExtras().getInt("idCar");
+        currentCar = Car.findCarById(idModel);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_up);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mCurrentDate = Calendar.getInstance();
 
@@ -45,27 +55,35 @@ public class FillUpActivity extends AppCompatActivity {
                 newFragment.show(getSupportFragmentManager(), "datePicker");
             }
         });
+        mDateTextView.addTextChangedListener(mTextWatcher);
 
-        mTimeTextView = (TextView) findViewById(R.id.time);
-        mTimeTextView.setText(getFormattedTime(this, mCurrentDate));
-        mTimeTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment newFragment = new TimePickerFragment();
-                newFragment.show(getSupportFragmentManager(), "timePicker");
-            }
-        });
+        kilometers = (TextView) findViewById(R.id.total);
+        kilometers.addTextChangedListener(mTextWatcher);
+        amount = (TextView) findViewById(R.id.quantity);
+        amount.addTextChangedListener(mTextWatcher);
+        price = (TextView) findViewById(R.id.price);
+        price.addTextChangedListener(mTextWatcher);
+        addButton = (Button) findViewById(R.id.addFillUpButton);
+        backButton = (Button) findViewById(R.id.backButton);
+        backButton.setOnClickListener(this);
+        addButton.setOnClickListener(this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+        @Override
+        public void afterTextChanged(Editable editable) {
+            addButton.setEnabled(
+                    !kilometers.getText().toString().matches("") &&
+                    !amount.getText().toString().matches("") &&
+                    !price.getText().toString().matches("") &&
+                    !mDateTextView.getText().toString().matches("")
+            );
         }
-        return super.onOptionsItemSelected(item);
-    }
+    };
 
     private static String getFormattedDate(Context ctx, Calendar c) {
         return DateUtils.formatDateTime(ctx, c.getTimeInMillis(),
@@ -76,27 +94,30 @@ public class FillUpActivity extends AppCompatActivity {
         return DateUtils.formatDateTime(ctx, c.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME);
     }
 
-    public static class TimePickerFragment extends DialogFragment
-            implements TimePickerDialog.OnTimeSetListener {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.backButton:
+                onBackPressed();
+                break;
+            case R.id.addFillUpButton:
+                SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy", Locale.FRENCH);
+                try {
+                    Date d = sdf.parse(mDateTextView.getText().toString());
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
-            final Calendar c = Calendar.getInstance();
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-
-            // Create a new instance of TimePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
-        }
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            final Calendar c = Calendar.getInstance();
-            c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            c.set(Calendar.MINUTE, minute);
-
-            mTimeTextView.setText(getFormattedTime(this.getContext(), c));
+                Intervention inter = new Intervention(0, Integer.parseInt(kilometers.getText().toString()),
+                        (double) Float.parseFloat(price.getText().toString()),
+                        (double) Float.parseFloat(amount.getText().toString()),
+                        new java.sql.Date(d.getTime()),
+                        currentCar.getId()
+                        );
+                    inter.persistFillUp();
+                    Intent intent = new Intent(FillUpActivity.this, MainActivity.class);
+                    FillUpActivity.this.startActivity(intent);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 

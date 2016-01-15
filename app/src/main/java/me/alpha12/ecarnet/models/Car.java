@@ -164,6 +164,25 @@ public class Car {
                 + ");";
     }
 
+
+    public static Car findCarById(int carId) {
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBModel.TABLE_NAME + " WHERE " + DBModel.C_ID + " = " + carId, null);
+
+        if (cursor.moveToNext()) {
+            return new Car(
+                    DatabaseManager.extractInt(cursor, DBModel.C_ID),
+                    CarModel.findById(DatabaseManager.extractInt(cursor, DBModel.C_MODEL_ID)),
+                    DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
+                    DatabaseManager.extractDate(cursor, DBModel.C_BUYING_DATE),
+                    DatabaseManager.extractDate(cursor, DBModel.C_CIRCULATION_DATE),
+                    DatabaseManager.extractString(cursor, DBModel.C_PLATE_NUMBER),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_AVERAGE_CONSUMPTION)
+            );
+        }
+
+        return null;
+    }
+
     /* Getters & Setters */
     public int getId() {
         return this.id;

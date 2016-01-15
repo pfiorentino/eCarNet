@@ -2,15 +2,19 @@ package me.alpha12.ecarnet.fragments;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -43,29 +47,22 @@ import me.alpha12.ecarnet.models.Note;
  */
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
-
     private int mMenuEntryId;
-    private LineChart mainChart;
+    private OnFragmentInteractionListener mListener;
+
 
     private boolean isDone;
     private boolean isNotifSet;
     private Note lastNote;
 
-    private OnFragmentInteractionListener mListener;
-
-
     private ArrayList<Intervention> myInterventions = new ArrayList<>();
     private ArrayList<Intervention> allMyInterventions = new ArrayList<>();
     private ArrayList<Intervention> myFillsUp = new ArrayList<>();
-    private ArrayList<Intervention> myFixes = new ArrayList<>();
-    private ArrayList<String> barLabels = new ArrayList<>();
-
 
     private ImageButton notifButton;
     private ImageButton editButton;
-    private ImageButton deleteButton;
     private ImageButton doneButton;
-    private ImageView flag;
+    private FrameLayout flagFrame;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -96,98 +93,44 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         Car currentCar = ((MainActivity) getActivity()).currentCar;
 
-        mainChart = (LineChart) view.findViewById(R.id.chart);
-        TextView title = (TextView) view.findViewById(R.id.titleCar);
-
-        //about notes
         lastNote = Note.getLastNote(currentCar.getId());
         notifButton = (ImageButton) view.findViewById(R.id.button_notification);
         editButton = (ImageButton) view.findViewById(R.id.button_edit);
-        deleteButton = (ImageButton) view.findViewById(R.id.button_delete);
         doneButton = (ImageButton) view.findViewById(R.id.button_done);
-        flag = (ImageView) view.findViewById(R.id.flagDone);
-
-
+        flagFrame = (FrameLayout) view.findViewById(R.id.flagFrame);
 
         TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
         LineChart kilometersLine = (LineChart) view.findViewById(R.id.kilometersChart);
-        //CardView kilometersCard = (CardView) view.findViewById(R.id.kilometerscard);
         TextView kilometersText = (TextView) view.findViewById(R.id.kilometersData);
-        BarChart costLine = (BarChart) view.findViewById(R.id.costChart);
+
+        LineChart costLine = (LineChart) view.findViewById(R.id.costChart);
         TextView costText = (TextView) view.findViewById(R.id.costData);
 
+        TextView title = (TextView) view.findViewById(R.id.titleCar);
         title.setText(currentCar.getCarModel().toString());
 
         Calendar c = Calendar.getInstance();
         Date limit = c.getTime();
         limit.setDate(1);
 
-        myFillsUp = Intervention.findFillUpByLimit(currentCar.getId(), limit);
-
-
-        myFixes = Intervention.findFixesByLimit(currentCar.getId(), limit);
+        myFillsUp = Intervention.findInterventionByLimit(currentCar.getId(), limit);
 
         myInterventions = Intervention.find10ByCar(currentCar.getId());
         allMyInterventions = Intervention.findAllByCar(currentCar.getId());
 
-        //fake data
-        lastNote = new Note(1, "Vidange", new Date(116, 0, 17), 13000, false, false, false, currentCar.getId());
-        myInterventions.add(new Intervention(currentCar.getId(), 10123, 5, 12.5, new Date(114, 11, 12)));
-        myInterventions.add(new Intervention(currentCar.getId(), 10223, 50.25, 15.5, new Date(115, 0, 12)));
-        myInterventions.add(new Intervention(currentCar.getId(), 10456, 50.25, 18.5, new Date(115, 2, 12)));
-        myInterventions.add(new Intervention(currentCar.getId(), 10710, 200.43, 0, new Date(115, 3, 12)));
-        myInterventions.add(new Intervention(currentCar.getId(), 11070, 50.90, 15, new Date(115, 3, 12)));
-        myInterventions.add(new Intervention(currentCar.getId(), 11340, 108.23, 0, new Date(115, 4, 12)));
-        myInterventions.add(new Intervention(currentCar.getId(), 11390, 200, 0, new Date(115, 5, 12)));
-        myInterventions.add(new Intervention(currentCar.getId(), 11701, 60.83, 25.3, new Date(116, 0, 1)));
-        myInterventions.add(new Intervention(currentCar.getId(), 11925, 120, 0, new Date(116, 0, 8)));
-        myInterventions.add(new Intervention(currentCar.getId(), 12780, 100.33, 0, new Date(116, 0, 12)));
-        allMyInterventions = myInterventions;
-
-        myFillsUp.add(new Intervention(currentCar.getId(), 11701, 60.83, 25.3, new Date(116, 0, 1)));
-        myFillsUp.add(new Intervention(currentCar.getId(), 11701, 100.83, 25.3, new Date(116, 0, 1)));
-        myFixes.add(new Intervention(currentCar.getId(), 11925, 120, 0, new Date(116, 0, 8)));
-        myFixes.add(new Intervention(currentCar.getId(), 12780, 100.33, 0, new Date(116, 0, 12)));
-
-        barLabels = getBarChartLabels(limit);
-
-        if(lastNote == null)
-        {
-            CardView card = (CardView)view.findViewById(R.id.noteCard);
-            card.setVisibility(View.GONE);
-        }
-        else
-        {
-            TextView titleNote = (TextView) view.findViewById(R.id.titleNote);
-            titleNote.setText(lastNote.getTitle());
-            TextView kilometerNote = (TextView) view.findViewById(R.id.kilometersNote);
-            kilometerNote.setText(lastNote.getKilometers() + " km");
-            TextView dateNote = (TextView) view.findViewById(R.id.dateNote);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
-            dateNote.setText(sdf.format(lastNote.getDateNote()));
-            if(!lastNote.isNotifSet())
-                notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_24dp);
-            if(lastNote.isDone()) {
-                doneButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
-                flag.setBackgroundResource(R.drawable.ic_bookmark_green_400_24dp);
-            }
-            isNotifSet = lastNote.isNotifSet();
-            isDone = lastNote.isDone();
-            notifButton.setOnClickListener(this);
-            doneButton.setOnClickListener(this);
-        }
+        //prepare note if exist
+        lastNote = new Note(0,"Vidange + filtre à diesel", limit, 15000, false, true, false, currentCar.getId());
+        useNotedCard(view);
 
         if(myInterventions.size() != 0) {
-            ArrayList<String> labels = getLineChartLabels();
             ArrayList<Entry> kilometersChart = getKilometers(myInterventions, currentCar);
-            ArrayList<BarEntry> fillUpChart = getAmoutsFillUp();
-            ArrayList<BarEntry> interventionChart = getAmoutsIntervention();
+            ArrayList<Entry> fillUpChart = getAmoutsFillUp();
 
-            //tempory affectation
-            LineChartCustom kilometersLineCustom = new LineChartCustom(kilometersLine, kilometersChart, "", labels, null);
+            LineChartCustom kilometersLineCustom = new LineChartCustom(kilometersLine, kilometersChart, "", getLineChartLabels(myInterventions), null);
 
 
             int sum = 0;
@@ -195,22 +138,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             {
                 sum += (int)value.getVal();
             }
-            kilometersText.setText(Integer.toString(sum) + " km");
+            kilometersText.setText(Integer.toString(sum) + " km effectués");
             kilometersText.setTextSize(16);
 
-            BarChartCustom costLineCustom = new BarChartCustom(costLine, interventionChart, "", barLabels, null);
-            costLineCustom.addEntries(fillUpChart);
+            LineChartCustom costLineCustom = new LineChartCustom(costLine, fillUpChart, "", getLineChartLabels(myFillsUp), null);
 
             float floatSum = 0f;
             for(int i = 0; i<fillUpChart.size(); i++)
             {
                 floatSum+= fillUpChart.get(i).getVal();
             }
-            for(int i = 0; i<interventionChart.size(); i++)
-            {
-                floatSum+= interventionChart.get(i).getVal();
-            }
-            costText.setText(String.format("%.2f€", floatSum));
+            costText.setText(String.format("%.2f€", floatSum)+ " dépensés");
             costText.setTextSize(16);
             animateTextView(0.0f, getConsumption(currentCar), consumption);
         }
@@ -226,26 +164,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         for(Intervention value : allMyInterventions) {
             if(value.getQuantity()!=0 && oldKilometers < value.getKilometers()) {
                 currentConsumption = (float)value.getQuantity() * 100 / (value.getKilometers() - oldKilometers);
+                Log.d("current consumption", ""+currentConsumption);
                 totalConsumption +=currentConsumption;
                 numberOfInters++;
                 oldKilometers = value.getKilometers();
             }
         }
+        Log.d("total consumption", ""+totalConsumption);
+        Log.d("number of entries", ""+numberOfInters);
+        Log.d("final consumption", ""+totalConsumption/numberOfInters);
         return totalConsumption/numberOfInters;
     }
 
-    public float[] additionAllPrices(ArrayList<Intervention> inters)
-    {
-        float values[] = new float[barLabels.size()];
-        for(Intervention value : inters)
-        {
-            Integer key = value.getDateIntervention().getDate();
-            values[key-1] += value.getPrice();
-        }
-        return values;
-    }
-
-    public ArrayList<String> getLineChartLabels()
+    public ArrayList<String> getLineChartLabels(ArrayList<Intervention> myInterventions)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM yy", Locale.FRENCH);
         ArrayList<String> labs = new ArrayList<>();
@@ -257,21 +188,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return labs;
     }
 
-
-    public ArrayList<String> getBarChartLabels(Date limit)
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yy", Locale.FRENCH);
-        ArrayList<String> labs = new ArrayList<>();
-        Calendar c = Calendar.getInstance();
-        Date now = c.getTime();
-        while(limit.before(now))
-        {
-            String dateOutput = sdf.format(limit);
-            labs.add(dateOutput);
-            limit.setDate(limit.getDate()+1);
-        }
-        return labs;
-    }
 
 
     public void animateTextView(float initialValue, float finalValue, final TextView  textview) {
@@ -306,51 +222,56 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mListener = null;
     }
 
-
-    public int[] getSumKilometers(ArrayList<Intervention> inters, Car current)
+    public ArrayList<Entry> getAmoutsFillUp()
     {
-        //-----------this function will regroup kilometers of interventino monthly and return into a Hashmap
-        int[] values = new int[12];
-        int oldkilometers = current.getKilometers();
-        int newkilometers = 0;
-        for(int i =0; i<inters.size(); i++) {
-            newkilometers = inters.get(i).getKilometers() - oldkilometers;
-            int indice = inters.get(i).getDateIntervention().getMonth();
-            values[indice] += newkilometers;
-            oldkilometers = inters.get(i).getKilometers();
-        }
-        return values;
-    }
-
-    public ArrayList<BarEntry> getAmoutsFillUp()
-    {
-        ArrayList<BarEntry> amountsOfFillUp = new ArrayList<>();
-        float[] sums = additionAllPrices(myFillsUp);
-        for(Integer i=0; i<sums.length; i++)
-            amountsOfFillUp.add(new BarEntry((float)sums[i], i));
+        ArrayList<Entry> amountsOfFillUp = new ArrayList<>();
+        for(Integer i=0; i<myFillsUp.size(); i++)
+            amountsOfFillUp.add(new Entry((float)myFillsUp.get(i).getPrice(), i));
         return amountsOfFillUp;
-    }
-
-    public ArrayList<BarEntry> getAmoutsIntervention()
-    {
-        ArrayList<BarEntry> amountsOfIntervention = new ArrayList<>();
-        float[] sums = additionAllPrices(myFixes);
-        for(Integer i=0; i<sums.length; i++)
-            amountsOfIntervention.add(new BarEntry((float)sums[i], i));
-        return amountsOfIntervention;
     }
 
 
     public ArrayList<Entry> getKilometers(ArrayList<Intervention> inters, Car current)
     {
         ArrayList<Entry> sumOfkilmeters = new ArrayList<>();
-        int[] fillUpTab = getSumKilometers(inters, current);
-        for(int i=0; i<fillUpTab.length; i++) {
-            if(fillUpTab[i]!=0 || i==0 || i==11)
-                sumOfkilmeters.add(new BarEntry(fillUpTab[i], i));
+        int oldValue = current.getKilometers();
+        int newValue = 0;
+        for(int i=0; i<inters.size(); i++) {
+            newValue = inters.get(i).getKilometers() - oldValue;
+            sumOfkilmeters.add(new Entry(newValue, i));
+            oldValue = inters.get(i).getKilometers();
         }
         return sumOfkilmeters;
     }
+
+
+    private void useNotedCard(View view) {
+        if (lastNote == null) {
+            CardView card = (CardView) view.findViewById(R.id.noteCard);
+            card.setVisibility(View.GONE);
+        } else {
+            TextView titleNote = (TextView) view.findViewById(R.id.titleNote);
+            titleNote.setText(lastNote.getTitle());
+            TextView kilometerNote = (TextView) view.findViewById(R.id.kilometersNote);
+            kilometerNote.setText(lastNote.getKilometers() + " km");
+            TextView dateNote = (TextView) view.findViewById(R.id.dateNote);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
+            dateNote.setText(sdf.format(lastNote.getDateNote()));
+            if (!lastNote.isNotifSet())
+                notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_36dp);
+            if (lastNote.isDone()) {
+                doneButton.setBackgroundResource(R.drawable.ic_undo_black_36dp);
+                flagFrame.setBackgroundColor(0xFFA5D6A7);
+            } else {
+                doneButton.setBackgroundResource(R.drawable.ic_done_black_36dp);
+            }
+            isNotifSet = lastNote.isNotifSet();
+            isDone = lastNote.isDone();
+            notifButton.setOnClickListener(this);
+            doneButton.setOnClickListener(this);
+        }
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -359,12 +280,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.button_notification :
                 if(isNotifSet)
                 {
-                    notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_24dp);
+                    notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_36dp);
                     isNotifSet = false;
                     //lastNote.setNotif(false);
                 }
                 else {
-                    notifButton.setBackgroundResource(R.drawable.ic_notifications_black_24dp);
+                    NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext());
+                    notif.setContentTitle("Test notif");
+                    notif.setContentText("pensez à effectuer votre opération !!!");
+                    notif.setSmallIcon(R.drawable.ic_directions_car_white_24dp);
+                    Notification notification = notif.build();
+                    NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                    int notificationId = 0;
+                    notificationManager.notify (notificationId, notification);
+
+                    notifButton.setBackgroundResource(R.drawable.ic_notifications_black_36dp);
                     isNotifSet = true;
                     //lastNote.setNotif(true);
                 }
@@ -372,18 +302,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.button_done :
                 if(isDone)
                 {
-                    Log.d("ok", "button_done pressed");
-                    doneButton.setBackgroundResource(R.drawable.ic_done_grey_600_24dp);
+                    //L'utilisateur undone la note
+                    doneButton.setBackgroundResource(R.drawable.ic_done_black_36dp);
                     isDone = false;
-                    flag.setImageResource(R.drawable.ic_bookmark_red_400_24dp);
+                    flagFrame.setBackgroundColor(0xFFEF9A9A);
                     //lastNote.setDone(false);
                 }
                 else
                 {
-                    Log.d("ko", "button_done pressed");
-                    doneButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+                    //L'uilisateur done la note
+                    doneButton.setBackgroundResource(R.drawable.ic_undo_black_36dp);
                     isDone = true;
-                    flag.setImageResource(R.drawable.ic_bookmark_green_400_24dp);
+                    flagFrame.setBackgroundColor(0xFFA5D6A7);
                     //lastNote.setDone(true);
                 }
         }

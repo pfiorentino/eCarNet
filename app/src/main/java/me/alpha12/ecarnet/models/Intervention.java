@@ -1,7 +1,9 @@
 package me.alpha12.ecarnet.models;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,27 +17,27 @@ public class Intervention {
     private double price;
     private Date dateIntervention;
     private double quantity;
+    private int carId;
 
     /* Constructors */
 
-    public Intervention(int id, int kilometers, double price, double quantity, Date dateIntervention) {
+    public Intervention(int id, int kilometers, double price, double quantity, Date dateIntervention, int carId) {
         this.id = id;
         this.kilometers = kilometers;
         this.price = price;
         this.dateIntervention = dateIntervention;
         this.quantity = quantity;
+        this.carId = carId;
     }
 
     /* Static methods */
 
     public static ArrayList<Intervention> findAllByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
-
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
                 "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId,
                 null
         );
-
         while(cursor.moveToNext()) {
             int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
             result.add(new Intervention(
@@ -43,21 +45,19 @@ public class Intervention {
                     DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
                     DatabaseManager.extractDouble(cursor, DBModel.C_PRICE),
                     DatabaseManager.extractDouble(cursor, DBModel.C_QUANTITY),
-                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION)
+                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION),
+                    DatabaseManager.extractInt(cursor, DBModel.C_CAR_ID)
             ));
         }
-
         return result;
     }
 
     public static ArrayList<Intervention> find10ByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
-
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
                 "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId +" ORDER BY " +DBModel.C_DATE_INTERVENTION+ " DESC LIMIT 10",
                 null
         );
-
         while(cursor.moveToNext()) {
             int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
             result.add(new Intervention(
@@ -65,23 +65,22 @@ public class Intervention {
                     DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
                     DatabaseManager.extractDouble(cursor, DBModel.C_PRICE),
                     DatabaseManager.extractDouble(cursor, DBModel.C_QUANTITY),
-                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION)
+                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION),
+                    DatabaseManager.extractInt(cursor, DBModel.C_CAR_ID)
             ));
         }
-
         return result;
     }
 
 
-    public static ArrayList<Intervention> findFillUpByLimit(int carId, Date limit) {
+    public static ArrayList<Intervention> findInterventionByLimit(int carId, Date limit) {
+        Log.d("limite", limit.toString());
         ArrayList<Intervention> result = new ArrayList<>();
-
         java.sql.Date sqlLimit = new java.sql.Date(limit.getTime());
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId +" AND " +DBModel.C_QUANTITY +" > 0 AND " +DBModel.C_DATE_INTERVENTION + " > " +sqlLimit ,
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId +" AND "+DBModel.C_DATE_INTERVENTION+" > "+sqlLimit ,
                 null
         );
-
         while(cursor.moveToNext()) {
             int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
             result.add(new Intervention(
@@ -89,35 +88,35 @@ public class Intervention {
                     DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
                     DatabaseManager.extractDouble(cursor, DBModel.C_PRICE),
                     DatabaseManager.extractDouble(cursor, DBModel.C_QUANTITY),
-                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION)
+                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION),
+                    DatabaseManager.extractInt(cursor, DBModel.C_CAR_ID)
             ));
         }
-
         return result;
     }
 
 
-    public static ArrayList<Intervention> findFixesByLimit(int carId, Date limit) {
-        ArrayList<Intervention> result = new ArrayList<>();
-        java.sql.Date sqlLimit = new java.sql.Date(limit.getTime());
+    public void persistFillUp() {
+        ContentValues newValues = new ContentValues();
 
-        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId +" AND " +DBModel.C_QUANTITY +" = 0 AND " +DBModel.C_DATE_INTERVENTION + " > " +sqlLimit ,
-                null
-        );
+        if (this.id > 0)
+            newValues.put(DBModel.C_ID, this.id);
 
-        while(cursor.moveToNext()) {
-            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
-            result.add(new Intervention(
-                    id,
-                    DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
-                    DatabaseManager.extractDouble(cursor, DBModel.C_PRICE),
-                    DatabaseManager.extractDouble(cursor, DBModel.C_QUANTITY),
-                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION)
-            ));
-        }
+        newValues.put(DBModel.C_KILOMETERS, this.kilometers);
 
-        return result;
+        if (this.dateIntervention != null)
+            newValues.put(DBModel.C_DATE_INTERVENTION, this.dateIntervention.getTime());
+
+        newValues.put(DBModel.C_PRICE, this.getPrice());
+        newValues.put(DBModel.C_QUANTITY, this.quantity);
+        newValues.put(DBModel.C_TYPE, 1);
+        newValues.put(DBModel.C_OPERATION, 0);
+        newValues.put(DBModel.C_CAR_ID, this.getCarId());
+
+        long insertedId = DatabaseManager.getCurrentDatabase().insert(DBModel.TABLE_NAME, null, newValues);
+
+        if (this.id <= 0)
+            this.id = (int) insertedId;
     }
 
 
@@ -146,6 +145,15 @@ public class Intervention {
                 + C_QUANTITY + " REAL,"
                 + C_CAR_ID + " INTEGER NOT NULL"
                 + ");";
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public int getCarId() {
+        return carId;
     }
 
     /* Getters & Setters */
