@@ -2,8 +2,12 @@ package me.alpha12.ecarnet.fragments;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -281,6 +285,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     //lastNote.setNotif(false);
                 }
                 else {
+                    NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext());
+                    notif.setContentTitle("Test notif");
+                    notif.setContentText("pensez à effectuer votre opération !!!");
+                    notif.setSmallIcon(R.drawable.ic_directions_car_white_24dp);
+                    Notification notification = notif.build();
+                    NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                    int notificationId = 0;
+                    notificationManager.notify (notificationId, notification);
+
                     notifButton.setBackgroundResource(R.drawable.ic_notifications_black_36dp);
                     isNotifSet = true;
                     //lastNote.setNotif(true);

@@ -32,6 +32,7 @@ import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
+import me.alpha12.ecarnet.fragments.NotesFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
 import me.alpha12.ecarnet.fragments.ShareFragment;
 import me.alpha12.ecarnet.fragments.TagsFragment;
@@ -173,6 +174,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_nfc:
                 openMainFragment(TagsFragment.newInstance(menuItemId), menuItemId);
+                break;
+            case R.id.nav_notes:
+                openMainFragment(NotesFragment.newInstance(menuItemId), menuItemId);
                 break;
             case R.id.nav_add_car:
                 Intent intent = new Intent(this, AddCarActivity.class);
