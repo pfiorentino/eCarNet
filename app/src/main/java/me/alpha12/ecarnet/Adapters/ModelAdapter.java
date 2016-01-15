@@ -51,7 +51,7 @@ public class ModelAdapter extends ArrayAdapter<CarModel> {
             TextView subModel = (TextView) v.findViewById(R.id.text);
 
             if (brand != null) {
-                brand.setText(Utils.ucWords(currentModel.getBrand() + "  " + currentModel.getFullModel()));
+                brand.setText(Utils.ucWords(currentModel.getBrand() + "  " + currentModel.getModel()));
             }
 
             if(year != null)
