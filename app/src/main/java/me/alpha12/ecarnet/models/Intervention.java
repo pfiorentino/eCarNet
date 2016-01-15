@@ -124,7 +124,7 @@ public class Intervention {
 
     /* Database Model */
     public static abstract class DBModel implements BaseColumns {
-        public static final String TABLE_NAME = "intervention";
+        public static final String TABLE_NAME = "interventions";
         public static final String C_ID = "id";
         public static final String C_KILOMETERS = "kilometers";
         public static final String C_PRICE = "price";

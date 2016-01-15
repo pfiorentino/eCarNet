@@ -64,7 +64,7 @@ public class Car {
 
     @Override
     public String toString() {
-        return Utils.ucWords(this.model.getBrand()+" "+this.model.getFullModel())+" - "+this.plateNum;
+        return Utils.ucWords(this.model.getBrand()+" "+this.model.getModel())+" - "+this.plateNum;
     }
 
     public void persist() {
@@ -143,7 +143,7 @@ public class Car {
 
     /* Database Model */
     public static abstract class DBModel implements BaseColumns {
-        public static final String TABLE_NAME = "car";
+        public static final String TABLE_NAME = "cars";
         public static final String C_ID = "id";
         public static final String C_KILOMETERS = "kilometers";
         public static final String C_BUYING_DATE = "buying_date";

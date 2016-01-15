@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity
 
         if (toolbar != null) {
             if (fragmentId == R.id.nav_home) {
-                toolbar.setTitle(Utils.ucWords(currentCar.getCarModel().getFullModel()) + " -  " + currentCar.getPlateNum());
+                toolbar.setTitle(Utils.ucWords(currentCar.getCarModel().getModel()) + " -  " + currentCar.getPlateNum());
                 fab.show();
             } else if (fragmentId == R.id.nav_gas) {
                 toolbar.setTitle(R.string.title_fragment_gas);
