@@ -96,7 +96,7 @@ public class Intervention {
     }
 
 
-    public void persistFillUp() {
+    public void persist() {
         ContentValues newValues = new ContentValues();
 
         if (this.id > 0)
