@@ -30,6 +30,7 @@ import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
+import me.alpha12.ecarnet.adapters.SchedulerBuilder;
 import me.alpha12.ecarnet.charts.BarChartCustom;
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
@@ -96,6 +97,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         Car currentCar = ((MainActivity) getActivity()).currentCar;
+
+        SchedulerBuilder alarm = new SchedulerBuilder();
+        alarm.setAlarm(getContext());
 
         lastNote = Note.getLastNote(currentCar.getId());
         notifButton = (ImageButton) view.findViewById(R.id.button_notification);
@@ -285,14 +289,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     //lastNote.setNotif(false);
                 }
                 else {
+
                     NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext());
                     notif.setContentTitle("Test notif");
                     notif.setContentText("pensez à effectuer votre opération !!!");
                     notif.setSmallIcon(R.drawable.ic_directions_car_white_24dp);
+                    notif.setDefaults(NotificationCompat.DEFAULT_SOUND);
                     Notification notification = notif.build();
                     NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
                     int notificationId = 0;
-                    notificationManager.notify (notificationId, notification);
+                    notificationManager.notify(notificationId, notification);
 
                     notifButton.setBackgroundResource(R.drawable.ic_notifications_black_36dp);
                     isNotifSet = true;
