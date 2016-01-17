@@ -118,6 +118,7 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         selectedDate.set(year, monthOfYear, dayOfMonth);
         dateTextView.setText(getFormattedDate(this, selectedDate));
 
+
         checkForm();
     }
 
