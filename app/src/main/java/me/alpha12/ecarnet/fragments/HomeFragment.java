@@ -29,6 +29,11 @@ import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
+<<<<<<< HEAD
+import me.alpha12.ecarnet.adapters.SchedulerBuilder;
+import me.alpha12.ecarnet.charts.BarChartCustom;
+=======
+>>>>>>> c8bfcafa681768e352b3fb0a4609c13f1ca445ca
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
@@ -96,10 +101,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         Car currentCar = ((MainActivity) getActivity()).currentCar;
 
+<<<<<<< HEAD
+        SchedulerBuilder alarm = new SchedulerBuilder();
+        alarm.setAlarm(getContext());
+=======
         contentCar = (TextView) view.findViewById(R.id.contentCar);
 
         contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
 
+>>>>>>> c8bfcafa681768e352b3fb0a4609c13f1ca445ca
 
         lastNote = Note.getLastNote(currentCar.getId());
         notifButton = (ImageButton) view.findViewById(R.id.button_notification);
@@ -289,14 +299,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     //lastNote.setNotif(false);
                 }
                 else {
+
                     NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext());
                     notif.setContentTitle("Test notif");
                     notif.setContentText("pensez à effectuer votre opération !!!");
                     notif.setSmallIcon(R.drawable.ic_directions_car_white_24dp);
+                    notif.setDefaults(NotificationCompat.DEFAULT_SOUND);
                     Notification notification = notif.build();
                     NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
                     int notificationId = 0;
-                    notificationManager.notify (notificationId, notification);
+                    notificationManager.notify(notificationId, notification);
 
                     notifButton.setBackgroundResource(R.drawable.ic_notifications_black_36dp);
                     isNotifSet = true;
