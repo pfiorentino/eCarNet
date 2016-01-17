@@ -38,7 +38,7 @@ public class FillUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        int carId = getIntent().getExtras().getInt("idCar");
+        int carId = getIntent().getExtras().getInt("carId");
         currentCar = Car.findCarById(carId);
 
         super.onCreate(savedInstanceState);
