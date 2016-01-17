@@ -69,8 +69,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), FillUpActivity.class);
-                intent.putExtra("idCar", currentCar.getId());
-                startActivityForResult(intent, 0);
+                intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
             }
         });
