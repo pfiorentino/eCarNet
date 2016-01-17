@@ -186,6 +186,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_manage_car:
                 openActivity(CarsMgmtActivity.class);
                 break;
+            case R.id.nav_about:
+                openActivity(AboutActivity.class);
+                break;
             default:
                 Car selectedCar = cars.get(menuItemId);
                 if (selectedCar != null){
@@ -203,7 +206,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void openActivity(Class activityClass) {
-        Intent intent = new Intent(this.getBaseContext(), activityClass);
+        Intent intent = new Intent(this, activityClass);
         startActivity(intent);
     }
 

@@ -23,5 +23,7 @@
     <string name="site_url">www.ecarnet.fr</string>
 
     <string name="cars_identity">Première mise en circulation : %1$s\nCompteur total : %2$d km</string>
+    <string name="title_activity_about">À propos</string>
+    <string name="keep_in_touch_text">Suivez-nous sur les réseaux sociaux pour obtenir de l\'aide, disposer des dernières informations, nous aider à améliorer eCarNet et construire une grande communauté d\'utilisateurs</string>
 </resources>
 
