@@ -97,9 +97,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         Car currentCar = ((MainActivity) getActivity()).currentCar;
 
         contentCar = (TextView) view.findViewById(R.id.contentCar);
-
-        contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
-
+        contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getPlateNum(), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
 
         lastNote = Note.getLastNote(currentCar.getId());
         notifButton = (ImageButton) view.findViewById(R.id.button_notification);
@@ -113,9 +111,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         LineChart costLine = (LineChart) view.findViewById(R.id.costChart);
         TextView costText = (TextView) view.findViewById(R.id.costData);
-
-        TextView title = (TextView) view.findViewById(R.id.titleCar);
-        title.setText(currentCar.getCarModel().toString());
 
         Calendar c = Calendar.getInstance();
         Date limit = c.getTime();
