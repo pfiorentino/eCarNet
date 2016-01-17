@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context="me.alpha12.ecarnet.activities.AboutActivity">
+
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/cards_margin" android:layout_marginBottom="@dimen/cards_half_margin"
+            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin">
+            <LinearLayout android:orientation="vertical" android:gravity="center"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:padding="16dp">
+                <ImageView android:adjustViewBounds="true"
+                    android:layout_width="100dp" android:layout_height="wrap_content"
+                    android:src="@drawable/splash_logo_black"/>
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="eCarNet" android:textAppearance="@android:style/TextAppearance.Large"/>
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Version : 0.9 - janvier 2016"/>
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Copyright 2016 - ENGLAN - FIORENTINO"
+                    android:textAppearance="@android:style/TextAppearance.Small"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
+            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin">
+            <LinearLayout android:orientation="vertical" android:gravity="center"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Noter l'application" android:textAppearance="@android:style/TextAppearance.Large"/>
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="eCarNet vous plaît ? N'oubliez pas de noter l'application sur Google Play !" />
+
+                <LinearLayout android:orientation="horizontal" android:gravity="center"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:background="#AAFFFFFF">
+                    <ImageView android:src="@drawable/ic_google_play_36dp"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="0.25" android:layout_marginRight="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="eCarNet" android:textAppearance="@android:style/TextAppearance.Medium"
+                        android:drawableBottom="@drawable/google_play_stars_small"/>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
+            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin">
+            <LinearLayout android:orientation="vertical" android:gravity="center"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Garder le contact" android:textAppearance="@android:style/TextAppearance.Large"/>
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/keep_in_touch_text"/>
+                <LinearLayout android:orientation="horizontal"
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <ImageButton
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_square_facebook_36dp"
+                        android:background="@android:color/transparent"/>
+                    <ImageButton
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_square_twitter_36dp"
+                        android:background="@android:color/transparent"/>
+                    <ImageButton
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_square_google_plus_36dp"
+                        android:background="@android:color/transparent"/>
+                    <ImageButton
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_square_mail_36dp"
+                        android:background="@android:color/transparent"/>
+                    <ImageButton
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_square_web_36dp"
+                        android:background="@android:color/transparent"/>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
+            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin">
+            <LinearLayout android:orientation="vertical" android:gravity="center"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Credits" android:textAppearance="@android:style/TextAppearance.Large"/>
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="Développeurs :" android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Guilhem ENGLAN, Paul FIORENTINO"/>
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="Avec l'aide de :" android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Benoît BOIVIN et Rémy LOZANO"/>
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="D'après une idée originale de :" android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Paul FIORENTINO"/>
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="Un grand merci à :" android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="L'EPSI de Montpellier pour le temps qui nous a été donné pour initier ce projet"
+                    android:drawableLeft="@drawable/ic_epsi_logo_24dp"
+                    android:drawablePadding="4dp"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_margin"
+            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin">
+            <LinearLayout android:orientation="vertical" android:gravity="center"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Open Source" android:textAppearance="@android:style/TextAppearance.Large"/>
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="eCarNet utilise certaines bibliothèques Open Source" />
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="MPAndroidChart" android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="https://github.com/PhilJay/MPAndroidChart"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+</ScrollView>

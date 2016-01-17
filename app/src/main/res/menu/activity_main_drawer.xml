@@ -25,8 +25,8 @@
     <group android:id="@+id/misc_group">
         <item android:id="@+id/nav_settings" android:icon="@drawable/ic_action_settings"
             android:title="Paramètres" />
-        <item android:id="@+id/nav_help" android:icon="@drawable/ic_action_help"
-            android:title="Aide" />
+        <item android:id="@+id/nav_about" android:icon="@drawable/ic_action_help"
+            android:title="À propos" />
     </group>
 
     <group android:id="@+id/cars_mgmt_group">
