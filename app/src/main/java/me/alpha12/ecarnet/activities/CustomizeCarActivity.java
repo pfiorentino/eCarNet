@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -83,7 +84,11 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Car car = new Car(imat.getText().toString(), selectedCar);
+                Car car = new Car(
+                        imat.getText().toString(),
+                        Integer.parseInt(kilometers.getText().toString()),
+                        new Date(selectedDate.getTimeInMillis()),
+                        selectedCar);
                 car.persist();
 
                 GlobalContext.setCurrentCar(car.getId());

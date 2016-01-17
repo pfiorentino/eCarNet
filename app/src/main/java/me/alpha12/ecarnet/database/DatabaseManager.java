@@ -175,7 +175,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public static Date extractDate(Cursor cur, String ColumnName) {
-        return new Date(cur.getLong(cur.getColumnIndex(ColumnName))*1000);
+        return new Date(cur.getLong(cur.getColumnIndex(ColumnName)));
     }
 }
 

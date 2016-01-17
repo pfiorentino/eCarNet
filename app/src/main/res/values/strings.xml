@@ -21,5 +21,7 @@
     <string name="title_activity_add_user">AddUserActivity</string>
     <string name="title_activity_car_search">CarSearchActivity</string>
     <string name="site_url">www.ecarnet.fr</string>
+
+    <string name="cars_identity">Première mise en circulation : %1$s\nCompteur total : %2$d km</string>
 </resources>
 

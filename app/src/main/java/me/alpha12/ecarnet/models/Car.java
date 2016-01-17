@@ -8,6 +8,7 @@ import android.provider.BaseColumns;
 import android.support.v4.content.ContextCompat;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,9 +31,10 @@ public class Car {
 
     /* Constructors */
 
-    public Car(String plateNum, CarModel model) {
+    public Car(String plateNum, int kilometers, Date circulationDate, CarModel model) {
         this.plateNum = plateNum;
-        this.kilometers = 10000;
+        this.kilometers = kilometers;
+        this.circulationDate = circulationDate;
         this.model = model;
     }
 
@@ -68,10 +70,20 @@ public class Car {
     }
 
     public void persist() {
+        persist(false);
+    }
+
+    public void update() {
+        persist(true);
+    }
+
+    public void persist(boolean update) {
         ContentValues newValues = new ContentValues();
 
         if (this.id > 0)
             newValues.put(DBModel.C_ID, this.id);
+        else
+            update = false;
 
         newValues.put(DBModel.C_KILOMETERS, this.kilometers);
 
@@ -82,13 +94,17 @@ public class Car {
             newValues.put(DBModel.C_CIRCULATION_DATE, this.circulationDate.getTime());
 
         newValues.put(DBModel.C_AVERAGE_CONSUMPTION, this.averageConsumption);
-        newValues.put(DBModel.C_PLATE_NUMBER, this.plateNum);
-        newValues.put(DBModel.C_MODEL_ID, this.model.getId());
+            newValues.put(DBModel.C_PLATE_NUMBER, this.plateNum);
+            newValues.put(DBModel.C_MODEL_ID, this.model.getId());
 
-        long insertedId = DatabaseManager.getCurrentDatabase().insert(DBModel.TABLE_NAME, null, newValues);
+        if (update){
+            DatabaseManager.getCurrentDatabase().update(DBModel.TABLE_NAME, newValues, DBModel.C_ID+"="+this.id, null);
+        } else {
+            long insertedId = DatabaseManager.getCurrentDatabase().insert(DBModel.TABLE_NAME, null, newValues);
 
-        if (this.id <= 0)
-            this.id = (int) insertedId;
+            if (this.id <= 0)
+                this.id = (int) insertedId;
+        }
     }
 
     public Drawable getCarPicture(Context ctx) {
@@ -156,8 +172,8 @@ public class Car {
             "CREATE TABLE " + TABLE_NAME + "("
                 + C_ID + " INTEGER PRIMARY KEY,"
                 + C_KILOMETERS + " INTEGER NOT NULL,"
-                + C_BUYING_DATE + " NUMERIC,"
-                + C_CIRCULATION_DATE + " NUMERIC,"
+                + C_BUYING_DATE + " INTEGER,"
+                + C_CIRCULATION_DATE + " INTEGER,"
                 + C_PLATE_NUMBER + " TEXT,"
                 + C_AVERAGE_CONSUMPTION + " REAL NOT NULL,"
                 + C_MODEL_ID + " INTEGER NOT NULL"
@@ -198,5 +214,15 @@ public class Car {
 
     public int getKilometers() {
         return this.kilometers;
+    }
+
+    public String getStringCirculationDate() {
+        SimpleDateFormat simpleDate =  new SimpleDateFormat("dd/MM/yyyy");
+        return simpleDate.format(circulationDate);
+    }
+
+    public void setKilometers(int kilometers) {
+        if (kilometers > this.kilometers)
+            this.kilometers = kilometers;
     }
 }

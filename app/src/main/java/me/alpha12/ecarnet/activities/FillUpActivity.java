@@ -28,7 +28,7 @@ import me.alpha12.ecarnet.models.Intervention;
 public class FillUpActivity extends AppCompatActivity implements View.OnClickListener {
     private static TextView mDateTextView;
     private Calendar mCurrentDate;
-    private TextView kilometers;
+    private TextView kilometersTextView;
     private TextView amount;
     private TextView price;
     private Button addButton;
@@ -38,8 +38,8 @@ public class FillUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        int idModel = getIntent().getExtras().getInt("idCar");
-        currentCar = Car.findCarById(idModel);
+        int carId = getIntent().getExtras().getInt("idCar");
+        currentCar = Car.findCarById(carId);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_up);
@@ -57,8 +57,8 @@ public class FillUpActivity extends AppCompatActivity implements View.OnClickLis
         });
         mDateTextView.addTextChangedListener(mTextWatcher);
 
-        kilometers = (TextView) findViewById(R.id.total);
-        kilometers.addTextChangedListener(mTextWatcher);
+        kilometersTextView = (TextView) findViewById(R.id.total);
+        kilometersTextView.addTextChangedListener(mTextWatcher);
         amount = (TextView) findViewById(R.id.quantity);
         amount.addTextChangedListener(mTextWatcher);
         price = (TextView) findViewById(R.id.price);
@@ -77,7 +77,7 @@ public class FillUpActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void afterTextChanged(Editable editable) {
             addButton.setEnabled(
-                    !kilometers.getText().toString().matches("") &&
+                    !kilometersTextView.getText().toString().matches("") &&
                     !amount.getText().toString().matches("") &&
                     !price.getText().toString().matches("") &&
                     !mDateTextView.getText().toString().matches("")
@@ -104,16 +104,23 @@ public class FillUpActivity extends AppCompatActivity implements View.OnClickLis
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy", Locale.FRENCH);
                 try {
                     Date d = sdf.parse(mDateTextView.getText().toString());
+                    int kilometers = Integer.parseInt(kilometersTextView.getText().toString());
 
-                Intervention inter = new Intervention(0, Integer.parseInt(kilometers.getText().toString()),
+                    Intervention inter = new Intervention(0,
+                            kilometers,
                         (double) Float.parseFloat(price.getText().toString()),
                         (double) Float.parseFloat(amount.getText().toString()),
                         new java.sql.Date(d.getTime()),
                         currentCar.getId()
                         );
-                    inter.persistFillUp();
-                    Intent intent = new Intent(FillUpActivity.this, MainActivity.class);
-                    FillUpActivity.this.startActivity(intent);
+                    inter.persist();
+
+                    currentCar.setKilometers(kilometers);
+                    currentCar.update();
+
+                    Intent intent = new Intent(this, MainActivity.class);
+                    this.startActivity(intent);
+                    finish();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

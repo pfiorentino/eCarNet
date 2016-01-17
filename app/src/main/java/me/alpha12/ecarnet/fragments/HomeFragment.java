@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 
 import java.text.SimpleDateFormat;
@@ -30,8 +29,11 @@ import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
+<<<<<<< HEAD
 import me.alpha12.ecarnet.adapters.SchedulerBuilder;
 import me.alpha12.ecarnet.charts.BarChartCustom;
+=======
+>>>>>>> c8bfcafa681768e352b3fb0a4609c13f1ca445ca
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
@@ -59,6 +61,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private ArrayList<Intervention> myInterventions = new ArrayList<>();
     private ArrayList<Intervention> allMyInterventions = new ArrayList<>();
     private ArrayList<Intervention> myFillsUp = new ArrayList<>();
+
+    private TextView contentCar;
 
     private ImageButton notifButton;
     private ImageButton editButton;
@@ -94,12 +98,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         Car currentCar = ((MainActivity) getActivity()).currentCar;
 
+<<<<<<< HEAD
         SchedulerBuilder alarm = new SchedulerBuilder();
         alarm.setAlarm(getContext());
+=======
+        contentCar = (TextView) view.findViewById(R.id.contentCar);
+
+        contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
+
+>>>>>>> c8bfcafa681768e352b3fb0a4609c13f1ca445ca
 
         lastNote = Note.getLastNote(currentCar.getId());
         notifButton = (ImageButton) view.findViewById(R.id.button_notification);
