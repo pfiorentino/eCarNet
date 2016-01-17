@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private View headerView;
 
-    private FloatingActionButton fab;
+    private FloatingActionButton addFillupFAB;
+    private FloatingActionButton addOperationFAB;
 
     public HashMap<Integer, Car> cars = new HashMap<>();
     public Car currentCar;
@@ -76,11 +77,21 @@ public class MainActivity extends AppCompatActivity
 
         cars = Car.findAll();
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        addFillupFAB = (FloatingActionButton) findViewById(R.id.addFillupFAB);
+        addFillupFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), FillUpActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
+            }
+        });
+
+        addOperationFAB = (FloatingActionButton) findViewById(R.id.addOperationFAB);
+        addOperationFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), AddOperationActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
             }
@@ -221,19 +232,28 @@ public class MainActivity extends AppCompatActivity
         setAppBarScrollEnabled(fragmentId == R.id.nav_home);
         if (fragmentId == R.id.nav_home) {
             setTitle(currentCar.getCarModel().toString());
-            fab.show();
+            addFillupFAB.show();
+            addOperationFAB.hide();
         } else if (fragmentId == R.id.nav_gas) {
             setTitle(R.string.title_fragment_gas);
-            fab.show();
+            addFillupFAB.show();
+            addOperationFAB.hide();
         } else if (fragmentId == R.id.nav_repair) {
             setTitle(R.string.title_fragment_operations);
-            fab.hide();
+            addFillupFAB.hide();
+            addOperationFAB.show();
+        } else if (fragmentId == R.id.nav_notes) {
+            setTitle(R.string.title_fragment_share);
+            addFillupFAB.hide();
+            addOperationFAB.hide();
         } else if (fragmentId == R.id.nav_share) {
             setTitle(R.string.title_fragment_share);
-            fab.hide();
+            addFillupFAB.hide();
+            addOperationFAB.hide();
         } else if (fragmentId == R.id.nav_nfc) {
             setTitle(R.string.title_fragment_tags);
-            fab.hide();
+            addFillupFAB.hide();
+            addOperationFAB.hide();
         }
     }
 

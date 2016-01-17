@@ -35,6 +35,16 @@
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
         <activity
+            android:name=".activities.AddOperationActivity"
+            android:label="@string/title_activity_add_operation"
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.alpha12.ecarnet.activities.MainActivity" />
+        </activity>
+        <activity
             android:name=".activities.CarsMgmtActivity"
             android:label="@string/title_activity_cars_management"
             android:parentActivityName=".activities.MainActivity"
@@ -44,7 +54,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
-
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_activity_about"
@@ -55,7 +64,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
-
         <activity
             android:name=".activities.AddUserActivity"
             android:label="@string/title_activity_add_user"
