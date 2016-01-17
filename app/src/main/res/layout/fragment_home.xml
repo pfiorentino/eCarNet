@@ -13,31 +13,18 @@
             android:layout_marginTop="@dimen/cards_margin" android:layout_marginBottom="@dimen/cards_half_margin"
             android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin" >
             <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content" >
-                <LinearLayout android:orientation="horizontal"
-                    android:layout_width="match_parent" android:layout_height="72dp" >
-                    <ImageView android:id="@+id/brand_image_view"
-                        android:layout_width="wrap_content" android:layout_height="72dp"
-                        android:paddingTop="16dp" android:paddingBottom="16dp"
-                        android:src="@drawable/ic_car_profile_picture" />
-
-                    <TextView android:id="@+id/titleCar"
-                        android:layout_width="match_parent" android:layout_height="72dp" android:gravity="center_vertical"
-                        android:paddingTop="16dp" android:paddingBottom="16dp"
-                        android:paddingRight="16dp" android:paddingLeft="16dp"
-                        android:text="votre véhicule"
-                        android:textSize="24sp" android:textStyle="bold" />
-                </LinearLayout>
-
-                <ImageView android:id="@+id/backgroundCar" android:adjustViewBounds="true"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:padding="16dp">
+                <TextView
                     android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:src="@drawable/default_car_background" />
+                    android:layout_marginBottom="16dp"
+                    android:textAppearance="@android:style/TextAppearance.Large"
+                    android:text="Votre véhicule"/>
 
                 <TextView android:id="@+id/contentCar"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="@string/cars_identity"
-                    android:textSize="14sp" />
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:text="@string/cars_identity" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
