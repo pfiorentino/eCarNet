@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:id="@+id/cars_icon_layout">
-        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <ImageView android:layout_width="72dp" android:layout_height="72dp"
             android:src="@android:drawable/sym_def_app_icon" android:id="@+id/brand_image_view" />
 
         <View
