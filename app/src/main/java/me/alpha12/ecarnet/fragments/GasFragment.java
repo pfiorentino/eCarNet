@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
@@ -71,13 +72,15 @@ public class GasFragment extends Fragment {
 
         ArrayList<Intervention> interventions = Intervention.findFillUpByCar(currentCar.getId());
 
+        if (interventions != null) {
+            TextView kmTotalText = (TextView) view.findViewById(R.id.kmTotalValue);
+            kmTotalText.setText(String.valueOf(interventions.get(0).getKilometers()));
+            TextView qteText = (TextView) view.findViewById(R.id.qteValue);
+            qteText.setText(String.valueOf(interventions.get(0).getQuantity()));
+            TextView priceText = (TextView) view.findViewById(R.id.priceValue);
+            priceText.setText(String.valueOf(interventions.get(0).getPrice()));
+        }
 
-        TextView kmTotalText = (TextView) view.findViewById(R.id.kmTotalValue);
-        kmTotalText.setText(String.valueOf(interventions.get(0).getKilometers()));
-        TextView qteText = (TextView) view.findViewById(R.id.qteValue);
-        qteText.setText(String.valueOf(interventions.get(0).getQuantity()));
-        TextView priceText = (TextView) view.findViewById(R.id.priceValue);
-        priceText.setText(String.valueOf(interventions.get(0).getPrice()));
 
         return view;
     }

@@ -52,7 +52,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
                     android:textSize="24sp"
-                    android:text="kmTotalValue"
+                    android:text="No value"
                     />
 
                 <TextView
@@ -73,7 +73,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
                     android:textSize="24sp"
-                    android:text="qteValue"
+                    android:text="No value"
                     />
 
                 <TextView
@@ -94,7 +94,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
                     android:textSize="24sp"
-                    android:text="priceValue"
+                    android:text="No value"
                     />
 
                 <ImageButton
