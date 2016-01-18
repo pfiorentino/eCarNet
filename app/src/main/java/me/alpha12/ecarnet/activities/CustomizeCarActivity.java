@@ -5,8 +5,12 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -19,6 +23,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,10 +36,10 @@ import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.CarModel;
 
-/**
- * Created by guilhem on 04/01/2016.
- */
 public class CustomizeCarActivity extends AppCompatActivity implements OnDateSetListener {
+    private static final int SELECT_PICTURE_INTENT = 1;
+    private static final int SELECT_COVER_INTENT = 2;
+
     private CarModel selectedCar;
     private Calendar selectedDate;
 
@@ -43,6 +51,9 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
 
     private Button finishButton;
     private Button backButton;
+
+    private Uri pictureUri;
+    private Uri coverUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +83,24 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
             }
         });
 
+        ((Button)findViewById(R.id.btn_addPicture)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, SELECT_PICTURE_INTENT);
+            }
+        });
+
+        ((Button)findViewById(R.id.btn_addCover)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, SELECT_COVER_INTENT);
+            }
+        });
+
         backButton = (Button) findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +121,13 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
                 car.persist();
 
                 GlobalContext.setCurrentCar(car.getId());
+
+                // Saving the pictures
+                if (pictureUri != null)
+                    savePicture(pictureUri, false);
+
+                if (coverUri != null)
+                    savePicture(coverUri, true);
 
                 Intent intent = new Intent(CustomizeCarActivity.this, MainActivity.class);
                 CustomizeCarActivity.this.startActivity(intent);
@@ -117,8 +153,6 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         selectedDate = Calendar.getInstance();
         selectedDate.set(year, monthOfYear, dayOfMonth);
         dateTextView.setText(getFormattedDate(this, selectedDate));
-
-
         checkForm();
     }
 
@@ -183,7 +217,63 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
             case GlobalContext.RESULT_CLOSE_ALL:
                 setResult(GlobalContext.RESULT_CLOSE_ALL);
                 finish();
+                break;
+            case RESULT_OK:
+                switch(requestCode) {
+                    case SELECT_PICTURE_INTENT:
+                        pictureUri = data.getData();
+                        break;
+                    case SELECT_COVER_INTENT:
+                        coverUri = data.getData();
+                        break;
+                }
         }
+
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void savePicture(Uri selectedImage, boolean isCover)
+    {
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(
+                selectedImage, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String filePath = cursor.getString(columnIndex);
+        cursor.close();
+
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+
+            if (!sd.canWrite())
+                return;
+
+            String sourceImagePath = filePath;
+            File destination = new File(GlobalContext.getAppPicturePath()
+                    + String.valueOf(GlobalContext.getCurrentCar())
+                    + (isCover ? "_cover.jpg" : "_picture.jpg"));
+
+            File source = new File(sourceImagePath);
+
+            if(!destination.exists()) {
+                destination.getParentFile().mkdirs();
+                destination.createNewFile();
+            }
+
+            if (!source.exists())
+                return;
+
+            FileChannel src = new FileInputStream(source).getChannel();
+            FileChannel dst = new FileOutputStream(destination).getChannel();
+            dst.transferFrom(src, 0, src.size());
+            src.close();
+            dst.close();
+
+        } catch (Exception e) {
+            Log.e("CustomizeCare", e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

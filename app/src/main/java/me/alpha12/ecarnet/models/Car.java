@@ -3,9 +3,19 @@ package me.alpha12.ecarnet.models;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.provider.BaseColumns;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -13,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.database.DatabaseManager;
@@ -108,19 +119,45 @@ public class Car {
     }
 
     public Drawable getCarPicture(Context ctx) {
-        String filePath = "/sdcard/Images/test_image.jpg";
-        File imgFile = new  File(filePath);
+        File imgFile = new  File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_picture.jpg");
 
-        if(imgFile.exists()){
-            return Drawable.createFromPath(imgFile.getAbsolutePath());
-        }
-        return ContextCompat.getDrawable(ctx, R.drawable.ic_car_profile_picture);
+        // Fallback to default image
+        if (!imgFile.exists())
+            return ContextCompat.getDrawable(ctx, R.drawable.ic_car_profile_picture);
+
+
+        int imageLength = (int)(72 * GlobalContext.getInstance().getResources().getDisplayMetrics().density);
+
+        // Loading the bitmap
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath()).copy(Bitmap.Config.ARGB_8888, true);
+
+        Bitmap output = Bitmap.createBitmap(imageLength, imageLength, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        // Cropping to a circle
+        int color = 0xff424242;
+        Paint paint = new Paint();
+        Rect rect = new Rect(0, 0, imageLength, imageLength);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+        canvas.drawCircle(output.getWidth() / 2, output.getHeight() / 2, output.getWidth() / 2, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        //Bitmap _bmp = Bitmap.createScaledBitmap(output, 60, 60, false);
+        //return _bmp;
+
+        // Returning drawable
+        return new BitmapDrawable(GlobalContext.getInstance().getResources(), output);
+        //return Drawable.createFromPath(imgFile.getAbsolutePath());
     }
 
-
     public Drawable getCarBanner(Context ctx) {
-        String filePath = "/sdcard/Images/test_image.jpg";
-        File imgFile = new  File(filePath);
+        File imgFile = new  File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_cover.jpg");
 
         if(imgFile.exists()){
             return Drawable.createFromPath(imgFile.getAbsolutePath());

@@ -3,8 +3,10 @@ package me.alpha12.ecarnet;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.text.format.DateUtils;
 
+import java.io.File;
 import java.util.Calendar;
 
 /**
@@ -39,6 +41,13 @@ public class GlobalContext extends Application {
     public static String getFormattedDate(Calendar c) {
         return DateUtils.formatDateTime(getInstance(), c.getTimeInMillis(),
                 DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH);
+    }
+
+    public static String getAppPicturePath() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath()
+                + File.separator  + "Android" + File.separator
+                + "data" + File.separator + getInstance().getPackageName()
+                + File.separator + "photos" + File.separator;
     }
 
     @Override

@@ -26,5 +26,7 @@
     <string name="title_activity_about">À propos</string>
     <string name="keep_in_touch_text">Suivez-nous sur les réseaux sociaux pour obtenir de l\'aide, disposer des dernières informations, nous aider à améliorer eCarNet et construire une grande communauté d\'utilisateurs</string>
     <string name="title_activity_add_operation">Ajouter une intervention</string>
+    <string name="addPicture">Ajouter photo</string>
+    <string name="addCover">Ajouter couverture</string>
 </resources>
 

@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton addFillupFAB;
     private FloatingActionButton addOperationFAB;
 
+    private ImageView appBarImage;
+
     public HashMap<Integer, Car> cars = new HashMap<>();
     public Car currentCar;
 
@@ -96,6 +98,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        appBarImage = (ImageView) findViewById(R.id.appBarImage);
 
         initNavDrawer();
 
@@ -282,8 +286,10 @@ public class MainActivity extends AppCompatActivity
         brandImageView.setImageDrawable(currentCar.getCarPicture(getBaseContext()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             header.setBackground(currentCar.getCarBanner(getBaseContext()));
+            appBarImage.setBackground(currentCar.getCarBanner(getBaseContext()));
         } else{
             header.setBackgroundDrawable(currentCar.getCarBanner(getBaseContext()));
+            appBarImage.setBackgroundDrawable(currentCar.getCarBanner(getBaseContext()));
         }
 
         LinearLayout carsLayout = (LinearLayout) headerView.findViewById(R.id.cars_icon_layout);
@@ -341,6 +347,7 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().popBackStack("FIRST_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             openMainFragment(HomeFragment.newInstance(R.id.nav_home), R.id.nav_home);
         }
+
         closeDrawer();
     }
 
