@@ -10,6 +10,7 @@
     <string name="title_fragment_gas">Pleins d\'essence</string>
     <string name="title_fragment_operations">Interventions</string>
     <string name="title_fragment_share">Partages</string>
+    <string name="title_fragment_memos">Rappels</string>
     <string name="title_fragment_tags">Mes tags NFC</string>
     <string name="add">Ajouter</string>
 

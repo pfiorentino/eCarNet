@@ -225,6 +225,7 @@ public class Car {
         return this.kilometers;
     }
 
+
     public String getStringCirculationDate() {
         SimpleDateFormat simpleDate =  new SimpleDateFormat("dd/MM/yyyy");
         return simpleDate.format(circulationDate);
@@ -234,4 +235,6 @@ public class Car {
         if (kilometers > this.kilometers)
             this.kilometers = kilometers;
     }
+
+
 }

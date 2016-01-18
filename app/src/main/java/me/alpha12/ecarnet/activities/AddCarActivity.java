@@ -1,11 +1,16 @@
 package me.alpha12.ecarnet.activities;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -98,9 +103,25 @@ public class AddCarActivity extends AppCompatActivity {
         mineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddCarActivity.this, SearchCarActivity.class);
-                intent.putExtra("mine", mineTypeEditText.getText().toString());
-                startActivityForResult(intent, 0);
+                if(CarModel.existWithTypeMine(mineTypeEditText.getText().toString())) {
+                    Intent intent = new Intent(AddCarActivity.this, SearchCarActivity.class);
+                    intent.putExtra("mine", mineTypeEditText.getText().toString());
+                    startActivityForResult(intent, 0);
+                }
+                else
+                {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddCarActivity.this);
+                    alertDialogBuilder.setMessage("Oups, aucun véhicule n'a été trouvé. Vérifiez le type mine ou cherchez par marque et modèle");
+                    alertDialogBuilder.setPositiveButton("fermer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                        }
+                    });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
             }
         });
 
