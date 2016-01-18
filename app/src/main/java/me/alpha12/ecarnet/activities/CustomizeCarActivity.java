@@ -6,6 +6,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,9 +39,14 @@ import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.ScalingUtilities;
 import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.CarModel;
+
+import static me.alpha12.ecarnet.ScalingUtilities.bitmapCirclify;
+import static me.alpha12.ecarnet.ScalingUtilities.createScaledBitmap;
+import static me.alpha12.ecarnet.ScalingUtilities.decodeFile;
 
 public class CustomizeCarActivity extends AppCompatActivity implements OnDateSetListener {
     private static final int SELECT_PICTURE_INTENT = 1;
@@ -234,46 +246,82 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
 
     private void savePicture(Uri selectedImage, boolean isCover)
     {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-        Cursor cursor = getContentResolver().query(
-                selectedImage, filePathColumn, null, null, null);
-        cursor.moveToFirst();
-
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String filePath = cursor.getString(columnIndex);
-        cursor.close();
-
         try {
-            File sd = Environment.getExternalStorageDirectory();
-
-            if (!sd.canWrite())
+            if (!Environment.getExternalStorageDirectory().canWrite())
                 return;
 
-            String sourceImagePath = filePath;
-            File destination = new File(GlobalContext.getAppPicturePath()
-                    + String.valueOf(GlobalContext.getCurrentCar())
-                    + (isCover ? "_cover.jpg" : "_picture.jpg"));
-
+            // Handling source file
+            String sourceImagePath = mediaUriToString(selectedImage);
             File source = new File(sourceImagePath);
+            if (!source.exists())
+                return;
+/*
+            Bitmap unscaledBitmap; = ScalingUtilities.decodeFile(source.getAbsolutePath(), dstWidth, dstHeight, scalingLogic);
+            Bitmap scaledBitmap; = createScaledBitmap(unscaledBitmap, dstWidth, dstHeight, scalingLogic);*/
 
-            if(!destination.exists()) {
+
+            // Cropping and resizing
+            Bitmap outputBitmap;
+            String outputFilename = String.valueOf(GlobalContext.getCurrentCar());
+            Bitmap.CompressFormat format;
+            float density = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
+            if (isCover) {
+                outputFilename += "_cover.jpg";
+                format = Bitmap.CompressFormat.JPEG;
+
+                int imageWidth = GlobalContext.getInstance().getResources().getDisplayMetrics().widthPixels;
+                int imageHeight = imageWidth * 9 / 16; // 16/9 yo
+
+                outputBitmap = createScaledBitmap(decodeFile(
+                        source.getAbsolutePath(),
+                        imageWidth,
+                        imageHeight,
+                        ScalingUtilities.ScalingLogic.CROP
+                ), imageWidth, imageHeight, ScalingUtilities.ScalingLogic.CROP);
+            } else {
+                outputFilename += "_picture.png";
+                format = Bitmap.CompressFormat.PNG;
+
+                int imageLength = (int)(72 * density);
+
+                // Preparing the source bitmap
+                outputBitmap = bitmapCirclify(createScaledBitmap(decodeFile(
+                        source.getAbsolutePath(),
+                        imageLength,
+                        imageLength,
+                        ScalingUtilities.ScalingLogic.CROP
+                ), imageLength, imageLength, ScalingUtilities.ScalingLogic.CROP));
+            }
+
+            // Handling writing
+            File destination = new File(GlobalContext.getAppPicturePath() + outputFilename);
+            if (!destination.exists()) {
                 destination.getParentFile().mkdirs();
                 destination.createNewFile();
             }
 
-            if (!source.exists())
-                return;
-
-            FileChannel src = new FileInputStream(source).getChannel();
-            FileChannel dst = new FileOutputStream(destination).getChannel();
-            dst.transferFrom(src, 0, src.size());
-            src.close();
-            dst.close();
-
+            FileOutputStream fos = new FileOutputStream(destination);
+            outputBitmap.compress(format, 45, fos); // The "quality" is ignored for PNG
+            fos.close();
         } catch (Exception e) {
-            Log.e("CustomizeCare", e.getMessage());
+            Log.e("CustomizeCar", e.getMessage());
             e.printStackTrace();
         }
+    }
+
+
+
+    private String mediaUriToString(Uri uri)
+    {
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String string = cursor.getString(columnIndex);
+        cursor.close();
+
+        return string;
     }
 }

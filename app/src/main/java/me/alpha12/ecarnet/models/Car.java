@@ -119,51 +119,23 @@ public class Car {
     }
 
     public Drawable getCarPicture(Context ctx) {
-        File imgFile = new  File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_picture.jpg");
+        File imgFile = new File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_picture.png");
 
         // Fallback to default image
         if (!imgFile.exists())
             return ContextCompat.getDrawable(ctx, R.drawable.ic_car_profile_picture);
 
-
-        int imageLength = (int)(72 * GlobalContext.getInstance().getResources().getDisplayMetrics().density);
-
-        // Loading the bitmap
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath()).copy(Bitmap.Config.ARGB_8888, true);
-
-        Bitmap output = Bitmap.createBitmap(imageLength, imageLength, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        // Cropping to a circle
-        int color = 0xff424242;
-        Paint paint = new Paint();
-        Rect rect = new Rect(0, 0, imageLength, imageLength);
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-        canvas.drawCircle(output.getWidth() / 2, output.getHeight() / 2, output.getWidth() / 2, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-        //Bitmap _bmp = Bitmap.createScaledBitmap(output, 60, 60, false);
-        //return _bmp;
-
-        // Returning drawable
-        return new BitmapDrawable(GlobalContext.getInstance().getResources(), output);
-        //return Drawable.createFromPath(imgFile.getAbsolutePath());
+        return Drawable.createFromPath(imgFile.getAbsolutePath());
     }
 
     public Drawable getCarBanner(Context ctx) {
-        File imgFile = new  File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_cover.jpg");
+        File imgFile = new File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_cover.jpg");
 
-        if(imgFile.exists()){
-            return Drawable.createFromPath(imgFile.getAbsolutePath());
-        }
+        // Fallback to default image
+        if(!imgFile.exists())
+            return ContextCompat.getDrawable(ctx, R.drawable.default_car_background);
 
-        return ContextCompat.getDrawable(ctx, R.drawable.default_car_background);
+        return Drawable.createFromPath(imgFile.getAbsolutePath());
     }
 
 
