@@ -1,7 +1,6 @@
 package me.alpha12.ecarnet.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,7 +31,7 @@ import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
-import me.alpha12.ecarnet.fragments.NotesFragment;
+import me.alpha12.ecarnet.fragments.MemosFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
 import me.alpha12.ecarnet.fragments.ShareFragment;
 import me.alpha12.ecarnet.fragments.TagsFragment;
@@ -68,10 +67,19 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), FillUpActivity.class);
-                intent.putExtra("idCar", currentCar.getId());
-                startActivityForResult(intent, 0);
-                startActivity(intent);
+                Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
+                int currentIdFragment = currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID);
+                if (currentIdFragment==R.id.nav_memos)
+                {
+                    Intent intent = new Intent(view.getContext(), AddMemoActivity.class);
+                    intent.putExtra("idCar", currentCar.getId());
+                    startActivityForResult(intent, 0);
+                }
+                else {
+                    Intent intent = new Intent(view.getContext(), FillUpActivity.class);
+                    intent.putExtra("idCar", currentCar.getId());
+                    startActivityForResult(intent, 0);
+                }
             }
         });
 
@@ -175,8 +183,8 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_nfc:
                 openMainFragment(TagsFragment.newInstance(menuItemId), menuItemId);
                 break;
-            case R.id.nav_notes:
-                openMainFragment(NotesFragment.newInstance(menuItemId), menuItemId);
+            case R.id.nav_memos:
+                openMainFragment(MemosFragment.newInstance(menuItemId), menuItemId);
                 break;
             case R.id.nav_add_car:
                 Intent intent = new Intent(this, AddCarActivity.class);
@@ -234,14 +242,21 @@ public class MainActivity extends AppCompatActivity
         if (toolbar != null) {
             if (fragmentId == R.id.nav_home) {
                 toolbar.setTitle(Utils.ucWords(currentCar.getCarModel().getModel()) + " -  " + currentCar.getPlateNum());
+                fab.setImageResource(R.drawable.ic_add_gas);
                 fab.show();
             } else if (fragmentId == R.id.nav_gas) {
                 toolbar.setTitle(R.string.title_fragment_gas);
+                fab.setImageResource(R.drawable.ic_add_gas);
                 fab.show();
             } else if (fragmentId == R.id.nav_repair) {
                 toolbar.setTitle(R.string.title_fragment_operations);
-                fab.hide();
-            } else if (fragmentId == R.id.nav_share) {
+            }
+            else if(fragmentId == R.id.nav_memos) {
+                toolbar.setTitle(R.string.title_fragment_memos);
+                fab.setImageResource(R.drawable.ic_add_black_24dp);
+                fab.show();
+            }
+            else if (fragmentId == R.id.nav_share) {
                 toolbar.setTitle(R.string.title_fragment_share);
                 fab.hide();
             } else if (fragmentId == R.id.nav_nfc) {

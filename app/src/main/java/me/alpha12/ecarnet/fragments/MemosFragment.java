@@ -19,7 +19,7 @@ import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
  * Use the {@link ShareFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NotesFragment extends Fragment {
+public class MemosFragment extends Fragment {
     private int mMenuEntryId;
 
     private OnFragmentInteractionListener mListener;
@@ -39,7 +39,7 @@ public class NotesFragment extends Fragment {
         return fragment;
     }
 
-    public NotesFragment() {
+    public MemosFragment() {
         // Required empty public constructor
     }
 
@@ -54,7 +54,7 @@ public class NotesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_note, container, false);
+        return inflater.inflate(R.layout.fragment_memo, container, false);
     }
 
     @Override

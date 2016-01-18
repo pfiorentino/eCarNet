@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +32,7 @@ import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
-import me.alpha12.ecarnet.models.Note;
+import me.alpha12.ecarnet.models.Memo;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,7 +50,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private boolean isDone;
     private boolean isNotifSet;
-    private Note lastNote;
+    private Memo lastMemo;
 
     private ArrayList<Intervention> myInterventions = new ArrayList<>();
     private ArrayList<Intervention> allMyInterventions = new ArrayList<>();
@@ -63,6 +62,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private ImageButton editButton;
     private ImageButton doneButton;
     private FrameLayout flagFrame;
+    private TextView titleMemo;
+    private TextView limitMemo;
+    private TextView dateMemo;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -98,8 +101,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         contentCar = (TextView) view.findViewById(R.id.contentCar);
 
+        titleMemo = (TextView) view.findViewById(R.id.reminderTitleTextView);
+        dateMemo = (TextView) view.findViewById(R.id.dateMemo);
+        limitMemo = (TextView) view.findViewById(R.id.reminderDateTextView);
+
         contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
-        lastNote = Note.getLastNote(currentCar.getId());
+        lastMemo = Memo.getLastNote(currentCar.getId());
         notifButton = (ImageButton) view.findViewById(R.id.button_notification);
         editButton = (ImageButton) view.findViewById(R.id.button_edit);
         doneButton = (ImageButton) view.findViewById(R.id.button_done);
@@ -125,7 +132,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         allMyInterventions = Intervention.findAllByCar(currentCar.getId());
 
         //prepare note if exist
-        lastNote = new Note(0,"Vidange + filtre à diesel", limit, 15000, false, true, false, currentCar.getId());
+        //lastMemo = new Memo(0,"Vidange + filtre à diesel", limit, 15000, false, true, false, currentCar.getId());
         useNotedCard(view);
 
         if(myInterventions.size() != 0) {
@@ -248,29 +255,37 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     private void useNotedCard(View view) {
-        if (lastNote == null) {
+        if (lastMemo == null) {
             CardView card = (CardView) view.findViewById(R.id.noteCard);
             card.setVisibility(View.GONE);
         } else {
+            titleMemo.setText(lastMemo.getTitle());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM", Locale.FRENCH);
+            dateMemo.setText(sdf.format(lastMemo.getDateNote()));
+            limitMemo.setText(lastMemo.getKilometers() + " km ou " + sdf.format(lastMemo.getLimitDate()));
+
+
+            /*
             TextView titleNote = (TextView) view.findViewById(R.id.titleNote);
-            titleNote.setText(lastNote.getTitle());
+            titleNote.setText(lastMemo.getTitle());
             TextView kilometerNote = (TextView) view.findViewById(R.id.kilometersNote);
-            kilometerNote.setText(lastNote.getKilometers() + " km");
+            kilometerNote.setText(lastMemo.getKilometers() + " km");
             TextView dateNote = (TextView) view.findViewById(R.id.dateNote);
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
-            dateNote.setText(sdf.format(lastNote.getDateNote()));
-            if (!lastNote.isNotifSet())
+            dateNote.setText(sdf.format(lastMemo.getDateNote()));
+            if (lastMemo.isNotifSet()==0)
                 notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_36dp);
-            if (lastNote.isDone()) {
+            if (lastMemo.isDone()==1) {
                 doneButton.setBackgroundResource(R.drawable.ic_undo_black_36dp);
                 flagFrame.setBackgroundColor(0xFFA5D6A7);
             } else {
                 doneButton.setBackgroundResource(R.drawable.ic_done_black_36dp);
             }
-            isNotifSet = lastNote.isNotifSet();
-            isDone = lastNote.isDone();
+            //isNotifSet = lastMemo.isNotifSet();
+            //isDone = lastMemo.isDone();
             notifButton.setOnClickListener(this);
             doneButton.setOnClickListener(this);
+            */
         }
     }
 

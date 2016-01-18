@@ -45,6 +45,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.AddMemoActivity"
+            android:label="@string/title_fragment_memos"
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.alpha12.ecarnet.activities.MainActivity" />
+        </activity>
 
         <activity
             android:name=".activities.AboutActivity"
