@@ -3,9 +3,19 @@ package me.alpha12.ecarnet.models;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.provider.BaseColumns;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -13,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.database.DatabaseManager;
@@ -108,25 +119,23 @@ public class Car {
     }
 
     public Drawable getCarPicture(Context ctx) {
-        String filePath = "/sdcard/Images/test_image.jpg";
-        File imgFile = new  File(filePath);
+        File imgFile = new File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_picture.png");
 
-        if(imgFile.exists()){
-            return Drawable.createFromPath(imgFile.getAbsolutePath());
-        }
-        return ContextCompat.getDrawable(ctx, R.drawable.ic_car_profile_picture);
+        // Fallback to default image
+        if (!imgFile.exists())
+            return ContextCompat.getDrawable(ctx, R.drawable.ic_car_profile_picture);
+
+        return Drawable.createFromPath(imgFile.getAbsolutePath());
     }
 
-
     public Drawable getCarBanner(Context ctx) {
-        String filePath = "/sdcard/Images/test_image.jpg";
-        File imgFile = new  File(filePath);
+        File imgFile = new File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_cover.png");
 
-        if(imgFile.exists()){
-            return Drawable.createFromPath(imgFile.getAbsolutePath());
-        }
+        // Fallback to default image
+        if(!imgFile.exists())
+            return ContextCompat.getDrawable(ctx, R.drawable.default_car_background);
 
-        return ContextCompat.getDrawable(ctx, R.drawable.default_car_background);
+        return Drawable.createFromPath(imgFile.getAbsolutePath());
     }
 
 

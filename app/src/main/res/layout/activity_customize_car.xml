@@ -71,6 +71,28 @@
                 android:text="Cliquez pour définir la date"
                 android:paddingLeft="5dp"
                 style="@style/Widget.AppCompat.Spinner"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/raised_button_height"
+                android:minWidth="@dimen/raised_button_min_width"
+                android:text="@string/addPicture"
+                android:id="@+id/btn_addPicture"
+                android:textColor="@color/colorPrimaryText"
+                android:background="@drawable/raised_button"
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="right" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/raised_button_height"
+                android:minWidth="@dimen/raised_button_min_width"
+                android:text="@string/addCover"
+                android:id="@+id/btn_addCover"
+                android:textColor="@color/colorPrimaryText"
+                android:background="@drawable/raised_button"
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="right" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

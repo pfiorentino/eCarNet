@@ -5,8 +5,19 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -19,19 +30,28 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 import java.util.Calendar;
 import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.ScalingUtilities;
 import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.CarModel;
 
-/**
- * Created by guilhem on 04/01/2016.
- */
+import static me.alpha12.ecarnet.ScalingUtilities.bitmapCirclify;
+import static me.alpha12.ecarnet.ScalingUtilities.createScaledBitmap;
+import static me.alpha12.ecarnet.ScalingUtilities.decodeFile;
+
 public class CustomizeCarActivity extends AppCompatActivity implements OnDateSetListener {
+    private static final int SELECT_PICTURE_INTENT = 1;
+    private static final int SELECT_COVER_INTENT = 2;
+
     private CarModel selectedCar;
     private Calendar selectedDate;
 
@@ -43,6 +63,9 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
 
     private Button finishButton;
     private Button backButton;
+
+    private Uri pictureUri;
+    private Uri coverUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +95,24 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
             }
         });
 
+        ((Button)findViewById(R.id.btn_addPicture)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, SELECT_PICTURE_INTENT);
+            }
+        });
+
+        ((Button)findViewById(R.id.btn_addCover)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, SELECT_COVER_INTENT);
+            }
+        });
+
         backButton = (Button) findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +133,13 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
                 car.persist();
 
                 GlobalContext.setCurrentCar(car.getId());
+
+                // Saving the pictures
+                if (pictureUri != null)
+                    savePicture(pictureUri, false);
+
+                if (coverUri != null)
+                    savePicture(coverUri, true);
 
                 Intent intent = new Intent(CustomizeCarActivity.this, MainActivity.class);
                 CustomizeCarActivity.this.startActivity(intent);
@@ -117,8 +165,6 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         selectedDate = Calendar.getInstance();
         selectedDate.set(year, monthOfYear, dayOfMonth);
         dateTextView.setText(getFormattedDate(this, selectedDate));
-
-
         checkForm();
     }
 
@@ -183,7 +229,99 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
             case GlobalContext.RESULT_CLOSE_ALL:
                 setResult(GlobalContext.RESULT_CLOSE_ALL);
                 finish();
+                break;
+            case RESULT_OK:
+                switch(requestCode) {
+                    case SELECT_PICTURE_INTENT:
+                        pictureUri = data.getData();
+                        break;
+                    case SELECT_COVER_INTENT:
+                        coverUri = data.getData();
+                        break;
+                }
         }
+
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void savePicture(Uri selectedImage, boolean isCover)
+    {
+        try {
+            if (!Environment.getExternalStorageDirectory().canWrite())
+                return;
+
+            // Handling source file
+            String sourceImagePath = mediaUriToString(selectedImage);
+            File source = new File(sourceImagePath);
+            if (!source.exists())
+                return;
+/*
+            Bitmap unscaledBitmap; = ScalingUtilities.decodeFile(source.getAbsolutePath(), dstWidth, dstHeight, scalingLogic);
+            Bitmap scaledBitmap; = createScaledBitmap(unscaledBitmap, dstWidth, dstHeight, scalingLogic);*/
+
+
+            // Cropping and resizing
+            Bitmap outputBitmap;
+            String outputFilename = String.valueOf(GlobalContext.getCurrentCar());
+            Bitmap.CompressFormat format;
+            float density = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
+            if (isCover) {
+                outputFilename += "_cover.png";
+                format = Bitmap.CompressFormat.PNG;
+
+                int imageWidth = GlobalContext.getInstance().getResources().getDisplayMetrics().widthPixels;
+                int imageHeight = imageWidth * 9 / 16; // 16/9 yo
+
+                outputBitmap = createScaledBitmap(decodeFile(
+                        source.getAbsolutePath(),
+                        imageWidth,
+                        imageHeight,
+                        ScalingUtilities.ScalingLogic.CROP
+                ), imageWidth, imageHeight, ScalingUtilities.ScalingLogic.CROP);
+            } else {
+                outputFilename += "_picture.png";
+                format = Bitmap.CompressFormat.PNG;
+
+                int imageLength = (int)(72 * density);
+
+                // Preparing the source bitmap
+                outputBitmap = bitmapCirclify(createScaledBitmap(decodeFile(
+                        source.getAbsolutePath(),
+                        imageLength,
+                        imageLength,
+                        ScalingUtilities.ScalingLogic.CROP
+                ), imageLength, imageLength, ScalingUtilities.ScalingLogic.CROP));
+            }
+
+            // Handling writing
+            File destination = new File(GlobalContext.getAppPicturePath() + outputFilename);
+            if (!destination.exists()) {
+                destination.getParentFile().mkdirs();
+                destination.createNewFile();
+            }
+
+            FileOutputStream fos = new FileOutputStream(destination);
+            outputBitmap.compress(format, 45, fos); // The "quality" is ignored for PNG
+            fos.close();
+        } catch (Exception e) {
+            Log.e("CustomizeCar", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+
+    private String mediaUriToString(Uri uri)
+    {
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String string = cursor.getString(columnIndex);
+        cursor.close();
+
+        return string;
     }
 }
