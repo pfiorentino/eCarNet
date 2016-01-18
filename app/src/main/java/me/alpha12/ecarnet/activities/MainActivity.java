@@ -1,7 +1,6 @@
 package me.alpha12.ecarnet.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,7 +32,6 @@ import java.util.Map;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
 import me.alpha12.ecarnet.fragments.NotesFragment;
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         addOperationFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddOperationActivity.class);
+                Intent intent = new Intent(view.getContext(), AddInterventionActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
             }

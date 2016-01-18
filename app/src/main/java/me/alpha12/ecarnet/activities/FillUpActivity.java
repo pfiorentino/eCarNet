@@ -105,12 +105,15 @@ public class FillUpActivity extends AppCompatActivity implements View.OnClickLis
                     Date d = sdf.parse(mDateTextView.getText().toString());
                     int kilometers = Integer.parseInt(kilometersTextView.getText().toString());
 
-                    Intervention inter = new Intervention(0,
+                    Intervention inter = new Intervention(
+                            0,
+                            currentCar.getId(),
+                            Intervention.TYPE_FILLUP,
+                            "fill_up_intervention",
                             kilometers,
-                        (double) Float.parseFloat(price.getText().toString()),
-                        (double) Float.parseFloat(amount.getText().toString()),
-                        new java.sql.Date(d.getTime()),
-                        currentCar.getId()
+                            new Date(d.getTime()),
+                            (double) Float.parseFloat(price.getText().toString()),
+                            (double) Float.parseFloat(amount.getText().toString())
                         );
                     inter.persist();
 

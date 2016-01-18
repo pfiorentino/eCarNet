@@ -3,7 +3,6 @@ package me.alpha12.ecarnet.activities;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -24,8 +23,9 @@ import java.util.Date;
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.models.Car;
+import me.alpha12.ecarnet.models.Intervention;
 
-public class AddOperationActivity extends AppCompatActivity implements OnClickListener, OnDateSetListener {
+public class AddInterventionActivity extends AppCompatActivity implements OnClickListener, OnDateSetListener {
     private Calendar selectedDate;
     private Car currentCar;
 
@@ -39,7 +39,7 @@ public class AddOperationActivity extends AppCompatActivity implements OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_operation);
+        setContentView(R.layout.activity_add_intervention);
 
         int carId = getIntent().getExtras().getInt("carId");
         currentCar = Car.findCarById(carId);
@@ -89,32 +89,25 @@ public class AddOperationActivity extends AppCompatActivity implements OnClickLi
                 onBackPressed();
                 break;
             case R.id.confirmButton:
-                Log.d("Operation", "TODO: Add operation in DB");
+                int kilometers = Integer.parseInt(kmEditText.getText().toString());
+
+                Intervention newIntervention =  new Intervention(
+                        0,
+                        currentCar.getId(),
+                        Intervention.TYPE_OTHER,
+                        descEditText.getText().toString(),
+                        kilometers,
+                        selectedDate.getTime(),
+                        (double) Float.parseFloat(priceEditText.getText().toString()),
+                        -1
+                    );
+                newIntervention.persist();
+
+                currentCar.setKilometers(kilometers);
+                currentCar.update();
+
                 onBackPressed();
                 finish();
-                /*SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy", Locale.FRENCH);
-                try {
-                    Date d = sdf.parse(dateTextView.getText().toString());
-                    int kilometers = Integer.parseInt(kmEditText.getText().toString());
-
-                    Intervention inter = new Intervention(0,
-                            kilometers,
-                            (double) Float.parseFloat(priceEditText.getText().toString()),
-                            (double) Float.parseFloat(amount.getText().toString()),
-                            new java.sql.Date(d.getTime()),
-                            currentCar.getId()
-                    );
-                    inter.persist();
-
-                    currentCar.setKilometers(kilometers);
-                    currentCar.update();
-
-                    Intent intent = new Intent(this, MainActivity.class);
-                    this.startActivity(intent);
-                    finish();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }*/
                 break;
         }
     }
@@ -156,7 +149,7 @@ public class AddOperationActivity extends AppCompatActivity implements OnClickLi
             int day = c.get(Calendar.DAY_OF_MONTH);
 
             // Create a new instance of DatePickerDialog and return it
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(), (AddOperationActivity) getActivity(), year, month, day);
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), (AddInterventionActivity) getActivity(), year, month, day);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 dialog.getDatePicker().setMaxDate(new Date().getTime());
             }
