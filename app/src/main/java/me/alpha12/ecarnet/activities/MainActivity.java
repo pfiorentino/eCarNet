@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,7 @@ import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
-import me.alpha12.ecarnet.fragments.NotesFragment;
+import me.alpha12.ecarnet.fragments.MemosFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
 import me.alpha12.ecarnet.fragments.ShareFragment;
 import me.alpha12.ecarnet.fragments.TagsFragment;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity
 
     private FloatingActionButton addFillupFAB;
     private FloatingActionButton addOperationFAB;
+    private FloatingActionButton addMemoFAB;
 
     private ImageView appBarImage;
 
@@ -75,13 +77,24 @@ public class MainActivity extends AppCompatActivity
         supportToolbar  = (Toolbar) findViewById(R.id.supportToolBar);
         setSupportActionBar(supportToolbar);
 
+
         cars = Car.findAll();
 
         addFillupFAB = (FloatingActionButton) findViewById(R.id.addFillupFAB);
+        addMemoFAB = (FloatingActionButton) findViewById(R.id.addMemoFAB);
         addFillupFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), FillUpActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
+            }
+        });
+
+        addMemoFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), AddMemoActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
             }
@@ -122,6 +135,12 @@ public class MainActivity extends AppCompatActivity
             changeCar(savedCar, true);
         } else {
             changeCar(cars.entrySet().iterator().next().getValue(), true);
+        }
+        if(getIntent().getExtras() != null) {
+            String dateAlarm = getIntent().getExtras().getString("dateRappel");
+            if (dateAlarm != null) {
+                Toast.makeText(this, "Un rappel sera effectué le " + dateAlarm, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -175,8 +194,8 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_nfc:
                 openMainFragment(TagsFragment.newInstance(menuItemId), menuItemId);
                 break;
-            case R.id.nav_notes:
-                openMainFragment(NotesFragment.newInstance(menuItemId), menuItemId);
+            case R.id.nav_memos:
+                openMainFragment(MemosFragment.newInstance(menuItemId), menuItemId);
                 break;
             case R.id.nav_add_car:
                 Intent intent = new Intent(this, AddCarActivity.class);
@@ -231,31 +250,38 @@ public class MainActivity extends AppCompatActivity
     public void fragmentSelected(int fragmentId) {
         navigationView.getMenu().findItem(fragmentId).setChecked(true);
 
+
         setAppBarScrollEnabled(fragmentId == R.id.nav_home);
         if (fragmentId == R.id.nav_home) {
             setTitle(currentCar.getCarModel().toString());
             addFillupFAB.show();
             addOperationFAB.hide();
+            addMemoFAB.hide();
         } else if (fragmentId == R.id.nav_gas) {
             setTitle(R.string.title_fragment_gas);
             addFillupFAB.show();
             addOperationFAB.hide();
+            addMemoFAB.hide();
         } else if (fragmentId == R.id.nav_repair) {
             setTitle(R.string.title_fragment_operations);
             addFillupFAB.hide();
             addOperationFAB.show();
-        } else if (fragmentId == R.id.nav_notes) {
+            addMemoFAB.hide();
+        } else if (fragmentId == R.id.nav_memos) {
             setTitle(R.string.title_fragment_share);
             addFillupFAB.hide();
             addOperationFAB.hide();
+            addMemoFAB.show();
         } else if (fragmentId == R.id.nav_share) {
             setTitle(R.string.title_fragment_share);
             addFillupFAB.hide();
             addOperationFAB.hide();
+            addMemoFAB.hide();
         } else if (fragmentId == R.id.nav_nfc) {
             setTitle(R.string.title_fragment_tags);
             addFillupFAB.hide();
             addOperationFAB.hide();
+            addMemoFAB.hide();
         }
     }
 

@@ -12,6 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".adapters.NotificationPublisher" />
         <activity
             android:name=".activities.SplashScreenActivity"
             android:screenOrientation="portrait"
@@ -50,6 +51,16 @@
         <activity
             android:name=".activities.CarsMgmtActivity"
             android:label="@string/title_activity_cars_management"
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.alpha12.ecarnet.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.AddMemoActivity"
+            android:label="@string/title_fragment_memos"
             android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">

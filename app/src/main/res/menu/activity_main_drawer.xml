@@ -7,8 +7,8 @@
             android:title="Essence" />
         <item android:id="@+id/nav_repair" android:icon="@drawable/ic_maps_directions_car"
             android:title="Interventions" />
-        <item android:id="@+id/nav_notes" android:icon="@drawable/ic_description_black_24dp"
-            android:title="Notes" />
+        <item android:id="@+id/nav_memos" android:icon="@drawable/ic_notifications_black_24dp"
+            android:title="Rappels" />
     </group>
 
     <item android:title="Partage" android:id="@+id/share_group_item">
