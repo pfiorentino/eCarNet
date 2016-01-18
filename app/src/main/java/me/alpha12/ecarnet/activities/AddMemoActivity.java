@@ -55,6 +55,7 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
         private boolean notifActivated;
         private Date alarmDate;
 
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
 
@@ -232,13 +233,13 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
             int kilometersOfCar = currentCar.getKilometers();
             int dayBeteweenInterventions = 0;
             int kilometersBeteweenInterventions = 0;
-            Date oldDay = inters.get(0).getDateIntervention();
+            Date oldDay = inters.get(0).getDate();
             int oldKilometers = inters.get(0).getKilometers();
             for (int i = 1; i < inters.size(); i++) {
-                dayBeteweenInterventions = new Date(inters.get(i).getDateIntervention().getTime()-oldDay.getTime()).getDate();
+                dayBeteweenInterventions = new Date(inters.get(i).getDate().getTime()-oldDay.getTime()).getDate();
                 kilometersBeteweenInterventions = inters.get(i).getKilometers() - oldKilometers;
                 average += kilometersBeteweenInterventions / dayBeteweenInterventions;
-                oldDay = inters.get(i).getDateIntervention();
+                oldDay = inters.get(i).getDate();
                 oldKilometers = inters.get(i).getKilometers();
             }
             float globalAverage = average / inters.size();
