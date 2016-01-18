@@ -184,7 +184,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         ArrayList<String> labs = new ArrayList<>();
         for(Intervention value : myInterventions)
         {
-            String dateOutput = sdf.format(value.getDateIntervention());
+            String dateOutput = sdf.format(value.getDate());
             labs.add(dateOutput);
         }
         return labs;

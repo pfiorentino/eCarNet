@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context="me.alpha12.ecarnet.activities.AddOperationActivity">
+    tools:context=".activities.AddInterventionActivity">
     <TextView android:id="@+id/titleTextView"
         android:layout_width="match_parent" android:layout_height="120dp" android:gravity="center_vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin" android:paddingRight="@dimen/activity_horizontal_margin"
