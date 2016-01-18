@@ -157,7 +157,7 @@ public class ChartDialogFragment extends DialogFragment implements AdapterView.O
         ArrayList<String> labs = new ArrayList<>();
         for(Intervention value : interventionsUpToDate)
         {
-                String dateOutput = sdf.format(value.getDateIntervention());
+                String dateOutput = sdf.format(value.getDate());
                 labs.add(dateOutput);
         }
         /*Log.d("number of labels", ""+labs.size());*/
@@ -172,7 +172,7 @@ public class ChartDialogFragment extends DialogFragment implements AdapterView.O
         {
             /*Log.d("date of intervention", "" + value.getDateIntervention().toString());*/
             /*Log.d("limit date", "" + limit.toString());*/
-            if(value.getDateIntervention().after(limit))
+            if(value.getDate().after(limit))
             this.interventionsUpToDate.add(value);
         }
     }
