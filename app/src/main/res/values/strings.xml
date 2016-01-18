@@ -15,6 +15,11 @@
 
     <string name="title_activity_customize_car">Dites-nous en plus sur votre </string>
 
+    <string name="fragment_gas_kmTotal">Compteur total</string>
+    <string name="fragment_gas_qte">Quantité</string>
+    <string name="fragment_gas_price">Prix</string>
+
+
     <string name="title_activity_add_car">AddCarActivity</string>
     <string name="title_activity_cars_management">CarsManagementActivity</string>
     <string name="title_activity_cars_mgmt">CarsMgmtActivity</string>

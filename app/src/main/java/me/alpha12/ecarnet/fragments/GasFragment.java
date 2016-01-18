@@ -4,12 +4,20 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
+import me.alpha12.ecarnet.models.Car;
+import me.alpha12.ecarnet.models.Intervention;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,10 +59,30 @@ public class GasFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_gas, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_gas, container, false);
+
+        Car currentCar = ((MainActivity) getActivity()).currentCar;
+
+
+
+        ArrayList<Intervention> interventions = Intervention.findFillUpByCar(currentCar.getId());
+
+        if (interventions != null) {
+            TextView kmTotalText = (TextView) view.findViewById(R.id.kmTotalValue);
+            kmTotalText.setText(String.valueOf(interventions.get(0).getKilometers()));
+            TextView qteText = (TextView) view.findViewById(R.id.qteValue);
+            qteText.setText(String.valueOf(interventions.get(0).getQuantity()));
+            TextView priceText = (TextView) view.findViewById(R.id.priceValue);
+            priceText.setText(String.valueOf(interventions.get(0).getPrice()));
+        }
+
+
+        return view;
     }
 
     @Override
