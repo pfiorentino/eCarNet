@@ -105,7 +105,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         dateMemo = (TextView) view.findViewById(R.id.dateMemo);
         limitMemo = (TextView) view.findViewById(R.id.reminderDateTextView);
 
-        contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
+
+        contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getPlateNum(), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
+
         lastMemo = Memo.getLastNote(currentCar.getId());
         notifButton = (ImageButton) view.findViewById(R.id.button_notification);
         editButton = (ImageButton) view.findViewById(R.id.button_edit);
@@ -118,9 +120,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         LineChart costLine = (LineChart) view.findViewById(R.id.costChart);
         TextView costText = (TextView) view.findViewById(R.id.costData);
-
-        TextView title = (TextView) view.findViewById(R.id.titleCar);
-        title.setText(currentCar.getCarModel().toString());
 
         Calendar c = Calendar.getInstance();
         Date limit = c.getTime();
@@ -173,15 +172,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         for(Intervention value : allMyInterventions) {
             if(value.getQuantity()!=0 && oldKilometers < value.getKilometers()) {
                 currentConsumption = (float)value.getQuantity() * 100 / (value.getKilometers() - oldKilometers);
-                Log.d("current consumption", ""+currentConsumption);
                 totalConsumption +=currentConsumption;
                 numberOfInters++;
                 oldKilometers = value.getKilometers();
             }
         }
-        Log.d("total consumption", ""+totalConsumption);
-        Log.d("number of entries", ""+numberOfInters);
-        Log.d("final consumption", ""+totalConsumption/numberOfInters);
         return totalConsumption/numberOfInters;
     }
 

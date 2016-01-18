@@ -1,11 +1,16 @@
 package me.alpha12.ecarnet.activities;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +23,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +34,9 @@ import java.util.List;
 import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.adapters.NotificationPublisher;
 import me.alpha12.ecarnet.models.Car;
+import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Memo;
 
 /**
@@ -45,11 +53,12 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
         private Car currentCar;
         private Spinner notifyActive;
         private boolean notifActivated;
+        private Date alarmDate;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
 
-            int carId = getIntent().getExtras().getInt("idCar");
+            int carId = getIntent().getExtras().getInt("carId");
             currentCar = Car.findCarById(carId);
 
             super.onCreate(savedInstanceState);
@@ -57,7 +66,6 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
 
             mCurrentDate = Calendar.getInstance();
             current = mCurrentDate.getTime();
-            Log.d("date courante", current.toString());
 
             mDateTextView = (TextView) findViewById(R.id.date);
             mDateTextView.setText(getFormattedDate(this, mCurrentDate));
@@ -131,12 +139,20 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
                 case R.id.addMemoButton:
                     SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy", Locale.FRENCH);
                     try {
-                        Log.d("date courante add memo", current.toString());
                         Date d = sdf.parse(mDateTextView.getText().toString());
                         int kilometers = Integer.parseInt(kilometersLimit.getText().toString());
                         Memo memo = new Memo(0, title.getText().toString(), current, d, kilometers, notifActivated, false, false, currentCar.getId());
                         memo.persist(false);
                         Intent intent = new Intent(this, MainActivity.class);
+                        if(notifActivated)
+                        {
+                            scheduleNotification(getNotification("Rappel sur intervention : " + title.getText().toString()), giveMeTheTimeBitch(d, kilometers), memo.getId());
+                            intent.putExtra("dateRappel", sdf.format(alarmDate));
+                        }
+                        else
+                        {
+                            cancelNotification(memo.getId());
+                        }
                         this.startActivity(intent);
                         finish();
                     } catch (ParseException e) {
@@ -168,4 +184,90 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
             }
         }
 
+
+    private void scheduleNotification(Notification notification, long delay, int id) {
+
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, id);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+                ;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
+
+    private void cancelNotification(int id)
+    {
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, id);
+        PendingIntent sender = PendingIntent.getBroadcast(this, 0, notificationIntent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(sender);
+    }
+
+
+
+    private Notification getNotification(String content) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Ecarnet - votre intervention");
+        builder.setContentText(content);
+        builder.setDefaults(NotificationCompat.DEFAULT_SOUND);
+        builder.setSmallIcon(R.drawable.ic_directions_car_white_24dp);
+        return builder.build();
+    }
+
+
+    private long giveMeTheTimeBitch(Date limit, int kilometers)
+    {
+        long timeRemining = 0;
+        timeRemining = limit.getTime();
+        Date setAlarm = new Date();
+
+
+        float average = 0f;
+        ArrayList<Intervention> inters = Intervention.find10ByCar(currentCar.getId());
+        if (inters.size() == 10) {
+            int kilometersOfCar = currentCar.getKilometers();
+            int dayBeteweenInterventions = 0;
+            int kilometersBeteweenInterventions = 0;
+            Date oldDay = inters.get(0).getDateIntervention();
+            int oldKilometers = inters.get(0).getKilometers();
+            for (int i = 1; i < inters.size(); i++) {
+                dayBeteweenInterventions = new Date(inters.get(i).getDateIntervention().getTime()-oldDay.getTime()).getDate();
+                kilometersBeteweenInterventions = inters.get(i).getKilometers() - oldKilometers;
+                average += kilometersBeteweenInterventions / dayBeteweenInterventions;
+                oldDay = inters.get(i).getDateIntervention();
+                oldKilometers = inters.get(i).getKilometers();
+            }
+            float globalAverage = average / inters.size();
+            int toDoIn = kilometers-kilometersOfCar;
+            float numbersOfDays = (globalAverage)/toDoIn;
+            numbersOfDays = 1/numbersOfDays;
+            Date alarm = new Date();
+            alarm.setTime(current.getTime());
+            alarm.setDate(setAlarm.getDate() + Math.round(numbersOfDays) - 5);
+            if(timeRemining > alarm.getTime())
+            {
+                setAlarm.setDate(alarm.getDate() - 5);
+            }
+            else
+            {
+                setAlarm.setTime(timeRemining);
+                setAlarm.setDate(setAlarm.getDate()-5);
+            }
+        }
+        else
+        {
+            setAlarm.setTime(timeRemining);
+            setAlarm.setDate(setAlarm.getDate()-5);
+        }
+
+        alarmDate = new Date();
+        alarmDate.setTime(setAlarm.getTime());
+        Log.d("Times : ", setAlarm.getTime()+ " - " + current.getTime());
+        Log.d("estimated time", setAlarm.getTime() - current.getTime() + "");
+        return setAlarm.getTime()-current.getTime();
+    }
+}

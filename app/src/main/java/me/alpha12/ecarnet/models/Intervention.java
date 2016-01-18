@@ -74,7 +74,6 @@ public class Intervention {
 
 
     public static ArrayList<Intervention> findInterventionByLimit(int carId, Date limit) {
-        Log.d("limite", limit.toString());
         ArrayList<Intervention> result = new ArrayList<>();
         java.sql.Date sqlLimit = new java.sql.Date(limit.getTime());
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(

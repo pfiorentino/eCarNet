@@ -4,13 +4,17 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,13 +26,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
 import me.alpha12.ecarnet.fragments.MemosFragment;
@@ -43,71 +47,68 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
     public static final String FRAGMENT_MENU_ENTRY_ID = "fmei";
 
+    private AppBarLayout appbar;
+    private CollapsingToolbarLayout appbarLayout;
+    private NestedScrollView scrollView;
+    private Toolbar supportToolbar;
+
+    private NavigationView navigationView;
+    private View headerView;
+
+    private FloatingActionButton addFillupFAB;
+    private FloatingActionButton addOperationFAB;
+    private FloatingActionButton addMemoFAB;
+
     public HashMap<Integer, Car> cars = new HashMap<>();
     public Car currentCar;
 
-    NavigationView navigationView;
-    FloatingActionButton fab;
-    Toolbar toolbar;
-
-    boolean isProfilesMenuOpen = false;
+    private boolean isProfilesMenuOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.title_fragment_home);
-        setSupportActionBar(toolbar);
+        appbar          = (AppBarLayout) findViewById(R.id.appbar);
+        scrollView      = (NestedScrollView) findViewById(R.id.scrollView);
+        appbarLayout    = (CollapsingToolbarLayout) findViewById(R.id.appbarLayout);
+        supportToolbar  = (Toolbar) findViewById(R.id.supportToolBar);
+        setSupportActionBar(supportToolbar);
+
 
         cars = Car.findAll();
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        addFillupFAB = (FloatingActionButton) findViewById(R.id.addFillupFAB);
+        addMemoFAB = (FloatingActionButton) findViewById(R.id.addMemoFAB);
+        addFillupFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
-                int currentIdFragment = currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID);
-                if (currentIdFragment==R.id.nav_memos)
-                {
-                    Intent intent = new Intent(view.getContext(), AddMemoActivity.class);
-                    intent.putExtra("idCar", currentCar.getId());
-                    startActivityForResult(intent, 0);
-                }
-                else {
-                    Intent intent = new Intent(view.getContext(), FillUpActivity.class);
-                    intent.putExtra("idCar", currentCar.getId());
-                    startActivityForResult(intent, 0);
-                }
+                Intent intent = new Intent(view.getContext(), FillUpActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
-
-        for (Map.Entry<Integer, Car> carEntry : cars.entrySet()) {
-            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().getId(), 0, carEntry.getValue().toString());
-            navigationView.getMenu().findItem(carEntry.getValue().getId()).setIcon(R.drawable.ic_car_circle);
-        }
-
-        navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, false);
-
-        LinearLayout profileSpinner = (LinearLayout) findViewById(R.id.profile_spinner);
-        profileSpinner.setOnClickListener(new View.OnClickListener() {
+        addMemoFAB.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                isProfilesMenuOpen = !isProfilesMenuOpen;
-                refreshProfilesMenu();
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), AddMemoActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
             }
         });
+
+        addOperationFAB = (FloatingActionButton) findViewById(R.id.addOperationFAB);
+        addOperationFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), AddOperationActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
+            }
+        });
+
+        initNavDrawer();
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
@@ -130,6 +131,12 @@ public class MainActivity extends AppCompatActivity
             changeCar(savedCar, true);
         } else {
             changeCar(cars.entrySet().iterator().next().getValue(), true);
+        }
+        if(getIntent().getExtras() != null) {
+            String dateAlarm = getIntent().getExtras().getString("dateRappel");
+            if (dateAlarm != null) {
+                Toast.makeText(this, "Un rappel sera effectué le " + dateAlarm, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -239,30 +246,38 @@ public class MainActivity extends AppCompatActivity
     public void fragmentSelected(int fragmentId) {
         navigationView.getMenu().findItem(fragmentId).setChecked(true);
 
-        if (toolbar != null) {
-            if (fragmentId == R.id.nav_home) {
-                toolbar.setTitle(Utils.ucWords(currentCar.getCarModel().getModel()) + " -  " + currentCar.getPlateNum());
-                fab.setImageResource(R.drawable.ic_add_gas);
-                fab.show();
-            } else if (fragmentId == R.id.nav_gas) {
-                toolbar.setTitle(R.string.title_fragment_gas);
-                fab.setImageResource(R.drawable.ic_add_gas);
-                fab.show();
-            } else if (fragmentId == R.id.nav_repair) {
-                toolbar.setTitle(R.string.title_fragment_operations);
-            }
-            else if(fragmentId == R.id.nav_memos) {
-                toolbar.setTitle(R.string.title_fragment_memos);
-                fab.setImageResource(R.drawable.ic_add_black_24dp);
-                fab.show();
-            }
-            else if (fragmentId == R.id.nav_share) {
-                toolbar.setTitle(R.string.title_fragment_share);
-                fab.hide();
-            } else if (fragmentId == R.id.nav_nfc) {
-                toolbar.setTitle(R.string.title_fragment_tags);
-                fab.hide();
-            }
+
+        setAppBarScrollEnabled(fragmentId == R.id.nav_home);
+        if (fragmentId == R.id.nav_home) {
+            setTitle(currentCar.getCarModel().toString());
+            addFillupFAB.show();
+            addOperationFAB.hide();
+            addMemoFAB.hide();
+        } else if (fragmentId == R.id.nav_gas) {
+            setTitle(R.string.title_fragment_gas);
+            addFillupFAB.show();
+            addOperationFAB.hide();
+            addMemoFAB.hide();
+        } else if (fragmentId == R.id.nav_repair) {
+            setTitle(R.string.title_fragment_operations);
+            addFillupFAB.hide();
+            addOperationFAB.show();
+            addMemoFAB.hide();
+        } else if (fragmentId == R.id.nav_memos) {
+            setTitle(R.string.title_fragment_share);
+            addFillupFAB.hide();
+            addOperationFAB.hide();
+            addMemoFAB.show();
+        } else if (fragmentId == R.id.nav_share) {
+            setTitle(R.string.title_fragment_share);
+            addFillupFAB.hide();
+            addOperationFAB.hide();
+            addMemoFAB.hide();
+        } else if (fragmentId == R.id.nav_nfc) {
+            setTitle(R.string.title_fragment_tags);
+            addFillupFAB.hide();
+            addOperationFAB.hide();
+            addMemoFAB.hide();
         }
     }
 
@@ -270,8 +285,8 @@ public class MainActivity extends AppCompatActivity
         Log.d("fragment", "Change car (" + openFragment + ")");
         GlobalContext.setCurrentCar(newCar.getId());
 
-        LinearLayout header = (LinearLayout) findViewById(R.id.drawer_header);
-        ImageView brandImageView = (ImageView) findViewById(R.id.brand_image_view);
+        LinearLayout header = (LinearLayout) headerView.findViewById(R.id.drawer_header);
+        ImageView brandImageView = (ImageView) headerView.findViewById(R.id.brand_image_view);
 
         if (currentCar != null){
             navigationView.getMenu().add(R.id.cars_mgmt_group, currentCar.getId(), 0, currentCar.toString());
@@ -283,10 +298,10 @@ public class MainActivity extends AppCompatActivity
         refreshProfilesMenu();
 
         currentCar = newCar;
-        TextView drawerTitle = (TextView) findViewById(R.id.car_name);
+        TextView drawerTitle = (TextView) headerView.findViewById(R.id.car_name);
         drawerTitle.setText(currentCar.getCarModel().toString());
 
-        TextView drawerDesc = (TextView) findViewById(R.id.car_desc);
+        TextView drawerDesc = (TextView) headerView.findViewById(R.id.car_desc);
         drawerDesc.setText(currentCar.getPlateNum());
         brandImageView.setImageDrawable(currentCar.getCarPicture(getBaseContext()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
@@ -295,7 +310,7 @@ public class MainActivity extends AppCompatActivity
             header.setBackgroundDrawable(currentCar.getCarBanner(getBaseContext()));
         }
 
-        LinearLayout carsLayout = (LinearLayout) findViewById(R.id.cars_icon_layout);
+        LinearLayout carsLayout = (LinearLayout) headerView.findViewById(R.id.cars_icon_layout);
         carsLayout.removeViews(2, carsLayout.getChildCount() - 2);
 
         for(Map.Entry<Integer, Car> carEntry : cars.entrySet()) {
@@ -360,12 +375,60 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, isProfilesMenuOpen);
 
-        ImageView spinnerTrigger = (ImageView) findViewById(R.id.spinner_trigger);
+        ImageView spinnerTrigger = (ImageView) headerView.findViewById(R.id.spinner_trigger);
         if (!isProfilesMenuOpen){
             spinnerTrigger.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
         } else {
             spinnerTrigger.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
         }
+    }
+
+    public void initNavDrawer() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, supportToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
+
+        for (Map.Entry<Integer, Car> carEntry : cars.entrySet()) {
+            navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().getId(), 0, carEntry.getValue().toString());
+            navigationView.getMenu().findItem(carEntry.getValue().getId()).setIcon(R.drawable.ic_car_circle);
+        }
+
+        navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, false);
+
+        headerView = navigationView.getHeaderView(0);
+        LinearLayout profileSpinner = (LinearLayout) headerView.findViewById(R.id.profile_spinner);
+        profileSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isProfilesMenuOpen = !isProfilesMenuOpen;
+                refreshProfilesMenu();
+            }
+        });
+    }
+
+    public void setAppBarScrollEnabled(boolean enabled) {
+        ViewCompat.setNestedScrollingEnabled(scrollView, enabled);
+        appbar.setExpanded(enabled);
+    }
+
+    public void setTitle(String title) {
+        if (appbarLayout != null)
+            appbarLayout.setTitle(title);
+        if (supportToolbar != null)
+            supportToolbar.setTitle(title);
+    }
+
+    public void setTitle(int titleResId) {
+        if (appbarLayout != null)
+            appbarLayout.setTitle(getString(titleResId));
+        if (supportToolbar != null)
+            supportToolbar.setTitle(titleResId);
     }
 }
 

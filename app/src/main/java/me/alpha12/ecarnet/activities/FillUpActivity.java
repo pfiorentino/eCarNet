@@ -37,12 +37,11 @@ public class FillUpActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        int carId = getIntent().getExtras().getInt("idCar");
-        currentCar = Car.findCarById(carId);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_up);
+
+        int carId = getIntent().getExtras().getInt("carId");
+        currentCar = Car.findCarById(carId);
 
         mCurrentDate = Calendar.getInstance();
 
