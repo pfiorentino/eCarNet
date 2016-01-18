@@ -2,12 +2,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/cards_half_margin"
     tools:context="me.alpha12.ecarnet.fragments.HomeFragment">
 
     <LinearLayout android:orientation="vertical"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp">
+        android:layout_width="match_parent" android:layout_height="wrap_content">
         <android.support.v7.widget.CardView
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/cards_margin" android:layout_marginBottom="@dimen/cards_half_margin"
@@ -26,81 +24,6 @@
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:text="@string/cars_identity" />
             </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <LinearLayout android:orientation="horizontal"
-            android:layout_width="match_parent" android:layout_height="wrap_content" >
-            <android.support.v7.widget.CardView android:id="@+id/kilometerscard"
-                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-                android:layout_marginRight="@dimen/cards_half_margin" android:layout_marginLeft="@dimen/cards_margin">
-                <LinearLayout android:orientation="vertical"
-                    android:layout_width="match_parent" android:layout_height="match_parent" >
-                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/kilometersChart"
-                        android:layout_width="match_parent" android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="16dp" android:layout_marginBottom="8dp"/>
-                    <TextView android:id="@+id/kilometersData" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="Aucune données"
-                        android:gravity="bottom"
-                        android:textAlignment="center" />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView android:id="@+id/consumptionCard"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-                android:layout_marginRight="@dimen/cards_margin" android:layout_marginLeft="@dimen/cards_half_margin">
-
-                <LinearLayout android:orientation="vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <LinearLayout android:orientation="horizontal"
-                        android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:gravity="center" >
-                        <TextView android:id="@+id/consumptionValue"
-                            android:layout_width="wrap_content" android:layout_height="80dp" android:gravity="center"
-                            android:layout_marginTop="16dp"
-                            android:text="0"
-                            android:textStyle="bold" android:textSize="32sp" android:textAlignment="center"  />
-
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginLeft="4dp"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:textSize="12sp"
-                            android:text="l/100km"/>
-                    </LinearLayout>
-
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp" android:layout_marginBottom="16dp"
-                        android:textAlignment="center"
-                        android:text="Consommation"
-                        android:textSize="16sp" />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-        </LinearLayout>
-
-        <android.support.v7.widget.CardView android:id="@+id/costCard"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin">
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content" >
-                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/costChart"
-                        android:layout_width="match_parent" android:layout_height="140dp"
-                        android:layout_margin="16dp"/>
-                <TextView android:id="@+id/costData"
-                    android:layout_width="match_parent" android:layout_height="24dp"
-                    android:text="Aucune données"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:gravity="bottom"
-                    android:layout_marginBottom="16dp"/>
-                </LinearLayout>
-
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView android:id="@+id/newNoteCard"
@@ -157,7 +80,7 @@
 
         <android.support.v7.widget.CardView android:id="@+id/noteCard"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/cards_margin"
+            android:layout_marginBottom="@dimen/cards_half_margin"
             android:layout_marginTop="@dimen/cards_half_margin"
             android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin"
             android:paddingBottom="8dp">
@@ -174,7 +97,7 @@
                     android:layout_margin="16dp"
                     android:orientation="vertical">
 
-                   <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+                    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:text="Prochaine intervention"
                         android:textSize="24sp"/>
@@ -200,7 +123,7 @@
                         android:id="@+id/kilometersNote"
                         android:textSize="16sp"
                         android:text="120000 km"/>
-                    </LinearLayout>
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -228,6 +151,80 @@
                 </LinearLayout>
             </LinearLayout>
 
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout android:orientation="horizontal" android:id="@+id/topCharts"
+            android:layout_width="match_parent" android:layout_height="wrap_content" >
+            <android.support.v7.widget.CardView android:id="@+id/kilometerscard"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
+                android:layout_marginRight="@dimen/cards_half_margin" android:layout_marginLeft="@dimen/cards_margin">
+                <LinearLayout android:orientation="vertical"
+                    android:layout_width="match_parent" android:layout_height="match_parent" >
+                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/kilometersChart"
+                        android:layout_width="match_parent" android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="16dp" android:layout_marginBottom="8dp"/>
+                    <TextView android:id="@+id/kilometersData" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="Aucune données"
+                        android:gravity="bottom"
+                        android:textAlignment="center" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView android:id="@+id/consumptionCard"
+                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
+                android:layout_marginRight="@dimen/cards_margin" android:layout_marginLeft="@dimen/cards_half_margin">
+
+                <LinearLayout android:orientation="vertical"
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <LinearLayout android:orientation="horizontal"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:gravity="center" >
+                        <TextView android:id="@+id/consumptionValue"
+                            android:layout_width="wrap_content" android:layout_height="80dp" android:gravity="center"
+                            android:layout_marginTop="16dp"
+                            android:text="0"
+                            android:textStyle="bold" android:textSize="32sp" android:textAlignment="center"  />
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:textSize="12sp"
+                            android:text="l/100km"/>
+                    </LinearLayout>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" android:layout_marginBottom="16dp"
+                        android:textAlignment="center"
+                        android:text="Consommation"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView android:id="@+id/costCard"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_margin"
+            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin">
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="match_parent" android:layout_height="wrap_content" >
+                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/costChart"
+                        android:layout_width="match_parent" android:layout_height="140dp"
+                        android:layout_margin="16dp"/>
+                <TextView android:id="@+id/costData"
+                    android:layout_width="match_parent" android:layout_height="24dp"
+                    android:text="Aucune données"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="16dp"/>
+                </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
 </ScrollView>

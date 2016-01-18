@@ -72,7 +72,7 @@ public class GasFragment extends Fragment {
 
         ArrayList<Intervention> interventions = Intervention.findFillUpByCar(currentCar.getId());
 
-        if (interventions != null) {
+        if (interventions != null && interventions.size() > 0) {
             TextView kmTotalText = (TextView) view.findViewById(R.id.kmTotalValue);
             kmTotalText.setText(String.valueOf(interventions.get(0).getKilometers()));
             TextView qteText = (TextView) view.findViewById(R.id.qteValue);
