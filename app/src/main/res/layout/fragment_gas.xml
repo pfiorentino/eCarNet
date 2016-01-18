@@ -28,7 +28,6 @@
                     android:id="@+id/lastFillupTitle"
                     android:layout_width="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:text="Dernier plein d'essence"
@@ -49,7 +48,9 @@
                     android:id="@+id/kmTotalValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
                     android:textSize="24sp"
                     android:text="kmTotalValue"
                     />
@@ -58,7 +59,9 @@
                     android:id="@+id/qte"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
                     android:textSize="14sp"
                     android:text="@string/fragment_gas_qte"/>
 
@@ -66,7 +69,9 @@
                     android:id="@+id/qteValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
                     android:textSize="24sp"
                     android:text="qteValue"
                     />
@@ -75,7 +80,9 @@
                     android:id="@+id/price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
                     android:textSize="14sp"
                     android:text="@string/fragment_gas_price"/>
 
@@ -83,7 +90,9 @@
                     android:id="@+id/priceValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
                     android:textSize="24sp"
                     android:text="priceValue"
                     />

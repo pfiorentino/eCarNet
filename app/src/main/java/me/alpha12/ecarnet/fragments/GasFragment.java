@@ -14,11 +14,9 @@ import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
-import me.alpha12.ecarnet.database.EcarnetHelper;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
-import me.alpha12.ecarnet.models.Operation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,32 +69,15 @@ public class GasFragment extends Fragment {
 
 
 
-        ArrayList<Intervention> interventions = Intervention.getAllIntervention(EcarnetHelper.bdd, currentCar.getUuid());
-
-        //fake data
-        interventions.add(new Intervention(currentCar.getUuid(), 10123, 5, new java.util.Date(2014, 11, 12), new ArrayList<Operation>(), 12.5));
-        interventions.add(new Intervention(currentCar.getUuid(), 10223, 50.25, new java.util.Date(2015, 0, 12), new ArrayList<Operation>(), 15.5));
-        interventions.add(new Intervention(currentCar.getUuid(), 10456, 50.25, new java.util.Date(2015, 2, 12), new ArrayList<Operation>(), 18.5));
-        interventions.add(new Intervention(currentCar.getUuid(), 10710, 200.43, new java.util.Date(2015, 3, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 11070, 50.90, new java.util.Date(2015, 3, 12), new ArrayList<Operation>(), 15));
-        interventions.add(new Intervention(currentCar.getUuid(), 11340, 108.23, new java.util.Date(2015, 4, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 11390, 200, new java.util.Date(2015, 5, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 11701, 60.83, new java.util.Date(2015, 6, 12), new ArrayList<Operation>(), 25.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 11925, 120, new java.util.Date(2015, 6, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 12780, 100.33, new java.util.Date(2015, 8, 12), new ArrayList<Operation>(), 0));
-        interventions.add(new Intervention(currentCar.getUuid(), 13332, 130, new java.util.Date(2015, 10, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 13782, 130, new java.util.Date(2015, 11, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 14600, 130, new java.util.Date(2016, 0, 12), new ArrayList<Operation>(), 45.3));
-        interventions.add(new Intervention(currentCar.getUuid(), 15770, 130, new java.util.Date(2016, 0, 12), new ArrayList<Operation>(), 45.3));
+        ArrayList<Intervention> interventions = Intervention.findFillUpByCar(currentCar.getId());
 
 
-
-        TextView kmTotalText = (TextView) view.findViewById(R.id.kmTotal);
-        kmTotalText.setText("Compteur total");
-        TextView qteText = (TextView) view.findViewById(R.id.qte);
-        qteText.setText("Quantité");
-        TextView priceText = (TextView) view.findViewById(R.id.price);
-        priceText.setText("Prix");
+        TextView kmTotalText = (TextView) view.findViewById(R.id.kmTotalValue);
+        kmTotalText.setText(String.valueOf(interventions.get(0).getKilometers()));
+        TextView qteText = (TextView) view.findViewById(R.id.qteValue);
+        qteText.setText(String.valueOf(interventions.get(0).getQuantity()));
+        TextView priceText = (TextView) view.findViewById(R.id.priceValue);
+        priceText.setText(String.valueOf(interventions.get(0).getPrice()));
 
         return view;
     }

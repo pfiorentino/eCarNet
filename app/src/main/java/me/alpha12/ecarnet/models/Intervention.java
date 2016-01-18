@@ -52,6 +52,26 @@ public class Intervention {
         return result;
     }
 
+    public static ArrayList<Intervention> findFillUpByCar(int carId) {
+        ArrayList<Intervention> result = new ArrayList<>();
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND "+DBModel.C_QUANTITY+" > 0 ORDER BY " + DBModel.C_DATE_INTERVENTION+", "+DBModel.C_ID+" DESC",
+                null
+        );
+        while(cursor.moveToNext()) {
+            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
+            result.add(new Intervention(
+                    id,
+                    DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_PRICE),
+                    DatabaseManager.extractDouble(cursor, DBModel.C_QUANTITY),
+                    DatabaseManager.extractDate(cursor, DBModel.C_DATE_INTERVENTION),
+                    DatabaseManager.extractInt(cursor, DBModel.C_CAR_ID)
+            ));
+        }
+        return result;
+    }
+
     public static ArrayList<Intervention> find10ByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
