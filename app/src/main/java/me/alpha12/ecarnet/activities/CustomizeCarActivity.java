@@ -266,8 +266,8 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
             Bitmap.CompressFormat format;
             float density = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
             if (isCover) {
-                outputFilename += "_cover.jpg";
-                format = Bitmap.CompressFormat.JPEG;
+                outputFilename += "_cover.png";
+                format = Bitmap.CompressFormat.PNG;
 
                 int imageWidth = GlobalContext.getInstance().getResources().getDisplayMetrics().widthPixels;
                 int imageHeight = imageWidth * 9 / 16; // 16/9 yo

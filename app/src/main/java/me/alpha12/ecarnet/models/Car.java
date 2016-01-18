@@ -129,7 +129,7 @@ public class Car {
     }
 
     public Drawable getCarBanner(Context ctx) {
-        File imgFile = new File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_cover.jpg");
+        File imgFile = new File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_cover.png");
 
         // Fallback to default image
         if(!imgFile.exists())
