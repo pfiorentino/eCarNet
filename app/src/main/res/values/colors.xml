@@ -9,5 +9,5 @@
     <color name="colorAccent">#D50000</color>
     <color name="colorAccentAlpha">#77D50000</color>
 
-    <color name="buttonActiveState">#EAEAEA</color>
+    <color name="buttonActiveState">#D5D5D5</color>
 </resources>

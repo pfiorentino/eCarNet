@@ -12,25 +12,26 @@
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white" />
 
-    <LinearLayout android:orientation="horizontal" android:id="@+id/bottomButtonBar"
+    <RelativeLayout android:orientation="horizontal" android:id="@+id/bottomButtonBar"
         android:layout_width="match_parent" android:layout_height="52dp"
         android:layout_alignParentBottom="true" android:layout_alignParentRight="true" android:layout_alignParentLeft="true"
         android:background="#E0E0E0">
 
         <Button android:id="@+id/backButton"
-            android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"
-            android:paddingLeft="16dp" android:paddingRight="16dp"
-            android:text="&lt; Étape précédente"
-            android:background="@drawable/selector_transparent_button" />
-
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#BDBDBD" />
+            android:layout_width="wrap_content" android:layout_height="match_parent"
+            android:paddingLeft="24dp" android:paddingRight="24dp"
+            android:drawableLeft="@drawable/ic_chevron_left_black_18dp" android:drawablePadding="8dp"
+            android:text="Étape précédente"
+            android:background="@drawable/selector_transparent_button"
+            android:layout_alignParentLeft="true" />
 
         <Button android:id="@+id/finishButton" android:enabled="false"
-            android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"
-            android:paddingLeft="16dp" android:paddingRight="16dp"
+            android:layout_width="wrap_content" android:layout_height="fill_parent"
+            android:paddingLeft="24dp" android:paddingRight="24dp"
             android:text="Terminer"
-            android:background="@drawable/selector_transparent_button" />
-    </LinearLayout>
+            android:background="@drawable/selector_transparent_button"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
     <ScrollView android:layout_below="@+id/titleTextView" android:layout_above="@id/bottomButtonBar"
         android:layout_width="match_parent" android:layout_height="match_parent"
