@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NavDrawer dimensions -->
+    <dimen name="nav_header_height">170dp</dimen>
+    <dimen name="nav_header_top_spacing">24dp</dimen>
+</resources>

@@ -159,7 +159,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             costText.setText(String.format("%.2f€", floatSum)+ " dépensés");
             costText.setTextSize(16);
             animateTextView(0.0f, getConsumption(currentCar), consumption);
+        } else {
+            view.findViewById(R.id.costCard).setVisibility(View.GONE);
+            view.findViewById(R.id.topCharts).setVisibility(View.GONE);
         }
+
         return view;
     }
 

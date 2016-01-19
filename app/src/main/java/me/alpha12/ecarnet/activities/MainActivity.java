@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         addFillupFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), FillUpActivity.class);
+                Intent intent = new Intent(view.getContext(), AddFillUpActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
             }
@@ -289,7 +290,7 @@ public class MainActivity extends AppCompatActivity
         Log.d("fragment", "Change car (" + openFragment + ")");
         GlobalContext.setCurrentCar(newCar.getId());
 
-        LinearLayout header = (LinearLayout) headerView.findViewById(R.id.drawer_header);
+        RelativeLayout header = (RelativeLayout) headerView.findViewById(R.id.drawer_header);
         ImageView brandImageView = (ImageView) headerView.findViewById(R.id.brand_image_view);
 
         if (currentCar != null){
@@ -299,6 +300,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().removeItem(newCar.getId());
 
         isProfilesMenuOpen = false;
+
         refreshProfilesMenu();
 
         currentCar = newCar;
@@ -310,10 +312,10 @@ public class MainActivity extends AppCompatActivity
         brandImageView.setImageDrawable(currentCar.getCarPicture(getBaseContext()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             header.setBackground(currentCar.getCarBanner(getBaseContext()));
-            appBarImage.setBackground(currentCar.getCarBanner(getBaseContext()));
+            appBarImage.setImageDrawable(currentCar.getCarBanner(getBaseContext()));
         } else{
             header.setBackgroundDrawable(currentCar.getCarBanner(getBaseContext()));
-            appBarImage.setBackgroundDrawable(currentCar.getCarBanner(getBaseContext()));
+            appBarImage.setImageDrawable(currentCar.getCarBanner(getBaseContext()));
         }
 
         LinearLayout carsLayout = (LinearLayout) headerView.findViewById(R.id.cars_icon_layout);
@@ -326,8 +328,8 @@ public class MainActivity extends AppCompatActivity
                 ImageView carImage = new ImageView(getBaseContext());
                 carImage.setImageDrawable(car.getCarPicture(getBaseContext()));
 
-                int size = (int) getResources().getDimension(R.dimen.other_car_size);
-                int spacing = (int) getResources().getDimension(R.dimen.other_car_spacing);
+                int size = (int) getResources().getDimension(R.dimen.nav_header_other_car_size);
+                int spacing = (int) getResources().getDimension(R.dimen.nav_header_other_car_spacing);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(size, size);
                 layoutParams.setMargins(spacing, 0, 0, 0);
                 carImage.setLayoutParams(layoutParams);
@@ -370,6 +372,7 @@ public class MainActivity extends AppCompatActivity
         if (openFragment) {
             getSupportFragmentManager().popBackStack("FIRST_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             openMainFragment(HomeFragment.newInstance(R.id.nav_home), R.id.nav_home);
+
         }
 
         closeDrawer();

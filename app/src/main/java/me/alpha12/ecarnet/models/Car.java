@@ -123,7 +123,7 @@ public class Car {
 
         // Fallback to default image
         if (!imgFile.exists())
-            return ContextCompat.getDrawable(ctx, R.drawable.ic_car_profile_picture);
+            return ContextCompat.getDrawable(ctx, R.drawable.ic_default_car);
 
         return Drawable.createFromPath(imgFile.getAbsolutePath());
     }

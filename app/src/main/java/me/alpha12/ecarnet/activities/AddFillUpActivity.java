@@ -4,12 +4,15 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,11 +24,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
 
-public class FillUpActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddFillUpActivity extends AppCompatActivity implements View.OnClickListener {
+    private boolean isCalledFromTag = false;
+
     private static TextView mDateTextView;
     private Calendar mCurrentDate;
     private TextView kilometersTextView;
@@ -38,7 +45,7 @@ public class FillUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fill_up);
+        setContentView(R.layout.activity_add_fill_up);
 
         int carId = getIntent().getExtras().getInt("carId");
         currentCar = Car.findCarById(carId);
@@ -66,6 +73,35 @@ public class FillUpActivity extends AppCompatActivity implements View.OnClickLis
         backButton = (Button) findViewById(R.id.backButton);
         backButton.setOnClickListener(this);
         addButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            Intent intent = getIntent();
+            if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+                String message = Utils.getNFCTagMessage(intent);
+                try {
+                    int carId = Integer.parseInt(message);
+
+                    currentCar = Car.findCarById(carId);
+                    if (currentCar != null) {
+                        GlobalContext.setCurrentCar(carId);
+                        isCalledFromTag = true;
+                    } else {
+                        Log.e("eCarNet", "Car not found for this profile (id:"+carId+")");
+                        this.onBackPressed();
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e("eCarNet", "Invalid tag message \"" + message + "\"");
+                    this.onBackPressed();
+                }
+            }
+        } else {
+            Log.e("eCarNet", "NFC Tags are not supported by this API level ("+Build.VERSION.SDK_INT+")");
+        }
     }
 
     private TextWatcher mTextWatcher = new TextWatcher() {
@@ -120,8 +156,11 @@ public class FillUpActivity extends AppCompatActivity implements View.OnClickLis
                     currentCar.setKilometers(kilometers);
                     currentCar.update();
 
-                    Intent intent = new Intent(this, MainActivity.class);
-                    this.startActivity(intent);
+                    if (isCalledFromTag){
+                        GlobalContext.pushNotification("eCarNet", "Le plein a bien été ajouté à votre "+currentCar.getCarModel().toString());
+                    }
+
+                    onBackPressed();
                     finish();
                 } catch (ParseException e) {
                     e.printStackTrace();
