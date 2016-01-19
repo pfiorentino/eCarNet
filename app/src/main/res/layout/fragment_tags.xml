@@ -1,9 +1,6 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="me.alpha12.ecarnet.fragments.TagsFragment">
+    android:layout_height="match_parent" tools:context="me.alpha12.ecarnet.fragments.TagsFragment"
+    android:id="@+id/list" android:nestedScrollingEnabled="true">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="NFC tags fragment" />
-
-</FrameLayout>
+</ListView>

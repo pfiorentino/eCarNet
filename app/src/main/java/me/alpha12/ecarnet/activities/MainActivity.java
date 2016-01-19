@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         addFillupFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), FillUpActivity.class);
+                Intent intent = new Intent(view.getContext(), AddFillUpActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
             }
