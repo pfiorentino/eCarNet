@@ -24,7 +24,7 @@
             android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"
             android:paddingLeft="16dp" android:paddingRight="16dp"
             android:text="Annuler"
-            android:background="@drawable/selector_transparent_button" />
+            android:background="@drawable/transparent_button" />
     </LinearLayout>
 
     <ScrollView
