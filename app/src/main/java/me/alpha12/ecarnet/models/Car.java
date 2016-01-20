@@ -123,7 +123,7 @@ public class Car {
 
         // Fallback to default image
         if (!imgFile.exists())
-            return ContextCompat.getDrawable(ctx, R.drawable.ic_car_profile_picture);
+            return ContextCompat.getDrawable(ctx, R.drawable.ic_default_car);
 
         return Drawable.createFromPath(imgFile.getAbsolutePath());
     }
@@ -133,7 +133,7 @@ public class Car {
 
         // Fallback to default image
         if(!imgFile.exists())
-            return ContextCompat.getDrawable(ctx, R.drawable.default_car_background);
+            return ContextCompat.getDrawable(ctx, R.drawable.pic_default_background);
 
         return Drawable.createFromPath(imgFile.getAbsolutePath());
     }

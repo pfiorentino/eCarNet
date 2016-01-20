@@ -2,12 +2,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/cards_half_margin"
     tools:context="me.alpha12.ecarnet.fragments.HomeFragment">
 
     <LinearLayout android:orientation="vertical"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp">
+        android:layout_width="match_parent" android:layout_height="wrap_content">
         <android.support.v7.widget.CardView
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/cards_margin" android:layout_marginBottom="@dimen/cards_half_margin"
@@ -28,7 +26,134 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <LinearLayout android:orientation="horizontal"
+        <android.support.v7.widget.CardView android:id="@+id/newNoteCard"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
+            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin" >
+
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="match_parent" android:layout_height="wrap_content" >
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp" android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp" android:layout_marginRight="16dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Rappel" android:textAppearance="@android:style/TextAppearance.Large"/>
+                    <TextView android:id="@+id/dateMemo" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="1 janv." android:textAppearance="@android:style/TextAppearance.Small"/>
+                </LinearLayout>
+
+
+                <TextView android:id="@+id/reminderTitleTextView"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
+                    android:layout_marginBottom="4dp" android:layout_marginLeft="16dp"
+                    android:text="Vidange + filtre gasoil" />
+
+                <TextView android:id="@+id/reminderDateTextView"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp" android:layout_marginLeft="16dp"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:text="15 avr. 2016 ou 15 000 km"
+                    android:drawableLeft="@drawable/ic_notifications_black_18dp"
+                    android:drawablePadding="4dp"/>
+
+                <LinearLayout android:orientation="horizontal"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_margin="8dp">
+                    <Button android:id="@+id/reminderDoneButton" android:minHeight="0dp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:padding="8dp" android:layout_marginRight="8dp"
+                        android:textColor="@color/colorPrimary300"
+                        android:text="Effectué"
+                        android:background="@drawable/transparent_button" />
+                    <Button android:id="@+id/reminderEditButton" android:minHeight="0dp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:textColor="@color/colorPrimary300"
+                        android:text="Modifier"
+                        android:background="@drawable/transparent_button" />
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView android:id="@+id/noteCard"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/cards_half_margin"
+            android:layout_marginTop="@dimen/cards_half_margin"
+            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin"
+            android:paddingBottom="8dp">
+
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="match_parent" android:layout_height="wrap_content" >
+                <FrameLayout android:id="@+id/flagFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:background="#EF9A9A"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
+
+                    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="Prochaine intervention"
+                        android:textSize="24sp"/>
+                    <TextView
+                        android:layout_marginTop="16dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/titleNote"
+                        android:textSize="16sp"
+                        android:text="Intitulé" />
+                    <TextView
+                        android:layout_marginTop="2dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/dateNote"
+                        android:textSize="16sp"
+                        android:text="21 Janvier 2016"/>
+                    <TextView
+                        android:layout_marginTop="2dp"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/kilometersNote"
+                        android:textSize="16sp"
+                        android:text="120000 km"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/button_notification"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_notifications_black_36dp"
+                        android:background="@color/cardview_light_background"/>
+                    <ImageButton
+                        android:id="@+id/button_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/ic_create_black_36dp"
+                        android:background="@color/cardview_light_background"/>
+                    <ImageButton
+                        android:id="@+id/button_done"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:background="@color/cardview_light_background"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout android:orientation="horizontal" android:id="@+id/topCharts"
             android:layout_width="match_parent" android:layout_height="wrap_content" >
             <android.support.v7.widget.CardView android:id="@+id/kilometerscard"
                 android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
@@ -85,7 +210,7 @@
 
         <android.support.v7.widget.CardView android:id="@+id/costCard"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
+            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_margin"
             android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin">
             <LinearLayout android:orientation="vertical"
                 android:layout_width="match_parent" android:layout_height="wrap_content" >
@@ -100,134 +225,6 @@
                     android:gravity="bottom"
                     android:layout_marginBottom="16dp"/>
                 </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView android:id="@+id/newNoteCard"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin" >
-
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content" >
-
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp" android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="16dp" android:layout_marginRight="16dp">
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Rappel" android:textAppearance="@android:style/TextAppearance.Large"/>
-                    <TextView android:id="@+id/dateMemo" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="1 janv." android:textAppearance="@android:style/TextAppearance.Small"/>
-                </LinearLayout>
-
-
-                <TextView android:id="@+id/reminderTitleTextView"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:layout_marginBottom="4dp" android:layout_marginLeft="16dp"
-                    android:text="Vidange + filtre gasoil" />
-
-                <TextView android:id="@+id/reminderDateTextView"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp" android:layout_marginLeft="16dp"
-                    android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="15 avr. 2016 ou 15 000 km"
-                    android:drawableLeft="@drawable/ic_notifications_black_18dp"
-                    android:drawablePadding="4dp"/>
-
-                <LinearLayout android:orientation="horizontal"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_margin="8dp">
-                    <Button android:id="@+id/reminderDoneButton" android:minHeight="0dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:padding="8dp" android:layout_marginRight="8dp"
-                        android:textColor="@color/colorPrimary300"
-                        android:text="Effectué"
-                        android:background="@drawable/selector_transparent_button" />
-                    <Button android:id="@+id/reminderEditButton" android:minHeight="0dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:textColor="@color/colorPrimary300"
-                        android:text="Modifier"
-                        android:background="@drawable/selector_transparent_button" />
-                </LinearLayout>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView android:id="@+id/noteCard"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/cards_margin"
-            android:layout_marginTop="@dimen/cards_half_margin"
-            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin"
-            android:paddingBottom="8dp">
-
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content" >
-                <FrameLayout android:id="@+id/flagFrame"
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:background="#EF9A9A"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:orientation="vertical">
-
-                   <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="Prochaine intervention"
-                        android:textSize="24sp"/>
-                    <TextView
-                        android:layout_marginTop="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/titleNote"
-                        android:textSize="16sp"
-                        android:text="Intitulé" />
-                    <TextView
-                        android:layout_marginTop="2dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/dateNote"
-                        android:textSize="16sp"
-                        android:text="21 Janvier 2016"/>
-                    <TextView
-                        android:layout_marginTop="2dp"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/kilometersNote"
-                        android:textSize="16sp"
-                        android:text="120000 km"/>
-                    </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <ImageButton
-                        android:id="@+id/button_notification"
-                        android:layout_width="wrap_content"
-                        android:layout_margin="8dp"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_notifications_black_36dp"
-                        android:background="@color/cardview_light_background"/>
-                    <ImageButton
-                        android:id="@+id/button_edit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:src="@drawable/ic_create_black_36dp"
-                        android:background="@color/cardview_light_background"/>
-                    <ImageButton
-                        android:id="@+id/button_done"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:background="@color/cardview_light_background"/>
-                </LinearLayout>
-            </LinearLayout>
-
         </android.support.v7.widget.CardView>
     </LinearLayout>
 </ScrollView>

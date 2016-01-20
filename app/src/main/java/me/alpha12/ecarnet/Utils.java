@@ -1,6 +1,13 @@
 package me.alpha12.ecarnet;
 
+import android.content.Intent;
+import android.nfc.NdefMessage;
+import android.nfc.NfcAdapter;
+import android.os.Build;
+import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Arrays;
 
@@ -30,5 +37,34 @@ public class Utils {
             return ROMAN_DIGITS[value];
 
         return String.valueOf(value);
+    }
+
+    public static String getNFCTagMessage(Intent intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            String message = "";
+
+            NdefMessage[] messages = null;
+            Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+            if (rawMsgs != null) {
+                messages = new NdefMessage[rawMsgs.length];
+                for (int i = 0; i < rawMsgs.length; i++) {
+                    messages[i] = (NdefMessage) rawMsgs[i];
+                }
+            }
+
+            if (messages[0] != null) {
+                byte[] payload = messages[0].getRecords()[0].getPayload();
+                for (int b = 0; b < payload.length; b++) {
+                    message += (char) payload[b];
+                }
+            }
+
+            if (message.isEmpty())
+                return null;
+            else
+                return message;
+        } else {
+            return null;
+        }
     }
 }

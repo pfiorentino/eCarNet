@@ -24,7 +24,7 @@ import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.User;
 
 public class SplashScreenActivity extends AppCompatActivity {
-    private static int SPLASH_MIN_DURATION = 1000;
+    private static int SPLASH_MIN_DURATION = 250;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

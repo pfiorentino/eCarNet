@@ -2,12 +2,8 @@ package me.alpha12.ecarnet.fragments;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -159,7 +155,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             costText.setText(String.format("%.2f€", floatSum)+ " dépensés");
             costText.setTextSize(16);
             animateTextView(0.0f, getConsumption(), consumption);
+        } else {
+            view.findViewById(R.id.costCard).setVisibility(View.GONE);
+            view.findViewById(R.id.topCharts).setVisibility(View.GONE);
         }
+
         return view;
     }
 

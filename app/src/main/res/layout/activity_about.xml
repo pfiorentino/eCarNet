@@ -15,8 +15,8 @@
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:padding="16dp">
                 <ImageView android:adjustViewBounds="true"
-                    android:layout_width="100dp" android:layout_height="wrap_content"
-                    android:src="@drawable/splash_logo_black"/>
+                    android:layout_width="128dp" android:layout_height="wrap_content"
+                    android:src="@drawable/pic_logo_black_128dp"/>
                 <TextView
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -57,7 +57,7 @@
                     <TextView
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:text="eCarNet" android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:drawableBottom="@drawable/google_play_stars_small"/>
+                        android:drawableBottom="@drawable/pic_stars_small"/>
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>

@@ -57,7 +57,7 @@
                 android:paddingLeft="24dp" android:paddingRight="24dp"
                 android:drawableRight="@drawable/ic_chevron_right_black_18dp" android:drawablePadding="8dp"
                 android:text="Continuer la configuration"
-                android:background="@drawable/selector_transparent_button"
+                android:background="@drawable/transparent_button"
                 android:layout_alignParentRight="true" />
         </RelativeLayout>
     </RelativeLayout>
