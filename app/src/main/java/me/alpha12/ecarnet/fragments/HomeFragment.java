@@ -138,7 +138,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             ArrayList<Entry> kilometersChart = getKilometers(myInterventions, currentCar);
             ArrayList<Entry> fillUpChart = getAmoutsFillUp();
 
-            LineChartCustom kilometersLineCustom = new LineChartCustom(kilometersLine, kilometersChart, "", getLineChartLabels(myInterventions), null);
+            LineChartCustom kilometersLineCustom = new LineChartCustom(kilometersLine, kilometersChart, "", getLineChartLabels(myInterventions, 1), null);
 
 
             int sum = 0;
@@ -149,7 +149,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             kilometersText.setText(Integer.toString(sum) + " km effectués");
             kilometersText.setTextSize(16);
 
-            LineChartCustom costLineCustom = new LineChartCustom(costLine, fillUpChart, "", getLineChartLabels(myFillsUp), null);
+            LineChartCustom costLineCustom = new LineChartCustom(costLine, fillUpChart, "", getLineChartLabels(myFillsUp, 0), null);
 
             float floatSum = 0f;
             for(int i = 0; i<fillUpChart.size(); i++)
@@ -158,37 +158,34 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
             costText.setText(String.format("%.2f€", floatSum)+ " dépensés");
             costText.setTextSize(16);
-            animateTextView(0.0f, getConsumption(currentCar), consumption);
+            animateTextView(0.0f, getConsumption(), consumption);
         }
         return view;
     }
 
-    public float getConsumption(Car current)
-    {
+    public float getConsumption() {
         float totalConsumption = 0;
         float currentConsumption;
         int numberOfInters = 0;
-        int oldKilometers = current.getKilometers();
-        for(Intervention value : allMyInterventions) {
-            if(value.getQuantity()!=0 && oldKilometers < value.getKilometers()) {
-                currentConsumption = (float)value.getQuantity() * 100 / (value.getKilometers() - oldKilometers);
+        for(int i=1; i<myInterventions.size(); i++) {
+            if(myInterventions.get(i).getQuantity()!=0 && myInterventions.get(i-1).getKilometers() < myInterventions.get(1).getKilometers()) {
+                currentConsumption = (float)myInterventions.get(i).getQuantity() * 100 / (myInterventions.get(i).getKilometers() - myInterventions.get(i-1).getKilometers());
                 totalConsumption +=currentConsumption;
-                numberOfInters++;
-                oldKilometers = value.getKilometers();
             }
         }
-        return totalConsumption/numberOfInters;
+        return totalConsumption/(myInterventions.size()-1);
     }
 
-    public ArrayList<String> getLineChartLabels(ArrayList<Intervention> myInterventions)
+    public ArrayList<String> getLineChartLabels(ArrayList<Intervention> myInterventions, int start)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM yy", Locale.FRENCH);
         ArrayList<String> labs = new ArrayList<>();
-        for(Intervention value : myInterventions)
+        for(int i=start; i<myInterventions.size(); i++)
         {
-            String dateOutput = sdf.format(value.getDate());
+            String dateOutput = sdf.format(myInterventions.get(i).getDate());
             labs.add(dateOutput);
         }
+        Log.d("nb int", labs.size()+"");
         return labs;
     }
 
@@ -235,16 +232,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public ArrayList<Entry> getKilometers(ArrayList<Intervention> inters, Car current)
-    {
+    public ArrayList<Entry> getKilometers(ArrayList<Intervention> inters, Car current) {
         ArrayList<Entry> sumOfkilmeters = new ArrayList<>();
-        int oldValue = current.getKilometers();
         int newValue = 0;
-        for(int i=0; i<inters.size(); i++) {
-            newValue = inters.get(i).getKilometers() - oldValue;
-            sumOfkilmeters.add(new Entry(newValue, i));
-            oldValue = inters.get(i).getKilometers();
+        for(int i=1; i<inters.size(); i++) {
+            newValue = inters.get(i).getKilometers() - inters.get(i-1).getKilometers();
+            sumOfkilmeters.add(new Entry(newValue, i-1));
         }
+        Log.d("nb kil", sumOfkilmeters.size()+"");
         return sumOfkilmeters;
     }
 
@@ -258,78 +253,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM", Locale.FRENCH);
             dateMemo.setText(sdf.format(lastMemo.getDateNote()));
             limitMemo.setText(lastMemo.getKilometers() + " km ou " + sdf.format(lastMemo.getLimitDate()));
-
-
-            /*
-            TextView titleNote = (TextView) view.findViewById(R.id.titleNote);
-            titleNote.setText(lastMemo.getTitle());
-            TextView kilometerNote = (TextView) view.findViewById(R.id.kilometersNote);
-            kilometerNote.setText(lastMemo.getKilometers() + " km");
-            TextView dateNote = (TextView) view.findViewById(R.id.dateNote);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
-            dateNote.setText(sdf.format(lastMemo.getDateNote()));
-            if (lastMemo.isNotifSet()==0)
-                notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_36dp);
-            if (lastMemo.isDone()==1) {
-                doneButton.setBackgroundResource(R.drawable.ic_undo_black_36dp);
-                flagFrame.setBackgroundColor(0xFFA5D6A7);
-            } else {
-                doneButton.setBackgroundResource(R.drawable.ic_done_black_36dp);
-            }
-            //isNotifSet = lastMemo.isNotifSet();
-            //isDone = lastMemo.isDone();
-            notifButton.setOnClickListener(this);
-            doneButton.setOnClickListener(this);
-            */
         }
     }
 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
-            case R.id.button_notification :
-                if(isNotifSet)
-                {
-                    notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_36dp);
-                    isNotifSet = false;
-                    //lastNote.setNotif(false);
-                }
-                else {
-
-                    NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext());
-                    notif.setContentTitle("Test notif");
-                    notif.setContentText("pensez à effectuer votre opération !!!");
-                    notif.setSmallIcon(R.drawable.ic_directions_car_white_24dp);
-                    notif.setDefaults(NotificationCompat.DEFAULT_SOUND);
-                    Notification notification = notif.build();
-                    NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                    int notificationId = 0;
-                    notificationManager.notify(notificationId, notification);
-
-                    notifButton.setBackgroundResource(R.drawable.ic_notifications_black_36dp);
-                    isNotifSet = true;
-                    //lastNote.setNotif(true);
-                }
-                break;
-            case R.id.button_done :
-                if(isDone)
-                {
-                    //L'utilisateur undone la note
-                    doneButton.setBackgroundResource(R.drawable.ic_done_black_36dp);
-                    isDone = false;
-                    flagFrame.setBackgroundColor(0xFFEF9A9A);
-                    //lastNote.setDone(false);
-                }
-                else
-                {
-                    //L'uilisateur done la note
-                    doneButton.setBackgroundResource(R.drawable.ic_undo_black_36dp);
-                    isDone = true;
-                    flagFrame.setBackgroundColor(0xFFA5D6A7);
-                    //lastNote.setDone(true);
-                }
-        }
     }
 }

@@ -79,7 +79,7 @@ public class Intervention {
     public static ArrayList<Intervention> find10ByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM " + DBModel.TABLE_NAME + " WHERE " + DBModel.C_CAR_ID + " = " + carId + " ORDER BY " + DBModel.C_DATE + " DESC LIMIT 10",
+                "SELECT * FROM " + DBModel.TABLE_NAME + " WHERE " + DBModel.C_CAR_ID + " = " + carId + " ORDER BY " + DBModel.C_DATE + " ASC LIMIT 10",
                 null
         );
         while(cursor.moveToNext()) {

@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity
             addOperationFAB.show();
             addMemoFAB.hide();
         } else if (fragmentId == R.id.nav_memos) {
-            setTitle(R.string.title_fragment_share);
+            setTitle(R.string.title_fragment_memos);
             addFillupFAB.hide();
             addOperationFAB.hide();
             addMemoFAB.show();
