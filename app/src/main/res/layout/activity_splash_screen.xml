@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="me.alpha12.ecarnet.activities.SplashScreenActivity"
-    android:background="@drawable/default_car_background">
+    android:background="@drawable/pic_default_background">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -18,10 +18,9 @@
         android:layout_centerInParent="true">
         <ImageView
             android:id="@+id/imgLogo"
-            android:layout_width="125dp"
+            android:layout_width="128dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/splash_logo_black"
-            android:adjustViewBounds="true"
+            android:src="@drawable/pic_logo_black_128dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center" />
 

@@ -27,7 +27,7 @@
                 android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"
                 android:paddingLeft="16dp" android:paddingRight="16dp"
                 android:text="&lt; Annuler"
-                android:background="@drawable/selector_transparent_button" />
+                android:background="@drawable/transparent_button" />
 
             <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#BDBDBD" />
 
@@ -35,7 +35,7 @@
                 android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"
                 android:paddingLeft="16dp" android:paddingRight="16dp"
                 android:text="Terminer"
-                android:background="@drawable/selector_transparent_button" />
+                android:background="@drawable/transparent_button" />
         </LinearLayout>
         <ScrollView android:layout_below="@+id/titleTextView" android:layout_above="@id/bottomButtonBar"
             android:layout_width="match_parent" android:layout_height="match_parent"
