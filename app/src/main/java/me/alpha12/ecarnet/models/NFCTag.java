@@ -14,7 +14,10 @@ import me.alpha12.ecarnet.database.DatabaseManager;
  * Created by guilhem on 13/01/2016.
  */
 public class NFCTag {
-    public static final String MIME_ADD_FILLUP = "application/ecarnet.fillup";
+    public static final String MIME_ADD_FILLUP      = "application/ecarnet.fillup";
+    public static final String MIME_ADD_OPERATION   = "application/ecarnet.operation";
+    public static final String MIME_ADD_MEMO        = "application/ecarnet.memo";
+    public static final String MIME_CAR_INFO        = "application/ecarnet.carInfo";
 
     private int id;
     private String name;
@@ -22,6 +25,12 @@ public class NFCTag {
     private String message;
 
     /* Contructors */
+
+    public NFCTag(String name, String mimeType, String message) {
+        this.name = name;
+        this.mimeType = mimeType;
+        this.message = message;
+    }
 
     public NFCTag(int id, String name, String mimeType, String message) {
         this.id = id;
@@ -38,6 +47,10 @@ public class NFCTag {
     }
 
     /* Public methods */
+
+    public void persist() {
+        persist(false);
+    }
 
     public void persist(boolean update) {
         ContentValues newValues = new ContentValues();
@@ -60,6 +73,11 @@ public class NFCTag {
             if (this.id <= 0)
                 this.id = (int) insertedId;
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.name+" - "+this.mimeType+" - "+this.message;
     }
 
     /* Static methods */

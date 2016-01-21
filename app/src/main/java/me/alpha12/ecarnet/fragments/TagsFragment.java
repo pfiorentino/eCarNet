@@ -15,15 +15,15 @@ import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddInterventionActivity;
+import me.alpha12.ecarnet.activities.AddTagActivity;
 import me.alpha12.ecarnet.activities.MainActivity;
 import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.NFCTag;
 
 public class TagsFragment extends MasterFragment {
+    ArrayAdapter<NFCTag> adapter;
     private ArrayList<NFCTag> tagsList;
-
-    private FloatingActionButton fab;
 
     public static TagsFragment newInstance(int fragmentId) {
         TagsFragment fragment = new TagsFragment();
@@ -49,7 +49,7 @@ public class TagsFragment extends MasterFragment {
 
         ListView listView = (ListView) view.findViewById(R.id.list);
 
-        ArrayAdapter<NFCTag> adapter = new ArrayAdapter<>(
+        adapter = new ArrayAdapter<>(
                 view.getContext(),
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1,
@@ -57,6 +57,15 @@ public class TagsFragment extends MasterFragment {
         listView.setAdapter(adapter);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        tagsList.clear();
+        tagsList.addAll(NFCTag.findAll());
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -70,7 +79,7 @@ public class TagsFragment extends MasterFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addTagFAB:
-                Intent intent = new Intent(v.getContext(), AddInterventionActivity.class);
+                Intent intent = new Intent(v.getContext(), AddTagActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
                 break;

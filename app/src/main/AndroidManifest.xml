@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.alpha12.ecarnet">
-    <uses-permission android:name='android.permission.WAKE_LOCK'/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.NFC"/>
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <application
         android:name=".GlobalContext"
@@ -14,6 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver android:name=".adapters.NotificationPublisher" />
+
         <activity
             android:name=".activities.SplashScreenActivity"
             android:screenOrientation="portrait"
@@ -38,9 +39,12 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
+
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/ecarnet.fillup" />
             </intent-filter>
         </activity>
@@ -70,6 +74,16 @@
             android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.alpha12.ecarnet.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.AddTagActivity"
+            android:label="Ajouter un Tag NFC"
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
