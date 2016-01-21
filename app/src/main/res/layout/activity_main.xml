@@ -4,9 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:fitsSystemWindows="true" tools:openDrawer="start">
+    <android.support.design.widget.CoordinatorLayout
+        tools:context=".MainActivity"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:fitsSystemWindows="true" >
+        <android.support.design.widget.AppBarLayout android:id="@+id/appbar"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            android:fitsSystemWindows="true">
+            <android.support.design.widget.CollapsingToolbarLayout android:id="@+id/appbarLayout"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleMarginStart="16dp" app:expandedTitleMarginEnd="16dp"
+                android:fitsSystemWindows="true">
+                <FrameLayout android:fitsSystemWindows="true"
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <ImageView android:id="@+id/appBarImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerCrop" android:adjustViewBounds="true"
+                        android:src="@drawable/pic_default_background" />
+                    <View
+                        android:layout_width="match_parent" android:layout_height="120dp"
+                        android:background="@color/black_gradient"
+                        android:layout_gravity="bottom"/>
+                </FrameLayout>
+                <android.support.v7.widget.Toolbar android:id="@+id/supportToolBar"
+                    android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    app:layout_collapseMode="pin"/>
+            </android.support.design.widget.CollapsingToolbarLayout>
 
-    <include layout="@layout/app_bar_main" android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView android:id="@+id/scrollView"
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:clipToPadding="false" android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.FloatingActionButton android:id="@+id/addFillupFAB"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_add_gas" />
+
+        <android.support.design.widget.FloatingActionButton android:id="@+id/addOperationFAB"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
+            android:visibility="gone"
+            android:src="@drawable/ic_content_add_white_24dp" />
+
+        <android.support.design.widget.FloatingActionButton android:id="@+id/addMemoFAB"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
+            android:visibility="gone"
+            android:src="@drawable/ic_content_add_white_24dp" />
+
+        <android.support.design.widget.FloatingActionButton android:id="@+id/addTagFAB"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
+            android:visibility="gone"
+            android:src="@drawable/ic_content_add_white_24dp" />
+    </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView android:id="@+id/nav_view"
         android:layout_width="wrap_content" android:layout_height="match_parent"
