@@ -1,54 +1,29 @@
 package me.alpha12.ecarnet.fragments;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.activities.MainActivity;
-import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
+import me.alpha12.ecarnet.activities.AddInterventionActivity;
+import me.alpha12.ecarnet.classes.MasterFragment;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link OperationsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class OperationsFragment extends Fragment {
-    private int mMenuEntryId;
+public class OperationsFragment extends MasterFragment {
+    private FloatingActionButton fab;
 
-    private OnFragmentInteractionListener mListener;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param menuEntryId Drawer Menu Item Id.
-     * @return A new instance of fragment OperationsFragment.
-     */
-    public static OperationsFragment newInstance(int menuEntryId) {
+    public static OperationsFragment newInstance(int fragmentId) {
         OperationsFragment fragment = new OperationsFragment();
-        Bundle args = new Bundle();
-        args.putInt(MainActivity.FRAGMENT_MENU_ENTRY_ID, menuEntryId);
-        fragment.setArguments(args);
+        fragment.setFragmentId(fragmentId);
         return fragment;
-    }
-
-    public OperationsFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mMenuEntryId = getArguments().getInt(MainActivity.FRAGMENT_MENU_ENTRY_ID);
-        }
+        registerFloatingActionButton(R.id.addOperationFAB);
     }
 
     @Override
@@ -58,20 +33,18 @@ public class OperationsFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addOperationFAB:
+                Intent intent = new Intent(v.getContext(), AddInterventionActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
+                break;
         }
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void setTitle() {
+        parentActivity.setTitle(R.string.title_fragment_operations);
     }
-
 }

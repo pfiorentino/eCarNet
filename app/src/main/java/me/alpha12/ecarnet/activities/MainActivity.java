@@ -56,9 +56,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private View headerView;
 
-    private FloatingActionButton addFillupFAB;
-    private FloatingActionButton addOperationFAB;
-    private FloatingActionButton addMemoFAB;
+    private HashMap<Integer, FloatingActionButton> fabs = new HashMap<>();
 
     private ImageView appBarImage;
 
@@ -78,38 +76,7 @@ public class MainActivity extends AppCompatActivity
         supportToolbar  = (Toolbar) findViewById(R.id.supportToolBar);
         setSupportActionBar(supportToolbar);
 
-
         cars = Car.findAll();
-
-        addFillupFAB = (FloatingActionButton) findViewById(R.id.addFillupFAB);
-        addMemoFAB = (FloatingActionButton) findViewById(R.id.addMemoFAB);
-        addFillupFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddFillUpActivity.class);
-                intent.putExtra("carId", currentCar.getId());
-                startActivity(intent);
-            }
-        });
-
-        addMemoFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddMemoActivity.class);
-                intent.putExtra("carId", currentCar.getId());
-                startActivity(intent);
-            }
-        });
-
-        addOperationFAB = (FloatingActionButton) findViewById(R.id.addOperationFAB);
-        addOperationFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddInterventionActivity.class);
-                intent.putExtra("carId", currentCar.getId());
-                startActivity(intent);
-            }
-        });
 
         appBarImage = (ImageView) findViewById(R.id.appBarImage);
 
@@ -123,7 +90,10 @@ public class MainActivity extends AppCompatActivity
                         } else {
                             Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
                             if (navigationView != null && currentFragment != null && currentFragment.isVisible()) {
-                                fragmentSelected(currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID));
+                                int fragmentId = currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID);
+                                navigationView.getMenu().findItem(fragmentId).setChecked(true);
+                                setAppBarScrollEnabled(fragmentId == R.id.nav_home);
+                                refreshFABs(fragmentId);
                             }
                         }
                     }
@@ -179,6 +149,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int menuItemId = item.getItemId();
 
+        Log.d("Fragment", menuItemId+" - "+R.id.nav_memos+" - "+item);
+
         switch (menuItemId) {
             case R.id.nav_home:
                 openMainFragment(HomeFragment.newInstance(menuItemId), menuItemId);
@@ -231,6 +203,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void openMainFragment(Fragment fragment, int fragmentId) {
+        Log.d("Fragment", fragmentId+" - "+R.id.nav_memos+" - "+fragment);
         if (findViewById(R.id.fragment_container) != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -244,45 +217,23 @@ public class MainActivity extends AppCompatActivity
 
             transaction.commit();
 
-            fragmentSelected(fragmentId);
+            navigationView.getMenu().findItem(fragmentId).setChecked(true);
+            setAppBarScrollEnabled(fragmentId == R.id.nav_home);
+            refreshFABs(fragmentId);
         }
     }
 
-    public void fragmentSelected(int fragmentId) {
-        navigationView.getMenu().findItem(fragmentId).setChecked(true);
+    public void registerFloatingActionButton(int fragmentId, FloatingActionButton fab){
+        fabs.put(fragmentId, fab);
+    }
 
-
-        setAppBarScrollEnabled(fragmentId == R.id.nav_home);
-        if (fragmentId == R.id.nav_home) {
-            setTitle(currentCar.getCarModel().toString());
-            addFillupFAB.show();
-            addOperationFAB.hide();
-            addMemoFAB.hide();
-        } else if (fragmentId == R.id.nav_gas) {
-            setTitle(R.string.title_fragment_gas);
-            addFillupFAB.show();
-            addOperationFAB.hide();
-            addMemoFAB.hide();
-        } else if (fragmentId == R.id.nav_repair) {
-            setTitle(R.string.title_fragment_operations);
-            addFillupFAB.hide();
-            addOperationFAB.show();
-            addMemoFAB.hide();
-        } else if (fragmentId == R.id.nav_memos) {
-            setTitle(R.string.title_fragment_memos);
-            addFillupFAB.hide();
-            addOperationFAB.hide();
-            addMemoFAB.show();
-        } else if (fragmentId == R.id.nav_share) {
-            setTitle(R.string.title_fragment_share);
-            addFillupFAB.hide();
-            addOperationFAB.hide();
-            addMemoFAB.hide();
-        } else if (fragmentId == R.id.nav_nfc) {
-            setTitle(R.string.title_fragment_tags);
-            addFillupFAB.hide();
-            addOperationFAB.hide();
-            addMemoFAB.hide();
+    private void refreshFABs(int fragmentId) {
+        for(Map.Entry<Integer, FloatingActionButton> entry : fabs.entrySet()) {
+            if (entry.getKey() == fragmentId){
+                entry.getValue().show();
+            } else {
+                entry.getValue().hide();
+            }
         }
     }
 

@@ -1,16 +1,18 @@
 package me.alpha12.ecarnet.fragments;
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -23,27 +25,14 @@ import java.util.Date;
 import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.activities.MainActivity;
+import me.alpha12.ecarnet.activities.AddFillUpActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
-import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
+import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Memo;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class HomeFragment extends Fragment implements View.OnClickListener {
-
-    private int mMenuEntryId;
-    private OnFragmentInteractionListener mListener;
-
-
+public class HomeFragment extends MasterFragment {
     private boolean isDone;
     private boolean isNotifSet;
     private Memo lastMemo;
@@ -58,38 +47,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private TextView limitMemo;
     private TextView dateMemo;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param menuEntryId Drawer Menu Item Id.
-     * @return A new instance of fragment HomeFragment.
-     */
-    public static HomeFragment newInstance(int menuEntryId) {
+    public static HomeFragment newInstance(int fragmentId) {
         HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putInt(MainActivity.FRAGMENT_MENU_ENTRY_ID, menuEntryId);
-        fragment.setArguments(args);
+        fragment.setFragmentId(fragmentId);
         return fragment;
     }
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    public HomeFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mMenuEntryId = getArguments().getInt(MainActivity.FRAGMENT_MENU_ENTRY_ID);
-        }
+        registerFloatingActionButton(R.id.addFillupFAB);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        Car currentCar = ((MainActivity) getActivity()).currentCar;
 
         contentCar = (TextView) view.findViewById(R.id.contentCar);
 
@@ -177,42 +152,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             String dateOutput = sdf.format(myInterventions.get(i).getDate());
             labs.add(dateOutput);
         }
-        Log.d("nb int", labs.size()+"");
+        Log.d("nb int", labs.size() + "");
         return labs;
     }
 
 
 
     public void animateTextView(float initialValue, float finalValue, final TextView  textview) {
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(initialValue, finalValue);
-        valueAnimator.setDuration(1800);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(initialValue, finalValue);
+            valueAnimator.setDuration(1800);
 
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float value = Float.parseFloat(valueAnimator.getAnimatedValue().toString());
-                textview.setText(String.format("%.1f", value));
-
-            }
-        });
-        valueAnimator.start();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        float value = Float.parseFloat(valueAnimator.getAnimatedValue().toString());
+                        textview.setText(String.format("%.1f", value));
+                    }
+                }
+            });
+            valueAnimator.start();
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     public ArrayList<Entry> getAmoutsFillUp()
@@ -251,5 +212,58 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addFillupFAB:
+                Intent intent = new Intent(v.getContext(), AddFillUpActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
+                break;
+            /*case R.id.button_notification :
+                if(isNotifSet)
+                {
+                    notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_36dp);
+                    isNotifSet = false;
+                    //lastNote.setNotif(false);
+                }
+                else {
+
+                    NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext());
+                    notif.setContentTitle("Test notif");
+                    notif.setContentText("pensez à effectuer votre opération !!!");
+                    notif.setSmallIcon(R.drawable.ic_directions_car_white_24dp);
+                    notif.setDefaults(NotificationCompat.DEFAULT_SOUND);
+                    Notification notification = notif.build();
+                    NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                    int notificationId = 0;
+                    notificationManager.notify(notificationId, notification);
+
+                    notifButton.setBackgroundResource(R.drawable.ic_notifications_black_36dp);
+                    isNotifSet = true;
+                    //lastNote.setNotif(true);
+                }
+                break;
+            case R.id.button_done :
+                if(isDone)
+                {
+                    //L'utilisateur undone la note
+                    doneButton.setBackgroundResource(R.drawable.ic_done_black_36dp);
+                    isDone = false;
+                    flagFrame.setBackgroundColor(0xFFEF9A9A);
+                    //lastNote.setDone(false);
+                }
+                else
+                {
+                    //L'uilisateur done la note
+                    doneButton.setBackgroundResource(R.drawable.ic_undo_black_36dp);
+                    isDone = true;
+                    flagFrame.setBackgroundColor(0xFFA5D6A7);
+                    //lastNote.setDone(true);
+                }*/
+        }
+    }
+
+    @Override
+    public void setTitle() {
+        parentActivity.setTitle(currentCar.getCarModel().toString());
     }
 }
