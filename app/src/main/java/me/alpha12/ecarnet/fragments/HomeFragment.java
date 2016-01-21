@@ -54,10 +54,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private TextView contentCar;
 
-    private ImageButton notifButton;
-    private ImageButton editButton;
-    private ImageButton doneButton;
-    private FrameLayout flagFrame;
     private TextView titleMemo;
     private TextView limitMemo;
     private TextView dateMemo;
@@ -105,10 +101,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getPlateNum(), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
 
         lastMemo = Memo.getLastNote(currentCar.getId());
-        notifButton = (ImageButton) view.findViewById(R.id.button_notification);
-        editButton = (ImageButton) view.findViewById(R.id.button_edit);
-        doneButton = (ImageButton) view.findViewById(R.id.button_done);
-        flagFrame = (FrameLayout) view.findViewById(R.id.flagFrame);
 
         TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
         LineChart kilometersLine = (LineChart) view.findViewById(R.id.kilometersChart);
@@ -246,7 +238,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void useNotedCard(View view) {
         if (lastMemo == null) {
-            CardView card = (CardView) view.findViewById(R.id.noteCard);
+            CardView card = (CardView) view.findViewById(R.id.newNoteCard);
             card.setVisibility(View.GONE);
         } else {
             titleMemo.setText(lastMemo.getTitle());

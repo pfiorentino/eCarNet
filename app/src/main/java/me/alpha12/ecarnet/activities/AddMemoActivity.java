@@ -99,7 +99,7 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
             current = mCurrentDate.getTime();
 
             Intent intent = getIntent();
-            if(intent.getExtras() != null && intent.getExtras().containsKey("isNewItem")){
+            if(intent.getExtras() != null && intent.getExtras().containsKey("idMemo")){
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy", Locale.FRENCH);
                 memo = Memo.findMemoById(intent.getExtras().getInt("idMemo"));
                 title.setText(memo.getTitle());

@@ -3,18 +3,16 @@ package me.alpha12.ecarnet.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.MainActivity;
-import me.alpha12.ecarnet.adapters.MemoRecyclerAdapter;
+import me.alpha12.ecarnet.adapters.MemoAdapter;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Memo;
@@ -31,7 +29,7 @@ public class MemosFragment extends Fragment {
     private int mMenuEntryId;
 
     private OnFragmentInteractionListener mListener;
-    private RecyclerView myMemos;
+    private ListView myMemos;
 
     /**
      * Use this factory method to create a new instance of
@@ -70,11 +68,8 @@ public class MemosFragment extends Fragment {
         memoList = Memo.findAllByCar(currentCar.getId());
 
         if(!memoList.isEmpty()) {
-            myMemos = (RecyclerView) view.findViewById(R.id.memoList);
-
-            myMemos.setHasFixedSize(true);
-            myMemos.setAdapter(new MemoRecyclerAdapter(getContext(), memoList));
-            myMemos.setLayoutManager(new LinearLayoutManager(getContext()));
+            myMemos = (ListView) view.findViewById(R.id.memoList);
+            myMemos.setAdapter(new MemoAdapter(getContext(), memoList, getActivity()));
         }
         return view;
     }
