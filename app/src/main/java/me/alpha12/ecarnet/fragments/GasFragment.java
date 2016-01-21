@@ -42,8 +42,6 @@ public class GasFragment extends MasterFragment {
             TextView priceText = (TextView) view.findViewById(R.id.priceValue);
             priceText.setText(String.valueOf(interventions.get(0).getPrice()));
         }
-
-
         return view;
     }
 

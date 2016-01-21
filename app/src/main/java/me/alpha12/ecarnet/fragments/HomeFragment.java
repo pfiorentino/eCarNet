@@ -5,15 +5,14 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -44,10 +43,6 @@ public class HomeFragment extends MasterFragment {
 
     private TextView contentCar;
 
-    private ImageButton notifButton;
-    private ImageButton editButton;
-    private ImageButton doneButton;
-    private FrameLayout flagFrame;
     private TextView titleMemo;
     private TextView limitMemo;
     private TextView dateMemo;
@@ -81,10 +76,6 @@ public class HomeFragment extends MasterFragment {
         contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getPlateNum(), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
 
         lastMemo = Memo.getLastNote(currentCar.getId());
-        notifButton = (ImageButton) view.findViewById(R.id.button_notification);
-        editButton = (ImageButton) view.findViewById(R.id.button_edit);
-        doneButton = (ImageButton) view.findViewById(R.id.button_done);
-        flagFrame = (FrameLayout) view.findViewById(R.id.flagFrame);
 
         TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
         LineChart kilometersLine = (LineChart) view.findViewById(R.id.kilometersChart);
@@ -110,7 +101,7 @@ public class HomeFragment extends MasterFragment {
             ArrayList<Entry> kilometersChart = getKilometers(myInterventions, currentCar);
             ArrayList<Entry> fillUpChart = getAmoutsFillUp();
 
-            LineChartCustom kilometersLineCustom = new LineChartCustom(kilometersLine, kilometersChart, "", getLineChartLabels(myInterventions), null);
+            LineChartCustom kilometersLineCustom = new LineChartCustom(kilometersLine, kilometersChart, "", getLineChartLabels(myInterventions, 1), null);
 
 
             int sum = 0;
@@ -121,7 +112,7 @@ public class HomeFragment extends MasterFragment {
             kilometersText.setText(Integer.toString(sum) + " km effectués");
             kilometersText.setTextSize(16);
 
-            LineChartCustom costLineCustom = new LineChartCustom(costLine, fillUpChart, "", getLineChartLabels(myFillsUp), null);
+            LineChartCustom costLineCustom = new LineChartCustom(costLine, fillUpChart, "", getLineChartLabels(myFillsUp, 0), null);
 
             float floatSum = 0f;
             for(int i = 0; i<fillUpChart.size(); i++)
@@ -130,7 +121,7 @@ public class HomeFragment extends MasterFragment {
             }
             costText.setText(String.format("%.2f€", floatSum)+ " dépensés");
             costText.setTextSize(16);
-            animateTextView(0.0f, getConsumption(currentCar), consumption);
+            animateTextView(0.0f, getConsumption(), consumption);
         } else {
             view.findViewById(R.id.costCard).setVisibility(View.GONE);
             view.findViewById(R.id.topCharts).setVisibility(View.GONE);
@@ -139,50 +130,50 @@ public class HomeFragment extends MasterFragment {
         return view;
     }
 
-    public float getConsumption(Car current)
-    {
+    public float getConsumption() {
         float totalConsumption = 0;
         float currentConsumption;
         int numberOfInters = 0;
-        int oldKilometers = current.getKilometers();
-        for(Intervention value : allMyInterventions) {
-            if(value.getQuantity()!=0 && oldKilometers < value.getKilometers()) {
-                currentConsumption = (float)value.getQuantity() * 100 / (value.getKilometers() - oldKilometers);
+        for(int i=1; i<myInterventions.size(); i++) {
+            if(myInterventions.get(i).getQuantity()!=0 && myInterventions.get(i-1).getKilometers() < myInterventions.get(1).getKilometers()) {
+                currentConsumption = (float)myInterventions.get(i).getQuantity() * 100 / (myInterventions.get(i).getKilometers() - myInterventions.get(i-1).getKilometers());
                 totalConsumption +=currentConsumption;
-                numberOfInters++;
-                oldKilometers = value.getKilometers();
             }
         }
-        return totalConsumption/numberOfInters;
+        return totalConsumption/(myInterventions.size()-1);
     }
 
-    public ArrayList<String> getLineChartLabels(ArrayList<Intervention> myInterventions)
+    public ArrayList<String> getLineChartLabels(ArrayList<Intervention> myInterventions, int start)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM yy", Locale.FRENCH);
         ArrayList<String> labs = new ArrayList<>();
-        for(Intervention value : myInterventions)
+        for(int i=start; i<myInterventions.size(); i++)
         {
-            String dateOutput = sdf.format(value.getDate());
+            String dateOutput = sdf.format(myInterventions.get(i).getDate());
             labs.add(dateOutput);
         }
+        Log.d("nb int", labs.size() + "");
         return labs;
     }
 
 
 
     public void animateTextView(float initialValue, float finalValue, final TextView  textview) {
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(initialValue, finalValue);
-        valueAnimator.setDuration(1800);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(initialValue, finalValue);
+            valueAnimator.setDuration(1800);
 
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float value = Float.parseFloat(valueAnimator.getAnimatedValue().toString());
-                textview.setText(String.format("%.1f", value));
-
-            }
-        });
-        valueAnimator.start();
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        float value = Float.parseFloat(valueAnimator.getAnimatedValue().toString());
+                        textview.setText(String.format("%.1f", value));
+                    }
+                }
+            });
+            valueAnimator.start();
+        }
     }
 
     public ArrayList<Entry> getAmoutsFillUp()
@@ -194,52 +185,27 @@ public class HomeFragment extends MasterFragment {
     }
 
 
-    public ArrayList<Entry> getKilometers(ArrayList<Intervention> inters, Car current)
-    {
+    public ArrayList<Entry> getKilometers(ArrayList<Intervention> inters, Car current) {
         ArrayList<Entry> sumOfkilmeters = new ArrayList<>();
-        int oldValue = current.getKilometers();
         int newValue = 0;
-        for(int i=0; i<inters.size(); i++) {
-            newValue = inters.get(i).getKilometers() - oldValue;
-            sumOfkilmeters.add(new Entry(newValue, i));
-            oldValue = inters.get(i).getKilometers();
+        for(int i=1; i<inters.size(); i++) {
+            newValue = inters.get(i).getKilometers() - inters.get(i-1).getKilometers();
+            sumOfkilmeters.add(new Entry(newValue, i-1));
         }
+        Log.d("nb kil", sumOfkilmeters.size()+"");
         return sumOfkilmeters;
     }
 
 
     private void useNotedCard(View view) {
         if (lastMemo == null) {
-            CardView card = (CardView) view.findViewById(R.id.noteCard);
+            CardView card = (CardView) view.findViewById(R.id.newNoteCard);
             card.setVisibility(View.GONE);
         } else {
             titleMemo.setText(lastMemo.getTitle());
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM", Locale.FRENCH);
             dateMemo.setText(sdf.format(lastMemo.getDateNote()));
             limitMemo.setText(lastMemo.getKilometers() + " km ou " + sdf.format(lastMemo.getLimitDate()));
-
-
-            /*
-            TextView titleNote = (TextView) view.findViewById(R.id.titleNote);
-            titleNote.setText(lastMemo.getTitle());
-            TextView kilometerNote = (TextView) view.findViewById(R.id.kilometersNote);
-            kilometerNote.setText(lastMemo.getKilometers() + " km");
-            TextView dateNote = (TextView) view.findViewById(R.id.dateNote);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
-            dateNote.setText(sdf.format(lastMemo.getDateNote()));
-            if (lastMemo.isNotifSet()==0)
-                notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_36dp);
-            if (lastMemo.isDone()==1) {
-                doneButton.setBackgroundResource(R.drawable.ic_undo_black_36dp);
-                flagFrame.setBackgroundColor(0xFFA5D6A7);
-            } else {
-                doneButton.setBackgroundResource(R.drawable.ic_done_black_36dp);
-            }
-            //isNotifSet = lastMemo.isNotifSet();
-            //isDone = lastMemo.isDone();
-            notifButton.setOnClickListener(this);
-            doneButton.setOnClickListener(this);
-            */
         }
     }
 
@@ -252,7 +218,7 @@ public class HomeFragment extends MasterFragment {
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
                 break;
-            case R.id.button_notification :
+            /*case R.id.button_notification :
                 if(isNotifSet)
                 {
                     notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_36dp);
@@ -292,7 +258,7 @@ public class HomeFragment extends MasterFragment {
                     isDone = true;
                     flagFrame.setBackgroundColor(0xFFA5D6A7);
                     //lastNote.setDone(true);
-                }
+                }*/
         }
     }
 

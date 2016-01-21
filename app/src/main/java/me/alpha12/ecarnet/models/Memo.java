@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import me.alpha12.ecarnet.database.DatabaseManager;
@@ -26,13 +27,11 @@ public class Memo {
 
     /* Contructors */
 
-    public Memo(int id, String firstName, Date date, Date limit, int distance, boolean notif, boolean done, boolean archived, int idCar) {
+    public Memo(int id, String title, Date date, Date limit, int distance, boolean notif, boolean done, boolean archived, int idCar) {
         this.id = id;
-        this.title = firstName;
+        this.title = title;
         this.dateNote = date;
-        Log.d("current date", dateNote.toString());
         this.limitDate = limit;
-        Log.d("limit date", limitDate.toString());
         this.kilometers = distance;
         if(notif)
             this.isNotifSet = 1;
@@ -44,6 +43,18 @@ public class Memo {
             this.isArchived = 1;
         else this.isArchived = 0;
         this.carId = idCar;
+    }
+
+    public Memo(Cursor cursor) {
+        this.id         = DatabaseManager.extractInt(cursor, DBMemo.C_ID);
+        this.carId      = DatabaseManager.extractInt(cursor, DBMemo.C_CAR_ID);
+        this.title      = DatabaseManager.extractString(cursor, DBMemo.C_TITLE);
+        this.kilometers = DatabaseManager.extractInt(cursor, DBMemo.C_KILOMETERS);
+        this.dateNote   = DatabaseManager.extractDate(cursor, DBMemo.C_DATE_CREATED);
+        this.limitDate  = DatabaseManager.extractDate(cursor, DBMemo.C_DATE_SET);
+        this.isNotifSet = DatabaseManager.extractInt(cursor, DBMemo.C_NOTIFICATION);
+        this.isArchived = DatabaseManager.extractInt(cursor, DBMemo.C_ARCHIVED);
+        this.isDone     = DatabaseManager.extractInt(cursor, DBMemo.C_DONE);
     }
 
     public void persist(boolean update) {
@@ -80,6 +91,22 @@ public class Memo {
     }
 
 
+    public static ArrayList<Memo> findAllByCar(int carId) {
+        ArrayList<Memo> result = new ArrayList<>();
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT * FROM "+DBMemo.TABLE_NAME+" WHERE "+DBMemo.C_CAR_ID+" = " + carId,
+                null
+        );
+        while(cursor.moveToNext()) {
+            result.add(new Memo(cursor));
+        }
+        return result;
+    }
+
+
+
+
+
     public static Memo getLastNote(int carId) {
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBMemo.TABLE_NAME +
                 " WHERE car_id = " + carId + " ORDER BY " + DBMemo.C_DATE_SET+", " +DBMemo.C_KILOMETERS + " DESC LIMIT 1", null);
@@ -100,7 +127,25 @@ public class Memo {
         return null;
     }
 
+    public static Memo findMemoById(int memoId) {
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBMemo.TABLE_NAME +
+                " WHERE " +DBMemo.C_ID+" = " + memoId, null);
 
+        if (cursor.moveToNext()) {
+            return new Memo(
+                    DatabaseManager.extractInt(cursor, DBMemo.C_ID),
+                    DatabaseManager.extractString(cursor, DBMemo.C_TITLE),
+                    DatabaseManager.extractDate(cursor, DBMemo.C_DATE_SET),
+                    DatabaseManager.extractDate(cursor, DBMemo.C_DATE_CREATED),
+                    DatabaseManager.extractInt(cursor, DBMemo.C_KILOMETERS),
+                    DatabaseManager.extractInt(cursor, DBMemo.C_NOTIFICATION) == 1,
+                    DatabaseManager.extractInt(cursor, DBMemo.C_DONE) == 1,
+                    DatabaseManager.extractInt(cursor, DBMemo.C_ARCHIVED) == 1,
+                    DatabaseManager.extractInt(cursor, DBMemo.C_CAR_ID)
+            );
+        }
+        return null;
+    }
 
 
 
@@ -189,6 +234,10 @@ public class Memo {
         if(isDone)
         this.isDone = 1;
         else this.isDone = 0;
+    }
+
+    public int getCarId() {
+        return carId;
     }
 
     public int isArchived() {
