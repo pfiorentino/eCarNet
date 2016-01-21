@@ -1,56 +1,45 @@
 package me.alpha12.ecarnet.fragments;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.activities.AddInterventionActivity;
 import me.alpha12.ecarnet.activities.MainActivity;
-import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
+import me.alpha12.ecarnet.classes.MasterFragment;
+import me.alpha12.ecarnet.models.Car;
+import me.alpha12.ecarnet.models.NFCTag;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TagsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class TagsFragment extends Fragment {
-    private int mMenuEntryId;
+public class TagsFragment extends MasterFragment {
+    private ArrayList<NFCTag> tagsList;
 
-    private OnFragmentInteractionListener mListener;
+    private FloatingActionButton fab;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param menuEntryId Drawer Menu Item Id.
-     * @return A new instance of fragment TagsFragment.
-     */
-    public static TagsFragment newInstance(int menuEntryId) {
+    public static TagsFragment newInstance(int fragmentId) {
         TagsFragment fragment = new TagsFragment();
-        Bundle args = new Bundle();
-        args.putInt(MainActivity.FRAGMENT_MENU_ENTRY_ID, menuEntryId);
-        fragment.setArguments(args);
+        fragment.setFragmentId(fragmentId);
         return fragment;
-    }
-
-    public TagsFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mMenuEntryId = getArguments().getInt(MainActivity.FRAGMENT_MENU_ENTRY_ID);
-        }
+
+        registerFloatingActionButton(R.id.addTagFAB);
+
+        setHasOptionsMenu(true);
+
+        tagsList = NFCTag.findAll();
     }
 
     @Override
@@ -58,50 +47,38 @@ public class TagsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tags, container, false);
 
-
         ListView listView = (ListView) view.findViewById(R.id.list);
 
-        // Defined Array values to show in ListView
-        String[] values = new String[] { "Android List View",
-                "Adapter implementation",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, values);
-
-
-        // Assign adapter to ListView
+        ArrayAdapter<NFCTag> adapter = new ArrayAdapter<>(
+                view.getContext(),
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1,
+                tagsList);
         listView.setAdapter(adapter);
 
         return view;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.tags_fragment_menu, menu);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addTagFAB:
+                Intent intent = new Intent(v.getContext(), AddInterventionActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
+                break;
         }
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void setTitle() {
+        parentActivity.setTitle(R.string.title_fragment_tags);
     }
 }
