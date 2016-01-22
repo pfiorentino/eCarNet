@@ -174,4 +174,8 @@ public class Intervention {
     public double getPrice() {
         return this.price;
     }
+
+    public String getDescription() {
+        return description;
+    }
 }
