@@ -8,6 +8,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 
+import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
 /**
@@ -80,12 +81,74 @@ public class NFCTag {
         return this.name+" - "+this.mimeType+" - "+this.message;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public String getMimeTypeString() {
+        switch (mimeType) {
+            case MIME_ADD_FILLUP:
+                return "Nouveau plein";
+            case MIME_ADD_OPERATION:
+                return "Nouvelle intervention";
+            case MIME_ADD_MEMO:
+                return "Nouveau mémo";
+            case MIME_CAR_INFO:
+                return "Infos du véhicule";
+        }
+
+        return null;
+    }
+
+    public Integer getMimeTypeIcon() {
+        switch (mimeType) {
+            case MIME_ADD_FILLUP:
+                return R.drawable.ic_local_gas_station_tblack_24dp;
+            case MIME_ADD_OPERATION:
+                return R.drawable.ic_local_car_wash_tblack_24dp;
+            case MIME_ADD_MEMO:
+                return R.drawable.ic_notifications_tblack_24dp;
+            case MIME_CAR_INFO:
+                return R.drawable.ic_info_outline_tblack_24dp;
+        }
+
+        return null;
+    }
+
+    public Car getCar() {
+        try {
+            int carId = Integer.parseInt(this.message);
+            return Car.findCarById(carId);
+        } catch (NumberFormatException e) {
+            Log.e("eCarNet", "Invalid tag message \"" + message + "\"");
+            return null;
+        }
+    }
+
     /* Static methods */
 
     public static ArrayList<NFCTag> findAll() {
+        return findAll(null);
+    }
+
+    public static ArrayList<NFCTag> findAll(String order) {
         ArrayList<NFCTag> result = new ArrayList<>();
+
+        String query = "SELECT * FROM "+DBModel.TABLE_NAME;
+        if (order != null) {
+            query += " ORDER BY "+order;
+        }
+
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME,
+                query,
                 null
         );
 

@@ -235,7 +235,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void changeCar(Car newCar, boolean openFragment) {
-        Log.d("fragment", "Change car (" + openFragment + ")");
         GlobalContext.setCurrentCar(newCar.getId());
 
         RelativeLayout header = (RelativeLayout) headerView.findViewById(R.id.drawer_header);

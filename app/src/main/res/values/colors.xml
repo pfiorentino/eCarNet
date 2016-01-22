@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryText">#FFFFFF</color>
+    <color name="textColor">#DE000000</color>
+    <color name="secondaryTextColor">#8A000000</color>
+    <color name="primaryTextColor">#FFFFFF</color>
 
     <color name="colorPrimary">#F44336</color>
     <color name="colorPrimary300">#E57373</color>
@@ -10,4 +12,5 @@
     <color name="colorAccentAlpha">#77D50000</color>
 
     <color name="buttonActiveState">#D5D5D5</color>
+    <color name="listDividerColor">#1E000000</color>
 </resources>

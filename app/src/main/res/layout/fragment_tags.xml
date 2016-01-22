@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="me.alpha12.ecarnet.fragments.TagsFragment"
     android:layout_width="match_parent" android:layout_height="match_parent"
+    android:divider="@drawable/inset_list_divider" android:dividerHeight="0dp"
     android:nestedScrollingEnabled="true">
 
 </ListView>

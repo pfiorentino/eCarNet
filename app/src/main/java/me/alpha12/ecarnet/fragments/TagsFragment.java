@@ -17,6 +17,7 @@ import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddInterventionActivity;
 import me.alpha12.ecarnet.activities.AddTagActivity;
 import me.alpha12.ecarnet.activities.MainActivity;
+import me.alpha12.ecarnet.adapters.NFCTagAdapter;
 import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.NFCTag;
@@ -39,7 +40,7 @@ public class TagsFragment extends MasterFragment {
 
         setHasOptionsMenu(true);
 
-        tagsList = NFCTag.findAll();
+        tagsList = new ArrayList<>();
     }
 
     @Override
@@ -49,11 +50,8 @@ public class TagsFragment extends MasterFragment {
 
         ListView listView = (ListView) view.findViewById(R.id.list);
 
-        adapter = new ArrayAdapter<>(
-                view.getContext(),
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
-                tagsList);
+        adapter = new NFCTagAdapter(view.getContext(), tagsList);
+
         listView.setAdapter(adapter);
 
         return view;
@@ -64,7 +62,7 @@ public class TagsFragment extends MasterFragment {
         super.onResume();
 
         tagsList.clear();
-        tagsList.addAll(NFCTag.findAll());
+        tagsList.addAll(NFCTag.findAll(NFCTag.DBModel.C_MESSAGE));
         adapter.notifyDataSetChanged();
     }
 

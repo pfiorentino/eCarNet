@@ -34,5 +34,6 @@
     <string name="title_activity_add_operation">Ajouter une intervention</string>
     <string name="addPicture">Ajouter photo</string>
     <string name="addCover">Ajouter couverture</string>
+    <string name="name_text_view">Nom</string>
 </resources>
 
