@@ -8,13 +8,17 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 
+import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
 /**
  * Created by guilhem on 13/01/2016.
  */
 public class NFCTag {
-    public static final String MIME_ADD_FILLUP = "application/ecarnet.fillup";
+    public static final String MIME_ADD_FILLUP      = "application/ecarnet.fillup";
+    public static final String MIME_ADD_OPERATION   = "application/ecarnet.operation";
+    public static final String MIME_ADD_MEMO        = "application/ecarnet.memo";
+    public static final String MIME_CAR_INFO        = "application/ecarnet.carInfo";
 
     private int id;
     private String name;
@@ -22,6 +26,12 @@ public class NFCTag {
     private String message;
 
     /* Contructors */
+
+    public NFCTag(String name, String mimeType, String message) {
+        this.name = name;
+        this.mimeType = mimeType;
+        this.message = message;
+    }
 
     public NFCTag(int id, String name, String mimeType, String message) {
         this.id = id;
@@ -38,6 +48,10 @@ public class NFCTag {
     }
 
     /* Public methods */
+
+    public void persist() {
+        persist(false);
+    }
 
     public void persist(boolean update) {
         ContentValues newValues = new ContentValues();
@@ -62,12 +76,79 @@ public class NFCTag {
         }
     }
 
+    @Override
+    public String toString() {
+        return this.name+" - "+this.mimeType+" - "+this.message;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public String getMimeTypeString() {
+        switch (mimeType) {
+            case MIME_ADD_FILLUP:
+                return "Nouveau plein";
+            case MIME_ADD_OPERATION:
+                return "Nouvelle intervention";
+            case MIME_ADD_MEMO:
+                return "Nouveau mémo";
+            case MIME_CAR_INFO:
+                return "Infos du véhicule";
+        }
+
+        return null;
+    }
+
+    public Integer getMimeTypeIcon() {
+        switch (mimeType) {
+            case MIME_ADD_FILLUP:
+                return R.drawable.ic_local_gas_station_tblack_24dp;
+            case MIME_ADD_OPERATION:
+                return R.drawable.ic_local_car_wash_tblack_24dp;
+            case MIME_ADD_MEMO:
+                return R.drawable.ic_notifications_tblack_24dp;
+            case MIME_CAR_INFO:
+                return R.drawable.ic_info_outline_tblack_24dp;
+        }
+
+        return null;
+    }
+
+    public Car getCar() {
+        try {
+            int carId = Integer.parseInt(this.message);
+            return Car.findCarById(carId);
+        } catch (NumberFormatException e) {
+            Log.e("eCarNet", "Invalid tag message \"" + message + "\"");
+            return null;
+        }
+    }
+
     /* Static methods */
 
     public static ArrayList<NFCTag> findAll() {
+        return findAll(null);
+    }
+
+    public static ArrayList<NFCTag> findAll(String order) {
         ArrayList<NFCTag> result = new ArrayList<>();
+
+        String query = "SELECT * FROM "+DBModel.TABLE_NAME;
+        if (order != null) {
+            query += " ORDER BY "+order;
+        }
+
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME,
+                query,
                 null
         );
 

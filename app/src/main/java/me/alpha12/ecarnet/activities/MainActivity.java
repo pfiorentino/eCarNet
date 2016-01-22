@@ -149,8 +149,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int menuItemId = item.getItemId();
 
-        Log.d("Fragment", menuItemId+" - "+R.id.nav_memos+" - "+item);
-
         switch (menuItemId) {
             case R.id.nav_home:
                 openMainFragment(HomeFragment.newInstance(menuItemId), menuItemId);
@@ -203,7 +201,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void openMainFragment(Fragment fragment, int fragmentId) {
-        Log.d("Fragment", fragmentId+" - "+R.id.nav_memos+" - "+fragment);
         if (findViewById(R.id.fragment_container) != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -238,7 +235,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void changeCar(Car newCar, boolean openFragment) {
-        Log.d("fragment", "Change car (" + openFragment + ")");
         GlobalContext.setCurrentCar(newCar.getId());
 
         RelativeLayout header = (RelativeLayout) headerView.findViewById(R.id.drawer_header);

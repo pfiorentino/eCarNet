@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="vertical" android:gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+    <me.alpha12.ecarnet.classes.SquareImageView android:id="@+id/tagTypeIcon" android:src="@drawable/ic_nfc_tblack_48dp"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="#88FFFFFF"
+        android:scaleType="center" android:layout_centerInParent="true"/>
+
+    <ImageView android:id="@+id/checkmark" android:src="@drawable/ic_check_red_500_36dp"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_margin="8dp" android:visibility="gone"/>
+
+    <TextView android:id="@+id/tagTypeLabel"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="16dp" android:background="#1F000000"
+        android:text="NFC Type" android:textStyle="bold" />
+</RelativeLayout>

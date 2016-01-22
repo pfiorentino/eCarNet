@@ -14,7 +14,7 @@
     <item android:title="Partage" android:id="@+id/share_group_item">
         <menu>
             <group android:checkableBehavior="single" android:id="@+id/share_group">
-                <item android:id="@+id/nav_nfc" android:icon="@drawable/ic_device_nfc"
+                <item android:id="@+id/nav_nfc" android:icon="@drawable/ic_nfc_black_24dp"
                     android:title="Mes tags NFC" />
                 <item android:id="@+id/nav_share" android:icon="@drawable/ic_social_share"
                     android:title="Share" android:enabled="false" />
