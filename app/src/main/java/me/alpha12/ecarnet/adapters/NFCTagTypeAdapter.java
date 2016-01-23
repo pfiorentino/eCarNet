@@ -46,10 +46,12 @@ public class NFCTagTypeAdapter extends ArrayAdapter<NFCTagType> {
             holder.imageView.setImageResource(R.drawable.ic_nfc_tblack_48dp);
 
 
-        if (objects.get(position).isSelected())
+        if (objects.get(position).isSelected()) {
             holder.checkmark.setVisibility(View.VISIBLE);
-        else {
+            holder.imageView.setBackgroundResource(R.drawable.selected_tag_type_border);
+        } else {
             holder.checkmark.setVisibility(View.GONE);
+            holder.imageView.setBackgroundColor(0x88FFFFFF);
         }
 
         return convertView;

@@ -21,12 +21,14 @@
             android:theme="@style/AppTheme.SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/ecarnet.carInfo" />
             </intent-filter>
         </activity>
@@ -47,7 +49,9 @@
 
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/ecarnet.fillup" />
             </intent-filter>
         </activity>
@@ -63,7 +67,9 @@
 
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/ecarnet.operation" />
             </intent-filter>
         </activity>
@@ -86,22 +92,26 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.MainActivity" />
+
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/ecarnet.memo" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.AddTagActivity"
             android:label="Ajouter un Tag NFC"
-            android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.WriteTagActivity"
+            android:label="Marquer une puce"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_activity_about"
