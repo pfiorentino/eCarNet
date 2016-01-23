@@ -120,6 +120,7 @@ public class TagsFragment extends MasterFragment implements View.OnKeyListener, 
         }
 
         adapter.notifyDataSetChanged();
+        refreshActionBar();
     }
 
     @Override
@@ -186,7 +187,8 @@ public class TagsFragment extends MasterFragment implements View.OnKeyListener, 
     }
 
     private void refreshActionBar() {
-        menu.findItem(R.id.deleteMenuItem).setVisible(selectedTagsList.size() > 0);
+        if (menu != null)
+            menu.findItem(R.id.deleteMenuItem).setVisible(selectedTagsList.size() > 0);
         setTitle();
     }
 

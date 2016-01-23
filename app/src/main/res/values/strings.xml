@@ -46,6 +46,6 @@
     <string name="dialog_delete_element">Supprimer l\'élément sélectionné ?</string>
     <string name="dialog_delete_elements">Supprimer les %1$d éléments sélectionnés ?</string>
 
-    <string name="no_tag_found">Aucun tag trouvé.\nPour créer un tag cliquez\nsur le bouton ci-dessous</string>
+    <string name="no_tag_found">Aucun tag trouvé.\nPour en créer un cliquez\nsur le bouton ci-dessous</string>
 </resources>
 
