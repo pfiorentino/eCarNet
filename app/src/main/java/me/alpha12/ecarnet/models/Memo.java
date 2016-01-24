@@ -3,7 +3,6 @@ package me.alpha12.ecarnet.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +18,7 @@ public class Memo {
     private String title;
     private Date dateNote;
     private Date limitDate;
+    private Date modifDate;
     private int kilometers;
     private int isNotifSet;
     private int isDone;
@@ -27,11 +27,12 @@ public class Memo {
 
     /* Contructors */
 
-    public Memo(int id, String title, Date date, Date limit, int distance, boolean notif, boolean done, boolean archived, int idCar) {
+    public Memo(int id, String title, Date limit, Date date, Date modif, int distance, boolean notif, boolean done, boolean archived, int idCar) {
         this.id = id;
         this.title = title;
         this.dateNote = date;
         this.limitDate = limit;
+        this.modifDate = modif;
         this.kilometers = distance;
         if(notif)
             this.isNotifSet = 1;
@@ -51,7 +52,8 @@ public class Memo {
         this.title      = DatabaseManager.extractString(cursor, DBMemo.C_TITLE);
         this.kilometers = DatabaseManager.extractInt(cursor, DBMemo.C_KILOMETERS);
         this.dateNote   = DatabaseManager.extractDate(cursor, DBMemo.C_DATE_CREATED);
-        this.limitDate  = DatabaseManager.extractDate(cursor, DBMemo.C_DATE_SET);
+        this.modifDate =  DatabaseManager.extractDate(cursor, DBMemo.C_LAST_MODIFICATION);
+        this.limitDate  = DatabaseManager.extractDate(cursor, DBMemo.C_DATE_LIMIT_SET);
         this.isNotifSet = DatabaseManager.extractInt(cursor, DBMemo.C_NOTIFICATION);
         this.isArchived = DatabaseManager.extractInt(cursor, DBMemo.C_ARCHIVED);
         this.isDone     = DatabaseManager.extractInt(cursor, DBMemo.C_DONE);
@@ -67,11 +69,14 @@ public class Memo {
 
         newValues.put(DBMemo.C_TITLE, this.title);
 
-        if (this.limitDate != null)
-            newValues.put(DBMemo.C_DATE_SET, this.dateNote.getTime());
+        if (this.dateNote != null)
+            newValues.put(DBMemo.C_DATE_CREATED, this.dateNote.getTime());
 
         if (this.limitDate != null)
-            newValues.put(DBMemo.C_DATE_CREATED, this.limitDate.getTime());
+            newValues.put(DBMemo.C_DATE_LIMIT_SET, this.limitDate.getTime());
+
+        if(this.modifDate != null)
+            newValues.put(DBMemo.C_LAST_MODIFICATION, this.modifDate.getTime());
 
         newValues.put(DBMemo.C_KILOMETERS, this.kilometers);
         newValues.put(DBMemo.C_NOTIFICATION, this.isNotifSet);
@@ -109,14 +114,15 @@ public class Memo {
 
     public static Memo getLastNote(int carId) {
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBMemo.TABLE_NAME +
-                " WHERE car_id = " + carId + " ORDER BY " + DBMemo.C_DATE_SET+", " +DBMemo.C_KILOMETERS + " DESC LIMIT 1", null);
+                " WHERE car_id = " + carId + " ORDER BY " + DBMemo.C_DATE_LIMIT_SET +", " +DBMemo.C_KILOMETERS + " DESC LIMIT 1", null);
 
         if (cursor.moveToNext()) {
             return new Memo(
                     DatabaseManager.extractInt(cursor, DBMemo.C_ID),
                     DatabaseManager.extractString(cursor, DBMemo.C_TITLE),
-                    DatabaseManager.extractDate(cursor, DBMemo.C_DATE_SET),
+                    DatabaseManager.extractDate(cursor, DBMemo.C_DATE_LIMIT_SET),
                     DatabaseManager.extractDate(cursor, DBMemo.C_DATE_CREATED),
+                    DatabaseManager.extractDate(cursor, DBMemo.C_LAST_MODIFICATION),
                     DatabaseManager.extractInt(cursor, DBMemo.C_KILOMETERS),
                     DatabaseManager.extractInt(cursor, DBMemo.C_NOTIFICATION) == 1,
                     DatabaseManager.extractInt(cursor, DBMemo.C_DONE) == 1,
@@ -135,8 +141,9 @@ public class Memo {
             return new Memo(
                     DatabaseManager.extractInt(cursor, DBMemo.C_ID),
                     DatabaseManager.extractString(cursor, DBMemo.C_TITLE),
-                    DatabaseManager.extractDate(cursor, DBMemo.C_DATE_SET),
+                    DatabaseManager.extractDate(cursor, DBMemo.C_DATE_LIMIT_SET),
                     DatabaseManager.extractDate(cursor, DBMemo.C_DATE_CREATED),
+                    DatabaseManager.extractDate(cursor, DBMemo.C_LAST_MODIFICATION),
                     DatabaseManager.extractInt(cursor, DBMemo.C_KILOMETERS),
                     DatabaseManager.extractInt(cursor, DBMemo.C_NOTIFICATION) == 1,
                     DatabaseManager.extractInt(cursor, DBMemo.C_DONE) == 1,
@@ -153,8 +160,9 @@ public class Memo {
         public static final String TABLE_NAME = "memos";
         public static final String C_ID = "id";
         public static final String C_TITLE = "title";
-        public static final String C_DATE_SET = "date_limit";
+        public static final String C_DATE_LIMIT_SET = "date_limit";
         public static final String C_DATE_CREATED = "creation_date";
+        public static final String C_LAST_MODIFICATION = "mod_date";
         public static final String C_KILOMETERS = "kilometers";
         public static final String C_NOTIFICATION = "notification";
         public static final String C_DONE = "done";
@@ -165,8 +173,9 @@ public class Memo {
                 "CREATE TABLE " + TABLE_NAME + " ("
                         + C_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                         + C_TITLE + " TEXT NOT NULL,"
-                        + C_DATE_SET + " NUMERIC,"
+                        + C_DATE_LIMIT_SET + " NUMERIC,"
                         + C_DATE_CREATED + " NUMERIC NOT NULL,"
+                        + C_LAST_MODIFICATION + " NUMERIC,"
                         + C_KILOMETERS + " INTEGER,"
                         + C_NOTIFICATION + " INTEGER NOT NULL,"
                         + C_DONE + " INTEGER NOT NULL,"
@@ -248,5 +257,9 @@ public class Memo {
         if(isArchived)
         this.isArchived = 1;
         else this.isArchived = 0;
+    }
+
+    public Date getModifDate() {
+        return modifDate;
     }
 }

@@ -6,12 +6,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddMemoActivity;
+import me.alpha12.ecarnet.adapters.DialogAction;
 import me.alpha12.ecarnet.adapters.MemoAdapter;
 import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Memo;
@@ -36,14 +38,23 @@ public class MemosFragment extends MasterFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_memo, container, false);
 
-        ArrayList<Memo> memoList = Memo.findAllByCar(currentCar.getId());
+        final ArrayList<Memo> memoList = Memo.findAllByCar(currentCar.getId());
 
-        if(!memoList.isEmpty()) {
+        if (!memoList.isEmpty()) {
             myMemos = (ListView) view.findViewById(R.id.memoList);
             myMemos.setAdapter(new MemoAdapter(getContext(), memoList, getActivity()));
+            myMemos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(parent.getContext(), AddMemoActivity.class);
+                    intent.putExtra("idMemo", memoList.get(position).getId());
+                    parent.getContext().startActivity(intent);
+                }
+            });
         }
         return view;
     }
+
 
     @Override
     public void onClick(View v) {
@@ -55,6 +66,7 @@ public class MemosFragment extends MasterFragment {
                 break;
         }
     }
+
 
     @Override
     public void setTitle() {

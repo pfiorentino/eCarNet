@@ -34,6 +34,14 @@
     <string name="title_activity_add_operation">Ajouter une intervention</string>
     <string name="addPicture">Ajouter photo</string>
     <string name="addCover">Ajouter couverture</string>
+    <string name="last_edit_memo">Dernière modification %1$s</string>
+    <string name="operationDataNotFound">Aucune donnée</string>
+    <string name="AverageOperationPrice">%1$s€</string>
+    <string name="AverageOperationPriceTitle">Coût moyen</string>
+    <string name="totalOperationPrice">Montant annuel</string>
+    <string name="operationTitle">Intervention</string>
+    <string name="operationCost">Montant</string>
+    <string name="operationDate">Date</string>
     <string name="name_text_view">Nom</string>
 
     <string name="no_nfc_description">Le NFC n\'est pas activé\nsur votre téléphone</string>
