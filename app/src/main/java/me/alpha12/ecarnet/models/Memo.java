@@ -17,21 +17,20 @@ public class Memo extends DBObject {
     private String title;
     private Date dateNote;
     private Date limitDate;
+    private Date modifDate;
     private int kilometers;
     private boolean notifSet;
     private boolean archived;
     private int carId;
 
-    private boolean selected;
-
     /* Contructors */
-
-    public Memo(int id, String title, Date date, Date limit, int distance, boolean notifSet, boolean archived, int idCar) {
+    public Memo(int id, String title, Date date, Date modif, Date limit, int distance, boolean notifSet, boolean archived, int idCar) {
         this.setId(id);
 
         this.title = title;
         this.dateNote = date;
         this.limitDate = limit;
+        this.modifDate = modif;
         this.kilometers = distance;
         this.notifSet = notifSet;
         this.archived = archived;
@@ -45,7 +44,8 @@ public class Memo extends DBObject {
         this.title      = DatabaseManager.extractString(cursor, DBModel.C_TITLE);
         this.kilometers = DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS);
         this.dateNote   = DatabaseManager.extractDate(cursor, DBModel.C_DATE_CREATED);
-        this.limitDate  = DatabaseManager.extractDate(cursor, DBModel.C_DATE_SET);
+        this.modifDate =  DatabaseManager.extractDate(cursor, DBModel.C_LAST_MODIFICATION);
+        this.limitDate  = DatabaseManager.extractDate(cursor, DBModel.C_DATE_LIMIT_SET);
         this.notifSet   = DatabaseManager.extractInt(cursor, DBModel.C_NOTIFICATION) == 1;
         this.archived   = DatabaseManager.extractInt(cursor, DBModel.C_ARCHIVED) == 1;
     }
@@ -60,11 +60,14 @@ public class Memo extends DBObject {
 
         newValues.put(DBModel.C_TITLE, this.title);
 
-        if (this.limitDate != null)
-            newValues.put(DBModel.C_DATE_SET, this.dateNote.getTime());
+        if (this.dateNote != null)
+            newValues.put(DBModel.C_DATE_CREATED, this.dateNote.getTime());
 
         if (this.limitDate != null)
-            newValues.put(DBModel.C_DATE_CREATED, this.limitDate.getTime());
+            newValues.put(DBModel.C_DATE_LIMIT_SET, this.limitDate.getTime());
+
+        if(this.modifDate != null)
+            newValues.put(DBModel.C_LAST_MODIFICATION, this.modifDate.getTime());
 
         newValues.put(DBModel.C_KILOMETERS, this.kilometers);
         newValues.put(DBModel.C_NOTIFICATION, this.notifSet);
@@ -104,7 +107,7 @@ public class Memo extends DBObject {
 
     public static Memo getLastByCar(int carId) {
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBModel.TABLE_NAME +
-                " WHERE car_id = " + carId + " ORDER BY " + DBModel.C_DATE_SET+", " +DBModel.C_KILOMETERS + " DESC LIMIT 1", null);
+                " WHERE car_id = " + carId + " ORDER BY " + DBModel.C_DATE_LIMIT_SET +", " +DBModel.C_KILOMETERS + " DESC LIMIT 1", null);
 
         if (cursor.moveToNext()) {
             return new Memo(cursor);
@@ -123,16 +126,6 @@ public class Memo extends DBObject {
         return null;
     }
 
-    @Override
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    @Override
-    public boolean isSelected() {
-        return this.selected;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -149,6 +142,10 @@ public class Memo extends DBObject {
         return limitDate;
     }
 
+    public Date getModifDate() {
+        return modifDate;
+    }
+
     public int getCarId() {
         return carId;
     }
@@ -157,8 +154,9 @@ public class Memo extends DBObject {
         public static final String TABLE_NAME = "memos";
         public static final String C_ID = "id";
         public static final String C_TITLE = "title";
-        public static final String C_DATE_SET = "date_limit";
+        public static final String C_DATE_LIMIT_SET = "date_limit";
         public static final String C_DATE_CREATED = "creation_date";
+        public static final String C_LAST_MODIFICATION = "mod_date";
         public static final String C_KILOMETERS = "kilometers";
         public static final String C_NOTIFICATION = "notification";
         public static final String C_ARCHIVED = "archived";
@@ -168,8 +166,9 @@ public class Memo extends DBObject {
                 "CREATE TABLE " + TABLE_NAME + " ("
                         + C_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                         + C_TITLE + " TEXT NOT NULL,"
-                        + C_DATE_SET + " NUMERIC,"
+                        + C_DATE_LIMIT_SET + " NUMERIC,"
                         + C_DATE_CREATED + " NUMERIC NOT NULL,"
+                        + C_LAST_MODIFICATION + " NUMERIC,"
                         + C_KILOMETERS + " INTEGER,"
                         + C_NOTIFICATION + " INTEGER NOT NULL,"
                         + C_ARCHIVED + " INTEGER NOT NULL,"

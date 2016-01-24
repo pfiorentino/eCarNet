@@ -1,7 +1,6 @@
 package me.alpha12.ecarnet.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.Utils;
-import me.alpha12.ecarnet.activities.AddMemoActivity;
 import me.alpha12.ecarnet.models.Memo;
 
 /**
@@ -64,27 +62,6 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
                 limit.setText(Utils.ucWords(currentMemo.getKilometers() + " km - " + sdf.format(currentMemo.getLimitDate())));
             }
             LinearLayout item = (LinearLayout) v.findViewById(R.id.memoSelection);
-
-            /*item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ctx, AddMemoActivity.class);
-                    intent.putExtra("idMemo", currentMemo.getId());
-                    ctx.startActivity(intent);
-                }
-            });*/
-            /*item.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    DialogAction da = new DialogAction();
-                    ArrayList<String> values = new ArrayList<String>();
-                    values.add("supprimer");
-                    values.add("archiver");
-                    da.setItems(values);
-                    da.show(contextFragment.getSupportFragmentManager(), "NoticeDialogFragment");
-                    return false;
-                }
-            });*/
         }
         return v;
     }

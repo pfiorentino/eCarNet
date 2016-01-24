@@ -61,6 +61,16 @@
 
                 <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
 
+
+                <TextView
+                    android:id="@+id/lastModDate"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="6dp"
+                    android:text="@string/last_edit_memo"/>
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -133,32 +143,8 @@
                     android:id="@+id/eneableNotification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-                    <TextView
-                        android:id="@+id/dateNotification"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="16dp"
-                        android:gravity="right"
-                        android:text=""
-                        />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/lastModText"
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:textSize="12dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_height="wrap_content"
-                    android:text="Dernière modification"
-                    />
-                <TextView
-                    android:id="@+id/lastModDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="6dp"
-                    android:text="Lun. 13 Nov. 2015"/>
 
 
                 <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight=".5"/>

@@ -1,13 +1,9 @@
 package me.alpha12.ecarnet.fragments;
 
 import android.animation.ValueAnimator;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,8 +29,6 @@ import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Memo;
 
 public class HomeFragment extends MasterFragment {
-    private boolean isDone;
-    private boolean isNotifSet;
     private Memo lastMemo;
 
     private ArrayList<Intervention> myInterventions = new ArrayList<>();
@@ -218,47 +212,6 @@ public class HomeFragment extends MasterFragment {
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
                 break;
-            /*case R.id.button_notification :
-                if(isNotifSet)
-                {
-                    notifButton.setBackgroundResource(R.drawable.ic_notifications_off_black_36dp);
-                    isNotifSet = false;
-                    //lastNote.setNotif(false);
-                }
-                else {
-
-                    NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext());
-                    notif.setContentTitle("Test notif");
-                    notif.setContentText("pensez à effectuer votre opération !!!");
-                    notif.setSmallIcon(R.drawable.ic_directions_car_white_24dp);
-                    notif.setDefaults(NotificationCompat.DEFAULT_SOUND);
-                    Notification notification = notif.build();
-                    NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                    int notificationId = 0;
-                    notificationManager.notify(notificationId, notification);
-
-                    notifButton.setBackgroundResource(R.drawable.ic_notifications_black_36dp);
-                    isNotifSet = true;
-                    //lastNote.setNotif(true);
-                }
-                break;
-            case R.id.button_done :
-                if(isDone)
-                {
-                    //L'utilisateur undone la note
-                    doneButton.setBackgroundResource(R.drawable.ic_done_black_36dp);
-                    isDone = false;
-                    flagFrame.setBackgroundColor(0xFFEF9A9A);
-                    //lastNote.setDone(false);
-                }
-                else
-                {
-                    //L'uilisateur done la note
-                    doneButton.setBackgroundResource(R.drawable.ic_undo_black_36dp);
-                    isDone = true;
-                    flagFrame.setBackgroundColor(0xFFA5D6A7);
-                    //lastNote.setDone(true);
-                }*/
         }
     }
 

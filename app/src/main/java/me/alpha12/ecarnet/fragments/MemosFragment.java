@@ -2,27 +2,13 @@ package me.alpha12.ecarnet.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddMemoActivity;
 import me.alpha12.ecarnet.adapters.MemoAdapter;
 import me.alpha12.ecarnet.classes.MasterListFragment;
-import me.alpha12.ecarnet.database.DBObject;
 import me.alpha12.ecarnet.models.Memo;
 
 public class MemosFragment extends MasterListFragment<Memo> implements View.OnKeyListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
@@ -50,6 +36,7 @@ public class MemosFragment extends MasterListFragment<Memo> implements View.OnKe
                 break;
         }
     }
+
 
     @Override
     public void defineListAdapter() {

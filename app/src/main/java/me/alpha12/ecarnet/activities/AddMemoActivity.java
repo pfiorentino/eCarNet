@@ -17,29 +17,21 @@ import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.adapters.NotificationPublisher;
 import me.alpha12.ecarnet.models.Car;
-import me.alpha12.ecarnet.models.CarModel;
 import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Memo;
 
@@ -48,26 +40,12 @@ import me.alpha12.ecarnet.models.Memo;
  */
 public class AddMemoActivity  extends AppCompatActivity implements View.OnClickListener {
 
-
-    private final String STATE_TITLE = "title";
-    private final String STATE_DISTANCE_LIMIT = "limitDistance";
-    private final String STATE_DATE_SET = "addedDate";
-    private final String STATE_DATE_LIMIT = "limitDate";
-    private final String STATE_ID = "idMemo";
-    private final String STATE_CAR_ID = "idCar";
-    private final String STATE_NOTFICATION = "notif";
-    private final String STATE_NOTIFICATION_DATE = "notifDate";
-    private final String STATE_DATE_LAST_MODIFICATION = "lastModif";
-
-
     private static TextView mDateTextView;
     private TextView title;
     private TextView kilometersLimit;
-    private TextView mlastModificationTextView;
     private Button addButton;
     private Button backButton;
     private CheckBox notification;
-    private TextView mNotificationDateTextView;
     private TextView mLastModicationDateTextView;
 
     Memo memo;
@@ -75,11 +53,7 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
     private Date current;
     private Date notificationDateAlarm = new Date();
     private Calendar mCurrentDate;
-
     private Car currentCar;
-    private int currentMemoId;
-
-
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -92,34 +66,35 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
             addButton = (Button) findViewById(R.id.addMemoButton);
             backButton = (Button) findViewById(R.id.backButton);
             notification = (CheckBox) findViewById(R.id.eneableNotification);
-            mNotificationDateTextView = (TextView) findViewById(R.id.dateNotification);
             mLastModicationDateTextView = (TextView) findViewById(R.id.lastModDate);
-            mlastModificationTextView = (TextView) findViewById(R.id.lastModText);
             mCurrentDate = Calendar.getInstance();
             current = mCurrentDate.getTime();
 
             Intent intent = getIntent();
             if(intent.getExtras() != null && intent.getExtras().containsKey("idMemo")){
-                SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy", Locale.FRENCH);
                 memo = Memo.get(intent.getExtras().getInt("idMemo"));
+                Log.d("selected memo", ""+intent.getExtras().getInt("idMemo"));
+                Log.d("founded memo", ""+memo.getId());
+
                 title.setText(memo.getTitle());
-                mDateTextView.setText(sdf.format(memo.getLimitDate()));
+                Calendar cl = Calendar.getInstance();
+                cl.setTimeInMillis(memo.getLimitDate().getTime());
+                mDateTextView.setText(getFormattedDate(getBaseContext(), cl));
                 kilometersLimit.setText(Integer.toString(memo.getKilometers()));
                 currentCar = Car.findCarById(memo.getCarId());
                 notificationDateAlarm.setTime(getBestValue(getAlarmWithDate(memo.getLimitDate()), getAlarmWithDistance(memo.getKilometers())));
                 if(notificationDateAlarm.getTime()>0)
                 {
-                    mNotificationDateTextView.setText(sdf.format(notificationDateAlarm));
                     notification.setChecked(true);
                 }
+                mLastModicationDateTextView.setText(getString(R.string.last_edit_memo, getFormattedFromDate(getBaseContext(), memo.getModifDate())));
             }
             else    //creation
             {
                 int carId = getIntent().getExtras().getInt("carId");
                 currentCar = Car.findCarById(carId);
                 mDateTextView.setText(getFormattedDate(this, mCurrentDate));
-                mLastModicationDateTextView.setText("");
-                mlastModificationTextView.setVisibility(View.GONE);
+                mLastModicationDateTextView.setVisibility(View.GONE);
             }
 
             //listeners
@@ -136,11 +111,18 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
             backButton.setOnClickListener(this);
             addButton.setOnClickListener(this);
             notification.setOnClickListener(this);
+            addButton.setEnabled(!title.getText().toString().matches("") && !kilometersLimit.getText().toString().matches("") && !mDateTextView.getText().toString().matches(""));
         }
 
         private TextWatcher mTextWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                addButton.setEnabled(
+                        !title.getText().toString().matches("") &&
+                                !kilometersLimit.getText().toString().matches("") &&
+                                !mDateTextView.getText().toString().matches("")
+                );
+            }
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
             @Override
@@ -152,6 +134,11 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
                 );
             }
         };
+
+        private static String getFormattedFromDate(Context ctx, Date c) {
+            return DateUtils.formatDateTime(ctx, c.getTime(),
+                    DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH);
+        }
 
         private static String getFormattedDate(Context ctx, Calendar c) {
             return DateUtils.formatDateTime(ctx, c.getTimeInMillis(),
@@ -181,11 +168,7 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
                         } else {
                             notificationDateAlarm.setTime(getBestValue(0, getAlarmWithDate(d)));
                         }
-                        if(notificationDateAlarm.getTime()>0)
-                            mNotificationDateTextView.setText(sdf.format(notificationDateAlarm));
-                        else mNotificationDateTextView.setText("Limite invalide");
                     }
-                    else mNotificationDateTextView.setText("");
                     break;
                 case R.id.backButton:
                     onBackPressed();
@@ -195,16 +178,21 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
                     try {
                         Date d = sdf.parse(mDateTextView.getText().toString());
                         int kilometers = Integer.parseInt(kilometersLimit.getText().toString());
-                        memo = new Memo(0, title.getText().toString(), d, current, kilometers, notification.isEnabled(), false, currentCar.getId());
-                        memo.persist(false);
+
+                        if(memo == null) {
+                            memo = new Memo(0, title.getText().toString(), d, current, current, kilometers, notification.isEnabled(), false, currentCar.getId());
+                            memo.persist(false);
+                        }
+                        else {
+                            memo = new Memo(memo.getId(), title.getText().toString(), d, memo.getDateNote(), current, kilometers, notification.isEnabled(), false, currentCar.getId());
+                            memo.persist(true);
+                        }
                         Intent intent = new Intent(this, MainActivity.class);
-                        if(notification.isEnabled())
-                        {
+                        if(notification.isChecked()) {
                             scheduleNotification(getNotification("Rappel sur intervention : " + title.getText().toString()), memo.getId());
                             intent.putExtra("dateRappel", sdf.format(notificationDateAlarm));
                         }
-                        else
-                        {
+                        else {
                             cancelNotification(memo.getId());
                         }
                         this.startActivity(intent);
