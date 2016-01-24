@@ -6,21 +6,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddInterventionActivity;
-import me.alpha12.ecarnet.activities.AddMemoActivity;
-import me.alpha12.ecarnet.adapters.MemoAdapter;
 import me.alpha12.ecarnet.adapters.OperationAdapter;
 import me.alpha12.ecarnet.classes.AdaptedListView;
 import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Intervention;
-import me.alpha12.ecarnet.models.Memo;
 
 public class OperationsFragment extends MasterFragment {
     private FloatingActionButton fab;

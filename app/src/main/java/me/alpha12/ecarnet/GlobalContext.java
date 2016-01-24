@@ -13,6 +13,7 @@ import android.text.format.DateUtils;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.Date;
 
 import me.alpha12.ecarnet.activities.MainActivity;
 
@@ -45,9 +46,24 @@ public class GlobalContext extends Application {
         settings.edit().putInt(PREFS_SAVED_CAR_KEY, newCarId).commit();
     }
 
+    public static String getFormattedDate(Date d) {
+        return DateUtils.formatDateTime(getInstance(), d.getTime(),
+                DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH);
+    }
+
     public static String getFormattedDate(Calendar c) {
         return DateUtils.formatDateTime(getInstance(), c.getTimeInMillis(),
                 DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH);
+    }
+
+    public static String getFormattedMediumDate(Date date) {
+        return DateUtils.formatDateTime(getInstance(), date.getTime(),
+                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_MONTH);
+    }
+
+    public static String getFormattedSmallDate(Date date) {
+        return DateUtils.formatDateTime(getInstance(), date.getTime(),
+                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_YEAR | DateUtils.FORMAT_ABBREV_MONTH);
     }
 
     public static String getAppPicturePath() {

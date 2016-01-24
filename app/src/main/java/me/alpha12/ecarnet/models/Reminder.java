@@ -7,13 +7,11 @@ import android.provider.BaseColumns;
 import java.util.ArrayList;
 import java.util.Date;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.database.DBObject;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
-/**
- * Created by guilhem on 13/01/2016.
- */
-public class Memo extends DBObject {
+public class Reminder extends DBObject {
     private String title;
     private Date dateNote;
     private Date limitDate;
@@ -24,7 +22,7 @@ public class Memo extends DBObject {
     private int carId;
 
     /* Contructors */
-    public Memo(int id, String title, Date date, Date modif, Date limit, int distance, boolean notifSet, boolean archived, int idCar) {
+    public Reminder(int id, String title, Date date, Date modif, Date limit, int distance, boolean notifSet, boolean archived, int idCar) {
         this.setId(id);
 
         this.title = title;
@@ -37,7 +35,7 @@ public class Memo extends DBObject {
         this.carId = idCar;
     }
 
-    public Memo(Cursor cursor) {
+    public Reminder(Cursor cursor) {
         this.setId(DatabaseManager.extractInt(cursor, DBModel.C_ID));
 
         this.carId      = DatabaseManager.extractInt(cursor, DBModel.C_CAR_ID);
@@ -93,61 +91,37 @@ public class Memo extends DBObject {
         }
     }
 
-    public static ArrayList<Memo> findAllByCar(int carId) {
-        ArrayList<Memo> result = new ArrayList<>();
+    public static ArrayList<Reminder> findAllByCar(int carId) {
+        ArrayList<Reminder> result = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
                 "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId,
                 null
         );
         while(cursor.moveToNext()) {
-            result.add(new Memo(cursor));
+            result.add(new Reminder(cursor));
         }
         return result;
     }
 
-    public static Memo getLastByCar(int carId) {
+    public static Reminder getLastByCar(int carId) {
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBModel.TABLE_NAME +
                 " WHERE car_id = " + carId + " ORDER BY " + DBModel.C_DATE_LIMIT_SET +", " +DBModel.C_KILOMETERS + " DESC LIMIT 1", null);
 
         if (cursor.moveToNext()) {
-            return new Memo(cursor);
+            return new Reminder(cursor);
         }
 
         return null;
     }
 
-    public static Memo get(int memoId) {
+    public static Reminder get(int memoId) {
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBModel.TABLE_NAME +
                 " WHERE " +DBModel.C_ID+" = " + memoId, null);
 
         if (cursor.moveToNext()) {
-            return new Memo(cursor);
+            return new Reminder(cursor);
         }
         return null;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Date getDateNote() {
-        return dateNote;
-    }
-
-    public int getKilometers() {
-        return kilometers;
-    }
-
-    public Date getLimitDate() {
-        return limitDate;
-    }
-
-    public Date getModifDate() {
-        return modifDate;
-    }
-
-    public int getCarId() {
-        return carId;
     }
 
     public static abstract class DBModel implements BaseColumns {
@@ -174,5 +148,61 @@ public class Memo extends DBObject {
                         + C_ARCHIVED + " INTEGER NOT NULL,"
                         + C_CAR_ID + " INTEGER NOT NULL"
                         + ");";
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Date getDateNote() {
+        return dateNote;
+    }
+
+    public int getKilometers() {
+        return kilometers;
+    }
+
+    public void setKilometers(int kilometers) {
+        this.kilometers = kilometers;
+    }
+
+    public Date getLimitDate() {
+        return limitDate;
+    }
+
+    public void setLimitDate(Date limitDate) {
+        this.limitDate = limitDate;
+    }
+
+    public void setNotifSet(boolean notifSet) {
+        this.notifSet = notifSet;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    public Date getModifDate() {
+        return modifDate;
+    }
+
+    public void setModifDate(Date modifDate) {
+        this.modifDate = modifDate;
+    }
+
+    public int getCarId() {
+        return carId;
+    }
+
+    public String getLimitText() {
+        return this.kilometers + " km ou " + GlobalContext.getFormattedMediumDate(this.limitDate);
+    }
+
+    public String getCreationString() {
+        return GlobalContext.getFormattedSmallDate(this.dateNote);
     }
 }

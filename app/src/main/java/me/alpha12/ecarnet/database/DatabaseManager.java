@@ -22,7 +22,7 @@ import java.util.zip.ZipInputStream;
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
-import me.alpha12.ecarnet.models.Memo;
+import me.alpha12.ecarnet.models.Reminder;
 import me.alpha12.ecarnet.models.NFCTag;
 import me.alpha12.ecarnet.models.User;
 
@@ -159,7 +159,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(Intervention.DBModel.SQL_CREATE_TABLE);
         db.execSQL(User.DBModel.SQL_CREATE_TABLE);
         db.execSQL(SQL_CREATE_TABLE_USE);
-        db.execSQL(Memo.DBModel.SQL_CREATE_TABLE);
+        db.execSQL(Reminder.DBModel.SQL_CREATE_TABLE);
         db.execSQL(NFCTag.DBModel.SQL_CREATE_TABLE);
     }
 
