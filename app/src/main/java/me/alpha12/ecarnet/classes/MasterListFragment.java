@@ -48,6 +48,8 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_master_list, container, false);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
         view.setOnKeyListener(this);
 
         noItemTextLayout = (LinearLayout) view.findViewById(R.id.noItemTextLayout);

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,8 +46,8 @@ public class TagsFragment extends MasterFragment implements View.OnKeyListener, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         registerFloatingActionButton(R.id.addTagFAB);
-
         tagsList = new ArrayList<>();
         selectedTagsList = new ArrayList<>();
     }
@@ -55,7 +56,10 @@ public class TagsFragment extends MasterFragment implements View.OnKeyListener, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tags, container, false);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
         view.setOnKeyListener(this);
+
 
         noTagTextLayout = (LinearLayout) view.findViewById(R.id.noTagTextLayout);
         noTagImageView = (ImageView) view.findViewById(R.id.noTagImageView);
