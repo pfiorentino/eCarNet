@@ -42,5 +42,6 @@
     <string name="operationTitle">Intervention</string>
     <string name="operationCost">Montant</string>
     <string name="operationDate">Date</string>
+    <string name="name_text_view">Nom</string>
 </resources>
 

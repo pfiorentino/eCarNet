@@ -17,6 +17,7 @@ import me.alpha12.ecarnet.activities.AddInterventionActivity;
 import me.alpha12.ecarnet.activities.AddMemoActivity;
 import me.alpha12.ecarnet.adapters.MemoAdapter;
 import me.alpha12.ecarnet.adapters.OperationAdapter;
+import me.alpha12.ecarnet.classes.AdaptedListView;
 import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Memo;
@@ -46,7 +47,8 @@ public class OperationsFragment extends MasterFragment {
         interventionList.add(1, new Intervention(0, currentCar.getId(), 1, "vidange et filtre a gazoil", 15000, new Date(), 80.4, 45.3));
 
         if (!interventionList.isEmpty()) {
-            ListView myIntervention = (ListView) view.findViewById(R.id.OperationList);
+            AdaptedListView myIntervention;
+            myIntervention = (AdaptedListView) view.findViewById(R.id.OperationList);
             myIntervention.setAdapter(new OperationAdapter(getContext(), interventionList, getActivity()));
         }
         return view;

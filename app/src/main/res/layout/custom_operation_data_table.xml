@@ -2,16 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
 
     <TextView
         android:id="@+id/operationTitle"
         android:layout_width="0dp" android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
-        android:gravity="center_vertical"
+        android:layout_weight="1" android:gravity="center_vertical"
+        android:layout_marginLeft="16dp" android:layout_marginRight="8dp"
         android:text="@string/operationTitle"/>
     <TextView
         android:id="@+id/costOperation"

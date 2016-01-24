@@ -59,7 +59,6 @@
                     android:text="" android:hint="Kilométrage total" />
             </android.support.design.widget.TextInputLayout>
 
-
             <TextView android:id="@+id/textView"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="Date de première mise en circulation"
@@ -79,7 +78,7 @@
                 android:minWidth="@dimen/raised_button_min_width"
                 android:text="@string/addPicture"
                 android:id="@+id/btn_addPicture"
-                android:textColor="@color/colorPrimaryText"
+                android:textColor="@color/primaryTextColor"
                 android:background="@drawable/raised_button"
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="right" />
@@ -90,7 +89,7 @@
                 android:minWidth="@dimen/raised_button_min_width"
                 android:text="@string/addCover"
                 android:id="@+id/btn_addCover"
-                android:textColor="@color/colorPrimaryText"
+                android:textColor="@color/secondaryTextColor"
                 android:background="@drawable/raised_button"
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="right" />
