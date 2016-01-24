@@ -1,18 +1,11 @@
 package me.alpha12.ecarnet.adapters;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,9 +18,6 @@ import java.util.Locale;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.activities.AddMemoActivity;
-import me.alpha12.ecarnet.activities.CustomizeCarActivity;
-import me.alpha12.ecarnet.activities.MainActivity;
-import me.alpha12.ecarnet.models.CarModel;
 import me.alpha12.ecarnet.models.Memo;
 
 /**
@@ -75,15 +65,15 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
             }
             LinearLayout item = (LinearLayout) v.findViewById(R.id.memoSelection);
 
-            item.setOnClickListener(new View.OnClickListener() {
+            /*item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(ctx, AddMemoActivity.class);
                     intent.putExtra("idMemo", currentMemo.getId());
                     ctx.startActivity(intent);
                 }
-            });
-            item.setOnLongClickListener(new View.OnLongClickListener() {
+            });*/
+            /*item.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     DialogAction da = new DialogAction();
@@ -94,7 +84,7 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
                     da.show(contextFragment.getSupportFragmentManager(), "NoticeDialogFragment");
                     return false;
                 }
-            });
+            });*/
         }
         return v;
     }

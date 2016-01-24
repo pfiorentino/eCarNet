@@ -3,12 +3,7 @@ package me.alpha12.ecarnet.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
-import android.util.Log;
-import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,24 +11,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.activities.AddInterventionActivity;
 import me.alpha12.ecarnet.activities.AddTagActivity;
-import me.alpha12.ecarnet.activities.MainActivity;
 import me.alpha12.ecarnet.activities.WriteTagActivity;
 import me.alpha12.ecarnet.adapters.NFCTagAdapter;
 import me.alpha12.ecarnet.classes.MasterFragment;
-import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.NFCTag;
 
 public class TagsFragment extends MasterFragment implements View.OnKeyListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
@@ -55,10 +45,7 @@ public class TagsFragment extends MasterFragment implements View.OnKeyListener, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         registerFloatingActionButton(R.id.addTagFAB);
-
-        setHasOptionsMenu(true);
 
         tagsList = new ArrayList<>();
         selectedTagsList = new ArrayList<>();

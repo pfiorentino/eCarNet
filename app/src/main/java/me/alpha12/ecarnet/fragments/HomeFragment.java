@@ -75,7 +75,7 @@ public class HomeFragment extends MasterFragment {
 
         contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getPlateNum(), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
 
-        lastMemo = Memo.getLastNote(currentCar.getId());
+        lastMemo = Memo.getLastByCar(currentCar.getId());
 
         TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
         LineChart kilometersLine = (LineChart) view.findViewById(R.id.kilometersChart);

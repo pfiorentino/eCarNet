@@ -159,7 +159,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(Intervention.DBModel.SQL_CREATE_TABLE);
         db.execSQL(User.DBModel.SQL_CREATE_TABLE);
         db.execSQL(SQL_CREATE_TABLE_USE);
-        db.execSQL(Memo.DBMemo.SQL_CREATE_TABLE);
+        db.execSQL(Memo.DBModel.SQL_CREATE_TABLE);
         db.execSQL(NFCTag.DBModel.SQL_CREATE_TABLE);
     }
 

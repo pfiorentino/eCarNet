@@ -3,22 +3,29 @@ package me.alpha12.ecarnet.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddMemoActivity;
 import me.alpha12.ecarnet.adapters.MemoAdapter;
-import me.alpha12.ecarnet.classes.MasterFragment;
+import me.alpha12.ecarnet.classes.MasterListFragment;
+import me.alpha12.ecarnet.database.DBObject;
 import me.alpha12.ecarnet.models.Memo;
 
-public class MemosFragment extends MasterFragment {
-    private ListView myMemos;
-
+public class MemosFragment extends MasterListFragment<Memo> implements View.OnKeyListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     public static MemosFragment newInstance(int fragmentId) {
         MemosFragment fragment = new MemosFragment();
         fragment.setFragmentId(fragmentId);
@@ -28,21 +35,9 @@ public class MemosFragment extends MasterFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        titleResourceId = R.string.title_fragment_memos;
+        noItemTextResId = R.string.no_memo_found;
         registerFloatingActionButton(R.id.addMemoFAB);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_memo, container, false);
-
-        ArrayList<Memo> memoList = Memo.findAllByCar(currentCar.getId());
-
-        if(!memoList.isEmpty()) {
-            myMemos = (ListView) view.findViewById(R.id.memoList);
-            myMemos.setAdapter(new MemoAdapter(getContext(), memoList, getActivity()));
-        }
-        return view;
     }
 
     @Override
@@ -57,7 +52,17 @@ public class MemosFragment extends MasterFragment {
     }
 
     @Override
-    public void setTitle() {
-        parentActivity.setTitle(R.string.title_fragment_memos);
+    public void defineListAdapter() {
+        adapter = new MemoAdapter(getContext(), itemsList, getActivity());
+    }
+
+    @Override
+    public void populateItemsList() {
+        itemsList.addAll(Memo.findAllByCar(currentCar.getId()));
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 }

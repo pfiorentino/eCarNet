@@ -101,7 +101,7 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
             Intent intent = getIntent();
             if(intent.getExtras() != null && intent.getExtras().containsKey("idMemo")){
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy", Locale.FRENCH);
-                memo = Memo.findMemoById(intent.getExtras().getInt("idMemo"));
+                memo = Memo.get(intent.getExtras().getInt("idMemo"));
                 title.setText(memo.getTitle());
                 mDateTextView.setText(sdf.format(memo.getLimitDate()));
                 kilometersLimit.setText(Integer.toString(memo.getKilometers()));
@@ -195,7 +195,7 @@ public class AddMemoActivity  extends AppCompatActivity implements View.OnClickL
                     try {
                         Date d = sdf.parse(mDateTextView.getText().toString());
                         int kilometers = Integer.parseInt(kilometersLimit.getText().toString());
-                        memo = new Memo(0, title.getText().toString(), d, current, kilometers, notification.isEnabled(), false, false, currentCar.getId());
+                        memo = new Memo(0, title.getText().toString(), d, current, kilometers, notification.isEnabled(), false, currentCar.getId());
                         memo.persist(false);
                         Intent intent = new Intent(this, MainActivity.class);
                         if(notification.isEnabled())
