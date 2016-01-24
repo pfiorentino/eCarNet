@@ -26,10 +26,10 @@ import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
-import me.alpha12.ecarnet.models.Memo;
+import me.alpha12.ecarnet.models.Reminder;
 
 public class HomeFragment extends MasterFragment {
-    private Memo lastMemo;
+    private Reminder lastMemo;
 
     private ArrayList<Intervention> myInterventions = new ArrayList<>();
     private ArrayList<Intervention> allMyInterventions = new ArrayList<>();
@@ -69,7 +69,7 @@ public class HomeFragment extends MasterFragment {
 
         contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getPlateNum(), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
 
-        lastMemo = Memo.getLastNote(currentCar.getId());
+        lastMemo = Reminder.getLastByCar(currentCar.getId());
 
         TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
         LineChart kilometersLine = (LineChart) view.findViewById(R.id.kilometersChart);

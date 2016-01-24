@@ -70,6 +70,7 @@ public class WriteTagActivity extends AppCompatActivity implements View.OnClickL
             tagTypeImageView.setImageResource(R.drawable.ic_nfc_tblack_24dp);
 
         writeTagLayout = (LinearLayout) findViewById(R.id.writeTagLayout);
+        writeTagLayout.setOnClickListener(this);
         writeTagDescTextView = (TextView) findViewById(R.id.writeTagDescTextView);
         writeTagDescIcon = (ImageView) findViewById(R.id.writeTagDescIcon);
     }
@@ -109,26 +110,7 @@ public class WriteTagActivity extends AppCompatActivity implements View.OnClickL
 
     public void onResume() {
         super.onResume();
-        if (writeMode){
-            disableTagWriteMode();
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
-            if (tagWritten) {
-                writeTagDescIcon.setImageResource(R.drawable.ic_check_tblack_96dp);
-                writeTagDescTextView.setText(R.string.written_tag_description);
-                writeTagLayout.clearAnimation();
-            } else {
-                if (nfcAdapter != null && nfcAdapter.isEnabled()) {
-                    writeTagDescIcon.setImageResource(R.drawable.ic_nfc_black_38pc_96dp);
-                    writeTagDescTextView.setText(R.string.write_tag_description);
-                    writeTagLayout.setOnClickListener(this);
-                } else {
-                    writeTagDescIcon.setImageResource(R.drawable.ic_nonfc_black_38pc_96dp);
-                    writeTagDescTextView.setText(R.string.no_nfc_description);
-                }
-            }
-        }
+        disableTagWriteMode();
     }
 
     private void startBlinking() {
@@ -140,6 +122,26 @@ public class WriteTagActivity extends AppCompatActivity implements View.OnClickL
         anim.setRepeatMode(Animation.REVERSE);
         anim.setRepeatCount(Animation.INFINITE);
         writeTagLayout.startAnimation(anim);
+    }
+
+    private void stopBlinking() {
+        writeTagLayout.clearAnimation();
+
+        if (tagWritten) {
+            writeTagDescIcon.setImageResource(R.drawable.ic_check_black_38pc_96dp);
+            writeTagDescTextView.setText(R.string.written_tag_description);
+            writeTagLayout.setOnClickListener(null);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1 && nfcAdapter != null && nfcAdapter.isEnabled()) {
+                writeTagDescIcon.setImageResource(R.drawable.ic_nfc_black_38pc_96dp);
+                writeTagDescTextView.setText(R.string.write_tag_description);
+                writeTagLayout.setOnClickListener(this);
+            } else {
+                writeTagDescIcon.setImageResource(R.drawable.ic_nonfc_black_38pc_96dp);
+                writeTagDescTextView.setText(R.string.no_nfc_description);
+                writeTagLayout.setOnClickListener(null);
+            }
+        }
     }
 
     private void enableTagWriteMode() {
@@ -162,6 +164,7 @@ public class WriteTagActivity extends AppCompatActivity implements View.OnClickL
             nfcAdapter.disableForegroundDispatch(this);
         }
 
+        stopBlinking();
         confirmButton.setText("Terminer");
     }
 

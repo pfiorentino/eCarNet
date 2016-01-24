@@ -6,18 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.Utils;
 import me.alpha12.ecarnet.models.Intervention;
-import me.alpha12.ecarnet.models.Memo;
 
 /**
  * Created by guilhem on 22/01/2016.

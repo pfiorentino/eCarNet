@@ -34,7 +34,7 @@
     <string name="title_activity_add_operation">Ajouter une intervention</string>
     <string name="addPicture">Ajouter photo</string>
     <string name="addCover">Ajouter couverture</string>
-    <string name="last_edit_memo">Dernière modification %1$s</string>
+    <string name="last_edit_memo">Dernière modification : %1$s</string>
     <string name="operationDataNotFound">Aucune donnée</string>
     <string name="AverageOperationPrice">%1$s€</string>
     <string name="AverageOperationPriceTitle">Coût moyen</string>
@@ -49,11 +49,22 @@
     <string name="writing_tag_description">Scannez la puce pour\nla marquer...</string>
     <string name="written_tag_description">La puce a été marquée\navec succès !</string>
 
+    <!-- Dialog strings -->
     <string name="dialog_yes">Oui</string>
     <string name="dialog_no">Non</string>
     <string name="dialog_delete_element">Supprimer l\'élément sélectionné ?</string>
     <string name="dialog_delete_elements">Supprimer les %1$d éléments sélectionnés ?</string>
 
-    <string name="no_tag_found">Aucun tag trouvé.\nPour créer un tag cliquez\nsur le bouton ci-dessous</string>
+    <!-- Lists views strings -->
+    <string name="no_tag_found">Aucun tag trouvé.</string>
+    <string name="no_tag_found_new_tag">Pour en créer un, touchez\nle bouton ci-dessous.</string>
+
+    <string name="no_item_found">Aucun élément trouvé.</string>
+    <string name="no_item_found_new_item">Pour en créer un, touchez\nle bouton ci-dessous</string>
+    <string name="no_memo_found">Aucun rappel trouvé</string>
+
+    <!-- Add reminder strings -->
+    <string name="add_reminder">Ajouter un rappel</string>
+    <string name="edit_reminder">Modifier le rappel</string>
 </resources>
 

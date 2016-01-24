@@ -7,18 +7,14 @@ import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
-/**
- * Created by guilhem on 13/01/2016.
- */
 public class NFCTag implements Serializable {
     public static final String MIME_ADD_FILLUP      = "application/ecarnet.fillup";
     public static final String MIME_ADD_OPERATION   = "application/ecarnet.operation";
-    public static final String MIME_ADD_MEMO        = "application/ecarnet.memo";
+    public static final String MIME_ADD_MEMO        = "application/ecarnet.reminder";
     public static final String MIME_CAR_INFO        = "application/ecarnet.carInfo";
 
     private int id;
@@ -157,7 +153,7 @@ public class NFCTag implements Serializable {
     public Car getCar() {
         try {
             int carId = Integer.parseInt(this.message);
-            return Car.findCarById(carId);
+            return Car.get(carId);
         } catch (NumberFormatException e) {
             Log.e("eCarNet", "Invalid tag message \"" + message + "\"");
             return null;

@@ -9,7 +9,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -42,7 +41,7 @@ public class AddInterventionActivity extends AppCompatActivity implements OnClic
         setContentView(R.layout.activity_add_intervention);
 
         int carId = getIntent().getExtras().getInt("carId");
-        currentCar = Car.findCarById(carId);
+        currentCar = Car.get(carId);
 
         selectedDate = Calendar.getInstance();
 
