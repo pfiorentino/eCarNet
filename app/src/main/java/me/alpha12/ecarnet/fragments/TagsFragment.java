@@ -20,6 +20,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,7 +42,7 @@ public class TagsFragment extends MasterFragment implements View.OnKeyListener, 
     private ArrayList<NFCTag> tagsList;
     private ArrayList<NFCTag> selectedTagsList;
 
-    private TextView noTagTextView;
+    private LinearLayout noTagTextLayout;
     private ImageView noTagImageView;
     private ListView tagsListView;
 
@@ -69,7 +70,7 @@ public class TagsFragment extends MasterFragment implements View.OnKeyListener, 
         View view = inflater.inflate(R.layout.fragment_tags, container, false);
         view.setOnKeyListener(this);
 
-        noTagTextView = (TextView) view.findViewById(R.id.noTagTextView);
+        noTagTextLayout = (LinearLayout) view.findViewById(R.id.noTagTextLayout);
         noTagImageView = (ImageView) view.findViewById(R.id.noTagImageView);
         tagsListView = (ListView) view.findViewById(R.id.list);
 
@@ -110,11 +111,11 @@ public class TagsFragment extends MasterFragment implements View.OnKeyListener, 
         tagsList.addAll(NFCTag.findAll(NFCTag.DBModel.C_MESSAGE));
 
         if (tagsList.size() > 0){
-            noTagTextView.setVisibility(View.GONE);
+            noTagTextLayout.setVisibility(View.GONE);
             noTagImageView.setVisibility(View.GONE);
             tagsListView.setVisibility(View.VISIBLE);
         } else {
-            noTagTextView.setVisibility(View.VISIBLE);
+            noTagTextLayout.setVisibility(View.VISIBLE);
             noTagImageView.setVisibility(View.VISIBLE);
             tagsListView.setVisibility(View.GONE);
         }
@@ -217,11 +218,11 @@ public class TagsFragment extends MasterFragment implements View.OnKeyListener, 
                 }
 
                 if (tagsList.size() > 0){
-                    noTagTextView.setVisibility(View.GONE);
+                    noTagTextLayout.setVisibility(View.GONE);
                     noTagImageView.setVisibility(View.GONE);
                     tagsListView.setVisibility(View.VISIBLE);
                 } else {
-                    noTagTextView.setVisibility(View.VISIBLE);
+                    noTagTextLayout.setVisibility(View.VISIBLE);
                     noTagImageView.setVisibility(View.VISIBLE);
                     tagsListView.setVisibility(View.GONE);
                 }

@@ -9,13 +9,23 @@
         android:nestedScrollingEnabled="true" android:visibility="gone" >
     </ListView>
 
-    <TextView android:id="@+id/noTagTextView"
+    <LinearLayout android:id="@+id/noTagTextLayout" android:orientation="vertical"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_centerInParent="true" android:textAlignment="center"
-        android:paddingBottom="88dp"
-        android:textAppearance="@android:style/TextAppearance.Large"
-        android:textColor="@color/hintTextColor"
-        android:text="@string/no_tag_found"/>
+        android:layout_centerInParent="true" android:gravity="center"
+        android:paddingBottom="88dp">
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textAlignment="center" android:layout_marginBottom="8dp"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="@color/hintTextColor"
+            android:text="@string/no_tag_found"/>
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:textAlignment="center"
+            android:textColor="@color/hintTextColor"
+            android:text="@string/no_tag_found_new_tag"/>
+    </LinearLayout>
 
     <ImageView android:id="@+id/noTagImageView"
         android:src="@drawable/ic_bottom_right_arrow_black_36pc_128dp"
