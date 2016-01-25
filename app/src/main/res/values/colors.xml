@@ -2,6 +2,7 @@
 <resources>
     <color name="textColor">#DE000000</color>
     <color name="secondaryTextColor">#8A000000</color>
+    <color name="hintTextColor">#61000000</color>
     <color name="primaryTextColor">#FFFFFF</color>
 
     <color name="colorPrimary">#F44336</color>
@@ -13,4 +14,5 @@
 
     <color name="buttonActiveState">#D5D5D5</color>
     <color name="listDividerColor">#1E000000</color>
+    <color name="defaultBackgroundColor">#EEEEEE</color>
 </resources>

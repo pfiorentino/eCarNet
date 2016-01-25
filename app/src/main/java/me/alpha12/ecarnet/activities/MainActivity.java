@@ -1,7 +1,9 @@
 package me.alpha12.ecarnet.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.nfc.NfcAdapter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -18,7 +20,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -36,7 +37,7 @@ import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
-import me.alpha12.ecarnet.fragments.MemosFragment;
+import me.alpha12.ecarnet.fragments.ReminderFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
 import me.alpha12.ecarnet.fragments.ShareFragment;
 import me.alpha12.ecarnet.fragments.TagsFragment;
@@ -107,12 +108,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             changeCar(cars.entrySet().iterator().next().getValue(), true);
         }
-        if(getIntent().getExtras() != null) {
-            String dateAlarm = getIntent().getExtras().getString("dateRappel");
-            if (dateAlarm != null) {
-                Toast.makeText(this, "Un rappel sera effectué le " + dateAlarm, Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     @Override
@@ -166,7 +161,7 @@ public class MainActivity extends AppCompatActivity
                 openMainFragment(TagsFragment.newInstance(menuItemId), menuItemId);
                 break;
             case R.id.nav_memos:
-                openMainFragment(MemosFragment.newInstance(menuItemId), menuItemId);
+                openMainFragment(ReminderFragment.newInstance(menuItemId), menuItemId);
                 break;
             case R.id.nav_add_car:
                 Intent intent = new Intent(this, AddCarActivity.class);
@@ -350,6 +345,13 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            PackageManager pm = getPackageManager();
+            if(pm.hasSystemFeature(PackageManager.FEATURE_NFC) && NfcAdapter.getDefaultAdapter(this) != null) {
+                navigationView.getMenu().findItem(R.id.nav_nfc).setEnabled(true);
+            }
+        }
 
         for (Map.Entry<Integer, Car> carEntry : cars.entrySet()) {
             navigationView.getMenu().add(R.id.cars_mgmt_group, carEntry.getValue().getId(), 0, carEntry.getValue().toString());

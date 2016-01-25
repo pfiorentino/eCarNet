@@ -7,9 +7,9 @@
         android:background="@color/listDividerColor" />
     <TextView android:id="@+id/sectionTextView" android:visibility="gone"
         android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:padding="@dimen/activity_vertical_margin" android:background="#EEEEEE"
+        android:padding="@dimen/activity_vertical_margin" android:background="@color/defaultBackgroundColor"
         android:text="Section" android:textStyle="bold"/>
-    <LinearLayout
+    <LinearLayout android:id="@+id/tagLayout"
         android:orientation="horizontal" android:gravity="center_vertical"
         android:layout_width="match_parent" android:layout_height="match_parent">
         <ImageView android:id="@+id/tagTypeIcon" android:src="@drawable/ic_nfc_tblack_24dp"

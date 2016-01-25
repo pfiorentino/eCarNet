@@ -5,25 +5,24 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
-/**
- * Created by guilhem on 13/01/2016.
- */
-public class NFCTag {
+public class NFCTag implements Serializable {
     public static final String MIME_ADD_FILLUP      = "application/ecarnet.fillup";
     public static final String MIME_ADD_OPERATION   = "application/ecarnet.operation";
-    public static final String MIME_ADD_MEMO        = "application/ecarnet.memo";
+    public static final String MIME_ADD_MEMO        = "application/ecarnet.reminder";
     public static final String MIME_CAR_INFO        = "application/ecarnet.carInfo";
 
     private int id;
     private String name;
     private String mimeType;
     private String message;
+
+    private boolean selected;
 
     /* Contructors */
 
@@ -53,11 +52,13 @@ public class NFCTag {
         persist(false);
     }
 
-    public void persist(boolean update) {
+    public boolean persist(boolean update) {
         ContentValues newValues = new ContentValues();
 
-        if (this.id > 0)
+        if (this.id > 0 && update)
             newValues.put(DBModel.C_ID, this.id);
+        else if (this.id > 0)
+            return false;
         else
             update = false;
 
@@ -74,11 +75,25 @@ public class NFCTag {
             if (this.id <= 0)
                 this.id = (int) insertedId;
         }
+
+        return true;
+    }
+
+    public boolean delete() {
+        if (this.getId() > 0) {
+            return DatabaseManager.getCurrentDatabase().delete(DBModel.TABLE_NAME, DBModel.C_ID + " = " + this.getId(), null) > 0;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public String toString() {
         return this.name+" - "+this.mimeType+" - "+this.message;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -89,11 +104,19 @@ public class NFCTag {
         return message;
     }
 
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
     public String getMimeType() {
         return mimeType;
     }
 
-    public String getMimeTypeString() {
+    public String getMimeTypeDesc() {
         switch (mimeType) {
             case MIME_ADD_FILLUP:
                 return "Nouveau plein";
@@ -109,15 +132,19 @@ public class NFCTag {
     }
 
     public Integer getMimeTypeIcon() {
-        switch (mimeType) {
-            case MIME_ADD_FILLUP:
-                return R.drawable.ic_local_gas_station_tblack_24dp;
-            case MIME_ADD_OPERATION:
-                return R.drawable.ic_local_car_wash_tblack_24dp;
-            case MIME_ADD_MEMO:
-                return R.drawable.ic_notifications_tblack_24dp;
-            case MIME_CAR_INFO:
-                return R.drawable.ic_info_outline_tblack_24dp;
+        if(this.selected){
+            return R.drawable.ic_check_tblack_24dp;
+        } else {
+            switch (mimeType) {
+                case MIME_ADD_FILLUP:
+                    return R.drawable.ic_local_gas_station_tblack_24dp;
+                case MIME_ADD_OPERATION:
+                    return R.drawable.ic_local_car_wash_tblack_24dp;
+                case MIME_ADD_MEMO:
+                    return R.drawable.ic_notifications_tblack_24dp;
+                case MIME_CAR_INFO:
+                    return R.drawable.ic_info_outline_tblack_24dp;
+            }
         }
 
         return null;
@@ -126,7 +153,7 @@ public class NFCTag {
     public Car getCar() {
         try {
             int carId = Integer.parseInt(this.message);
-            return Car.findCarById(carId);
+            return Car.get(carId);
         } catch (NumberFormatException e) {
             Log.e("eCarNet", "Invalid tag message \"" + message + "\"");
             return null;
@@ -134,6 +161,16 @@ public class NFCTag {
     }
 
     /* Static methods */
+
+    public static NFCTag get(int tagId) {
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBModel.TABLE_NAME + " WHERE " + DBModel.C_ID + " = " + tagId + " LIMIT 1", null);
+
+        if (cursor.moveToNext()) {
+            return new NFCTag(cursor);
+        }
+
+        return null;
+    }
 
     public static ArrayList<NFCTag> findAll() {
         return findAll(null);

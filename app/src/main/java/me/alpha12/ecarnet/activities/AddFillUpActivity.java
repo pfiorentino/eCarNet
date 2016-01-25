@@ -48,7 +48,7 @@ public class AddFillUpActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_add_fill_up);
 
         int carId = getIntent().getExtras().getInt("carId");
-        currentCar = Car.findCarById(carId);
+        currentCar = Car.get(carId);
 
         mCurrentDate = Calendar.getInstance();
 
@@ -86,7 +86,7 @@ public class AddFillUpActivity extends AppCompatActivity implements View.OnClick
                 try {
                     int carId = Integer.parseInt(message);
 
-                    currentCar = Car.findCarById(carId);
+                    currentCar = Car.get(carId);
                     if (currentCar != null) {
                         GlobalContext.setCurrentCar(carId);
                         isCalledFromTag = true;

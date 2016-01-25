@@ -18,6 +18,7 @@ public abstract class MasterFragment extends Fragment implements View.OnClickLis
     protected OnFragmentInteractionListener mListener;
 
     protected Car currentCar;
+    protected int titleResourceId;
 
     public MasterFragment() { }
 
@@ -58,7 +59,9 @@ public abstract class MasterFragment extends Fragment implements View.OnClickLis
     @Override
     public void onClick(View v) { }
 
-    public abstract void setTitle();
+    public void setTitle() {
+        parentActivity.setTitle(titleResourceId);
+    }
 
     public void setFragmentId(int fragmentId) {
         Bundle args = new Bundle();
