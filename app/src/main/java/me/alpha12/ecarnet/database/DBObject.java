@@ -9,7 +9,11 @@ public abstract class DBObject {
     private int id;
     protected boolean selected;
 
-    public abstract void persist(boolean update);
+    public abstract boolean persist(boolean update);
+    public boolean persist() {
+        return persist(false);
+    }
+
     public abstract boolean delete();
 
     public void setId(int id) {

@@ -1,4 +1,4 @@
-package me.alpha12.ecarnet;
+package me.alpha12.ecarnet.classes;
 
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -11,9 +11,6 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 
-/**
- * Created by paul on 13/01/16.
- */
 public class Utils {
     public static final String[] ROMAN_DIGITS = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
 

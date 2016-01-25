@@ -1,6 +1,5 @@
 package me.alpha12.ecarnet.models;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,7 +8,7 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 
-import me.alpha12.ecarnet.Utils;
+import me.alpha12.ecarnet.classes.Utils;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
 public class CarModel implements Parcelable {

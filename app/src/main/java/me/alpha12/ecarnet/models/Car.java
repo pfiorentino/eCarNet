@@ -3,19 +3,9 @@ package me.alpha12.ecarnet.models;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.provider.BaseColumns;
 import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -25,7 +15,7 @@ import java.util.HashMap;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.Utils;
+import me.alpha12.ecarnet.classes.Utils;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
 public class Car {

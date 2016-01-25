@@ -26,7 +26,7 @@ import java.util.Locale;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.Utils;
+import me.alpha12.ecarnet.classes.Utils;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
 

@@ -115,6 +115,16 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        deselectAllItems();
+    }
+
+    @Override
+    public void onClick(View v) {
+        deselectAllItems();
+    }
+
+    @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         ItemsType clickedItem = itemsList.get(position);
 
