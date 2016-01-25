@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.io.OutputStream;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.zip.ZipInputStream;
 
@@ -179,12 +178,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public static Date extractDate(Cursor cur, String ColumnName) {
         return new Date(cur.getLong(cur.getColumnIndex(ColumnName)));
-    }
-
-    public static Calendar extractCalendar(Cursor cur, String ColumName) {
-        Calendar cr = Calendar.getInstance();
-        cr.setTime(new Date(cur.getLong((cur.getColumnIndex(ColumName)))));
-        return cr;
     }
 }
 
