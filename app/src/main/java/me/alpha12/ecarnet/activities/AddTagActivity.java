@@ -1,5 +1,6 @@
 package me.alpha12.ecarnet.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.adapters.NFCTagTypeAdapter;
 import me.alpha12.ecarnet.models.Car;
@@ -33,6 +35,7 @@ public class AddTagActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tag);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         currentCarId = getIntent().getExtras().getInt("carId");
 
@@ -77,15 +80,12 @@ public class AddTagActivity extends AppCompatActivity implements View.OnClickLis
                     name = "Tag sans nom";
 
                 NFCTag tag = new NFCTag(name, selectedType.getMimeType(), String.valueOf(currentCarId));
-                tag.persist();
-                onBackPressed();
+
+                Intent intent = new Intent(this, WriteTagActivity.class);
+                intent.putExtra("nfcTag", tag);
+                startActivityForResult(intent, 0);
                 break;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override
@@ -96,5 +96,15 @@ public class AddTagActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(resultCode) {
+            case GlobalContext.RESULT_CLOSE_ALL:
+                setResult(GlobalContext.RESULT_CLOSE_ALL);
+                finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

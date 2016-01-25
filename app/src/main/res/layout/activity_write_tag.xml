@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context="me.alpha12.ecarnet.activities.WriteTagActivity">
+
+    <include layout="@layout/nfc_tag_item"
+        android:layout_height="wrap_content" android:layout_width="match_parent"></include>
+
+    <View android:id="@+id/sectionDivider"
+        android:layout_width="match_parent" android:layout_height="1dp"
+        android:background="@color/listDividerColor" />
+
+    <LinearLayout android:id="@+id/writeTagLayout" android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <ImageView android:id="@+id/writeTagDescIcon" android:src="@drawable/ic_nfc_black_38pc_96dp"
+            android:layout_width="96dp" android:layout_height="wrap_content" />
+        <TextView android:id="@+id/writeTagDescTextView"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center" android:layout_margin="16dp"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="@color/hintTextColor"
+            android:text="@string/write_tag_description"/>
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent" android:layout_height="52dp"
+        android:background="#E0E0E0">
+        <Button android:id="@+id/confirmButton"
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:paddingLeft="24dp" android:paddingRight="24dp"
+            android:text="Terminer" android:textAlignment="center"
+            android:background="@drawable/transparent_button"/>
+    </LinearLayout>
+</LinearLayout>
