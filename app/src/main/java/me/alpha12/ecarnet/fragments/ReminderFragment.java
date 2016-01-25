@@ -21,6 +21,7 @@ public class ReminderFragment extends MasterListFragment<Reminder> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         titleResourceId = R.string.title_fragment_memos;
         noItemTextResId = R.string.no_memo_found;
         registerFloatingActionButton(R.id.addMemoFAB);
