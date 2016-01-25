@@ -171,7 +171,7 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
     public abstract void populateItemsList();
 
     private void refreshActionBar() {
-        if (menu != null)
+        if (menu != null && menu.findItem(R.id.deleteMenuItem) != null)
             menu.findItem(R.id.deleteMenuItem).setVisible(selectedItemsList.size() > 0);
         setTitle();
     }
