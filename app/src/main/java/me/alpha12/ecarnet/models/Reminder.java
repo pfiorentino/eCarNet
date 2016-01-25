@@ -48,11 +48,13 @@ public class Reminder extends DBObject {
         this.archived   = DatabaseManager.extractInt(cursor, DBModel.C_ARCHIVED) == 1;
     }
 
-    public void persist(boolean update) {
+    public boolean persist(boolean update) {
         ContentValues newValues = new ContentValues();
 
-        if (this.getId() > 0)
+        if (this.getId() > 0 && update)
             newValues.put(DBModel.C_ID, this.getId());
+        else if (this.getId() > 0)
+            return false;
         else
             update = false;
 
@@ -80,6 +82,8 @@ public class Reminder extends DBObject {
             if (this.getId() <= 0)
                 this.setId((int) insertedId);
         }
+
+        return true;
     }
 
     @Override

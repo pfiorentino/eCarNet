@@ -7,12 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,22 +25,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
 import java.util.Calendar;
 import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.ScalingUtilities;
-import me.alpha12.ecarnet.Utils;
+import me.alpha12.ecarnet.classes.ScalingUtilities;
+import me.alpha12.ecarnet.classes.Utils;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.CarModel;
 
-import static me.alpha12.ecarnet.ScalingUtilities.bitmapCirclify;
-import static me.alpha12.ecarnet.ScalingUtilities.createScaledBitmap;
-import static me.alpha12.ecarnet.ScalingUtilities.decodeFile;
+import static me.alpha12.ecarnet.classes.ScalingUtilities.bitmapCirclify;
+import static me.alpha12.ecarnet.classes.ScalingUtilities.createScaledBitmap;
+import static me.alpha12.ecarnet.classes.ScalingUtilities.decodeFile;
 
 public class CustomizeCarActivity extends AppCompatActivity implements OnDateSetListener {
     private static final int SELECT_PICTURE_INTENT = 1;

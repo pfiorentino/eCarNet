@@ -1,4 +1,4 @@
-package me.alpha12.ecarnet;
+package me.alpha12.ecarnet.classes;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

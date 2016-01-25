@@ -21,7 +21,7 @@ public class ReminderFragment extends MasterListFragment<Reminder> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+
         titleResourceId = R.string.title_fragment_memos;
         noItemTextResId = R.string.no_memo_found;
         registerFloatingActionButton(R.id.addMemoFAB);
@@ -29,6 +29,8 @@ public class ReminderFragment extends MasterListFragment<Reminder> {
 
     @Override
     public void onClick(View v) {
+        super.onClick(v);
+
         switch (v.getId()) {
             case R.id.addMemoFAB:
                 Intent intent = new Intent(v.getContext(), AddReminderActivity.class);
@@ -50,6 +52,8 @@ public class ReminderFragment extends MasterListFragment<Reminder> {
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        super.onItemClick(parent, view, position, id);
+
         Intent intent = new Intent(parent.getContext(), AddReminderActivity.class);
         intent.putExtra("memoId", itemsList.get(position).getId());
         parentActivity.startActivity(intent);

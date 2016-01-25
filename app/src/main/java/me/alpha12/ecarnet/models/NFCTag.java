@@ -9,20 +9,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.database.DBObject;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
-public class NFCTag implements Serializable {
+public class NFCTag extends DBObject implements Serializable {
     public static final String MIME_ADD_FILLUP      = "application/ecarnet.fillup";
     public static final String MIME_ADD_OPERATION   = "application/ecarnet.operation";
     public static final String MIME_ADD_MEMO        = "application/ecarnet.reminder";
     public static final String MIME_CAR_INFO        = "application/ecarnet.carInfo";
 
-    private int id;
     private String name;
     private String mimeType;
     private String message;
-
-    private boolean selected;
 
     /* Contructors */
 
@@ -33,31 +31,26 @@ public class NFCTag implements Serializable {
     }
 
     public NFCTag(int id, String name, String mimeType, String message) {
-        this.id = id;
+        this.setId(id);
         this.name = name;
         this.mimeType = mimeType;
         this.message = message;
     }
 
     public NFCTag(Cursor cursor) {
-        this.id         = DatabaseManager.extractInt(cursor, DBModel.C_ID);
+        this.setId(DatabaseManager.extractInt(cursor, DBModel.C_ID));
         this.name       = DatabaseManager.extractString(cursor, DBModel.C_NAME);
         this.mimeType   = DatabaseManager.extractString(cursor, DBModel.C_MIME);
         this.message    = DatabaseManager.extractString(cursor, DBModel.C_MESSAGE);
     }
 
     /* Public methods */
-
-    public void persist() {
-        persist(false);
-    }
-
     public boolean persist(boolean update) {
         ContentValues newValues = new ContentValues();
 
-        if (this.id > 0 && update)
-            newValues.put(DBModel.C_ID, this.id);
-        else if (this.id > 0)
+        if (this.getId() > 0 && update)
+            newValues.put(DBModel.C_ID, this.getId());
+        else if (this.getId() > 0)
             return false;
         else
             update = false;
@@ -68,12 +61,12 @@ public class NFCTag implements Serializable {
 
 
         if (update){
-            DatabaseManager.getCurrentDatabase().update(DBModel.TABLE_NAME, newValues, DBModel.C_ID+"="+this.id, null);
+            DatabaseManager.getCurrentDatabase().update(DBModel.TABLE_NAME, newValues, DBModel.C_ID+"="+this.getId(), null);
         } else {
             long insertedId = DatabaseManager.getCurrentDatabase().insert(DBModel.TABLE_NAME, null, newValues);
 
-            if (this.id <= 0)
-                this.id = (int) insertedId;
+            if (this.getId() <= 0)
+                this.setId((int) insertedId);
         }
 
         return true;
@@ -92,24 +85,12 @@ public class NFCTag implements Serializable {
         return this.name+" - "+this.mimeType+" - "+this.message;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
 
     public String getMessage() {
         return message;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    public boolean isSelected() {
-        return selected;
     }
 
     public String getMimeType() {

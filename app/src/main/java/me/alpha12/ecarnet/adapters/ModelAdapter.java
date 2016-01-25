@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.Utils;
+import me.alpha12.ecarnet.classes.Utils;
 import me.alpha12.ecarnet.models.CarModel;
 
 
