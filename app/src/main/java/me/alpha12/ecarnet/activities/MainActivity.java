@@ -20,7 +20,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +36,8 @@ import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.fragments.GasFragment;
 import me.alpha12.ecarnet.fragments.HomeFragment;
-import me.alpha12.ecarnet.fragments.ReminderFragment;
 import me.alpha12.ecarnet.fragments.OperationsFragment;
+import me.alpha12.ecarnet.fragments.ReminderFragment;
 import me.alpha12.ecarnet.fragments.ShareFragment;
 import me.alpha12.ecarnet.fragments.TagsFragment;
 import me.alpha12.ecarnet.interfaces.OnFragmentInteractionListener;
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity
                         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                             onBackPressed();
                         } else {
-                            Fragment currentFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
+                            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
                             if (navigationView != null && currentFragment != null && currentFragment.isVisible()) {
                                 int fragmentId = currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID);
                                 navigationView.getMenu().findItem(fragmentId).setChecked(true);
@@ -116,30 +115,16 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("CURRENT_FRAGMENT");
+            if (currentFragment != null) {
+                int fragmentId = currentFragment.getArguments().getInt(FRAGMENT_MENU_ENTRY_ID);
+                navigationView.getMenu().findItem(fragmentId).setChecked(false);
+            }
+
             super.onBackPressed();
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int menuItemId = item.getItemId();
