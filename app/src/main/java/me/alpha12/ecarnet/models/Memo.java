@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import me.alpha12.ecarnet.database.DatabaseManager;
@@ -16,18 +17,17 @@ public class Memo {
 
     private int id;
     private String title;
-    private Date dateNote;
-    private Date limitDate;
-    private Date modifDate;
+    private Calendar dateNote;
+    private Calendar limitDate;
+    private Calendar modifDate;
     private int kilometers;
     private int isNotifSet;
-    private int isDone;
     private int isArchived;
     private int carId;
 
     /* Contructors */
 
-    public Memo(int id, String title, Date limit, Date date, Date modif, int distance, boolean notif, boolean done, boolean archived, int idCar) {
+    public Memo(int id, String title, Calendar limit, Calendar date, Calendar modif, int distance, boolean notif, boolean archived, int idCar) {
         this.id = id;
         this.title = title;
         this.dateNote = date;
@@ -37,9 +37,22 @@ public class Memo {
         if(notif)
             this.isNotifSet = 1;
         else this.isNotifSet = 0;
-        if(done)
-            this.isDone = 1;
-        else this.isDone = 0;
+        if(archived)
+            this.isArchived = 1;
+        else this.isArchived = 0;
+        this.carId = idCar;
+    }
+
+    public void setAll(int id, String title, Calendar limit, Calendar date, Calendar modif, int distance, boolean notif, boolean archived, int idCar){
+        this.id = id;
+        this.title = title;
+        this.dateNote = date;
+        this.limitDate = limit;
+        this.modifDate = modif;
+        this.kilometers = distance;
+        if(notif)
+            this.isNotifSet = 1;
+        else this.isNotifSet = 0;
         if(archived)
             this.isArchived = 1;
         else this.isArchived = 0;
@@ -51,12 +64,11 @@ public class Memo {
         this.carId      = DatabaseManager.extractInt(cursor, DBMemo.C_CAR_ID);
         this.title      = DatabaseManager.extractString(cursor, DBMemo.C_TITLE);
         this.kilometers = DatabaseManager.extractInt(cursor, DBMemo.C_KILOMETERS);
-        this.dateNote   = DatabaseManager.extractDate(cursor, DBMemo.C_DATE_CREATED);
-        this.modifDate =  DatabaseManager.extractDate(cursor, DBMemo.C_LAST_MODIFICATION);
-        this.limitDate  = DatabaseManager.extractDate(cursor, DBMemo.C_DATE_LIMIT_SET);
+        this.dateNote   = DatabaseManager.extractCalendar(cursor, DBMemo.C_DATE_CREATED);
+        this.modifDate =  DatabaseManager.extractCalendar(cursor, DBMemo.C_LAST_MODIFICATION);
+        this.limitDate  = DatabaseManager.extractCalendar(cursor, DBMemo.C_DATE_LIMIT_SET);
         this.isNotifSet = DatabaseManager.extractInt(cursor, DBMemo.C_NOTIFICATION);
         this.isArchived = DatabaseManager.extractInt(cursor, DBMemo.C_ARCHIVED);
-        this.isDone     = DatabaseManager.extractInt(cursor, DBMemo.C_DONE);
     }
 
     public void persist(boolean update) {
@@ -70,17 +82,16 @@ public class Memo {
         newValues.put(DBMemo.C_TITLE, this.title);
 
         if (this.dateNote != null)
-            newValues.put(DBMemo.C_DATE_CREATED, this.dateNote.getTime());
+            newValues.put(DBMemo.C_DATE_CREATED, this.dateNote.getTimeInMillis());
 
         if (this.limitDate != null)
-            newValues.put(DBMemo.C_DATE_LIMIT_SET, this.limitDate.getTime());
+            newValues.put(DBMemo.C_DATE_LIMIT_SET, this.limitDate.getTimeInMillis());
 
         if(this.modifDate != null)
-            newValues.put(DBMemo.C_LAST_MODIFICATION, this.modifDate.getTime());
+            newValues.put(DBMemo.C_LAST_MODIFICATION, this.modifDate.getTimeInMillis());
 
         newValues.put(DBMemo.C_KILOMETERS, this.kilometers);
         newValues.put(DBMemo.C_NOTIFICATION, this.isNotifSet);
-        newValues.put(DBMemo.C_DONE, this.isDone());
         newValues.put(DBMemo.C_ARCHIVED, this.isArchived());
         newValues.put(DBMemo.C_CAR_ID, this.carId);
 
@@ -117,18 +128,7 @@ public class Memo {
                 " WHERE car_id = " + carId + " ORDER BY " + DBMemo.C_DATE_LIMIT_SET +", " +DBMemo.C_KILOMETERS + " DESC LIMIT 1", null);
 
         if (cursor.moveToNext()) {
-            return new Memo(
-                    DatabaseManager.extractInt(cursor, DBMemo.C_ID),
-                    DatabaseManager.extractString(cursor, DBMemo.C_TITLE),
-                    DatabaseManager.extractDate(cursor, DBMemo.C_DATE_LIMIT_SET),
-                    DatabaseManager.extractDate(cursor, DBMemo.C_DATE_CREATED),
-                    DatabaseManager.extractDate(cursor, DBMemo.C_LAST_MODIFICATION),
-                    DatabaseManager.extractInt(cursor, DBMemo.C_KILOMETERS),
-                    DatabaseManager.extractInt(cursor, DBMemo.C_NOTIFICATION) == 1,
-                    DatabaseManager.extractInt(cursor, DBMemo.C_DONE) == 1,
-                    DatabaseManager.extractInt(cursor, DBMemo.C_ARCHIVED) == 1,
-                    DatabaseManager.extractInt(cursor, DBMemo.C_CAR_ID)
-            );
+            return new Memo(cursor);
         }
         return null;
     }
@@ -138,18 +138,7 @@ public class Memo {
                 " WHERE " +DBMemo.C_ID+" = " + memoId, null);
 
         if (cursor.moveToNext()) {
-            return new Memo(
-                    DatabaseManager.extractInt(cursor, DBMemo.C_ID),
-                    DatabaseManager.extractString(cursor, DBMemo.C_TITLE),
-                    DatabaseManager.extractDate(cursor, DBMemo.C_DATE_LIMIT_SET),
-                    DatabaseManager.extractDate(cursor, DBMemo.C_DATE_CREATED),
-                    DatabaseManager.extractDate(cursor, DBMemo.C_LAST_MODIFICATION),
-                    DatabaseManager.extractInt(cursor, DBMemo.C_KILOMETERS),
-                    DatabaseManager.extractInt(cursor, DBMemo.C_NOTIFICATION) == 1,
-                    DatabaseManager.extractInt(cursor, DBMemo.C_DONE) == 1,
-                    DatabaseManager.extractInt(cursor, DBMemo.C_ARCHIVED) == 1,
-                    DatabaseManager.extractInt(cursor, DBMemo.C_CAR_ID)
-            );
+            return new Memo(cursor);
         }
         return null;
     }
@@ -165,7 +154,6 @@ public class Memo {
         public static final String C_LAST_MODIFICATION = "mod_date";
         public static final String C_KILOMETERS = "kilometers";
         public static final String C_NOTIFICATION = "notification";
-        public static final String C_DONE = "done";
         public static final String C_ARCHIVED = "archived";
         public static final String C_CAR_ID = "car_id";
 
@@ -178,7 +166,6 @@ public class Memo {
                         + C_LAST_MODIFICATION + " NUMERIC,"
                         + C_KILOMETERS + " INTEGER,"
                         + C_NOTIFICATION + " INTEGER NOT NULL,"
-                        + C_DONE + " INTEGER NOT NULL,"
                         + C_ARCHIVED + " INTEGER NOT NULL,"
                         + C_CAR_ID + " INTEGER NOT NULL"
                         + ");";
@@ -200,11 +187,11 @@ public class Memo {
         this.title = title;
     }
 
-    public Date getDateNote() {
+    public Calendar getDateNote() {
         return dateNote;
     }
 
-    public void setDateNote(Date dateNote) {
+    public void setDateNote(Calendar dateNote) {
         this.dateNote = dateNote;
     }
 
@@ -226,24 +213,14 @@ public class Memo {
         else this.isNotifSet = 0;
     }
 
-    public Date getLimitDate() {
+    public Calendar getLimitDate() {
         return limitDate;
     }
 
-    public void setLimitDate(Date limitDate) {
+    public void setLimitDate(Calendar limitDate) {
         this.limitDate = limitDate;
     }
 
-    public int isDone() {
-        return isDone;
-    }
-
-    public void setIsDone(boolean isDone)
-    {
-        if(isDone)
-        this.isDone = 1;
-        else this.isDone = 0;
-    }
 
     public int getCarId() {
         return carId;
@@ -259,7 +236,7 @@ public class Memo {
         else this.isArchived = 0;
     }
 
-    public Date getModifDate() {
+    public Calendar getModifDate() {
         return modifDate;
     }
 }

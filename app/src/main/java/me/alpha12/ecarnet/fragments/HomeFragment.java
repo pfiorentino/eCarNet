@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddFillUpActivity;
+import me.alpha12.ecarnet.activities.AddMemoActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Car;
@@ -198,20 +199,25 @@ public class HomeFragment extends MasterFragment {
         } else {
             titleMemo.setText(lastMemo.getTitle());
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM", Locale.FRENCH);
-            dateMemo.setText(sdf.format(lastMemo.getDateNote()));
-            limitMemo.setText(lastMemo.getKilometers() + " km ou " + sdf.format(lastMemo.getLimitDate()));
+            dateMemo.setText(sdf.format(lastMemo.getDateNote().getTime()));
+            limitMemo.setText(lastMemo.getKilometers() + " km ou " + sdf.format(lastMemo.getLimitDate().getTime()));
         }
     }
 
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
             case R.id.addFillupFAB:
-                Intent intent = new Intent(v.getContext(), AddFillUpActivity.class);
+                intent = new Intent(v.getContext(), AddFillUpActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
                 break;
+            case R.id.reminderEditButton:
+                intent = new Intent(v.getContext(), AddMemoActivity.class);
+                intent.putExtra("memeId", lastMemo.getId());
+                startActivity(intent);
         }
     }
 
