@@ -29,6 +29,11 @@
                         android:layout_width="match_parent" android:layout_height="120dp"
                         android:background="@color/black_gradient"
                         android:layout_gravity="bottom"/>
+
+                    <TextView android:id="@+id/subTitle" android:layout_gravity="bottom"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+                        android:layout_marginBottom="8dp" android:layout_marginTop="8dp"/>
                 </FrameLayout>
                 <android.support.v7.widget.Toolbar android:id="@+id/supportToolBar"
                     android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
@@ -72,7 +77,7 @@
             android:src="@drawable/ic_content_add_white_24dp" />
     </android.support.design.widget.CoordinatorLayout>
 
-    <android.support.design.widget.NavigationView android:id="@+id/nav_view"
+    <android.support.design.widget.NavigationView android:id="@+id/nav_view" android:visibility="gone"
         android:layout_width="wrap_content" android:layout_height="match_parent"
         android:layout_gravity="start" android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main" app:menu="@menu/activity_main_drawer"

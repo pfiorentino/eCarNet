@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
     public static final String FRAGMENT_MENU_ENTRY_ID = "fmei";
 
+    private TextView subTitle;
+
     private AppBarLayout appbar;
     private CollapsingToolbarLayout appbarLayout;
     private NestedScrollView scrollView;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity
         cars = Car.findAll();
 
         appBarImage = (ImageView) findViewById(R.id.appBarImage);
+        subTitle = (TextView) findViewById(R.id.subTitle);
 
         initNavDrawer();
 
@@ -373,6 +376,12 @@ public class MainActivity extends AppCompatActivity
             appbarLayout.setTitle(getString(titleResId));
         if (supportToolbar != null)
             supportToolbar.setTitle(titleResId);
+    }
+
+    public void setSubTitle(String subTitle) {
+        if (this.subTitle != null) {
+            this.subTitle.setText(subTitle);
+        }
     }
 }
 

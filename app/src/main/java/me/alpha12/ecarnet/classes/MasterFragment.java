@@ -19,6 +19,7 @@ public abstract class MasterFragment extends Fragment implements View.OnClickLis
 
     protected Car currentCar;
     protected int titleResourceId;
+    protected String subTitle;
 
     public MasterFragment() { }
 
@@ -48,6 +49,7 @@ public abstract class MasterFragment extends Fragment implements View.OnClickLis
     public void onResume() {
         super.onResume();
         setTitle();
+        setSubtitle();
     }
 
     @Override
@@ -61,6 +63,10 @@ public abstract class MasterFragment extends Fragment implements View.OnClickLis
 
     public void setTitle() {
         parentActivity.setTitle(titleResourceId);
+    }
+
+    public void setSubtitle() {
+        parentActivity.setSubTitle(subTitle);
     }
 
     public void setFragmentId(int fragmentId) {
