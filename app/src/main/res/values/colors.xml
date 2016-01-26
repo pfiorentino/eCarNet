@@ -14,5 +14,6 @@
 
     <color name="buttonActiveState">#D5D5D5</color>
     <color name="listDividerColor">#1E000000</color>
-    <color name="defaultBackgroundColor">#EEEEEE</color>
+    <color name="defaultBackgroundColor">#FAFAFA</color>
+    <color name="defaultCardsBackgroundColor">#EEEEEE</color>
 </resources>
