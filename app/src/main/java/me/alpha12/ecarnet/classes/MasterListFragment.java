@@ -92,7 +92,7 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
         }
 
         adapter.notifyDataSetChanged();
-        refreshActionBar();
+        invalidateActionBar();
     }
 
     @Override
@@ -137,7 +137,7 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
         }
 
         adapter.notifyDataSetChanged();
-        refreshActionBar();
+        invalidateActionBar();
         return true;
     }
 
@@ -155,25 +155,21 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
         return false;
     }
 
-    @Override
-    public void setTitle() {
+    public abstract void defineListAdapter();
+    public abstract void populateItemsList();
+
+    private void invalidateActionBar() {
+        if (menu != null && menu.findItem(R.id.deleteMenuItem) != null)
+            menu.findItem(R.id.deleteMenuItem).setVisible(selectedItemsList.size() > 0);
+
         if (selectedItemsList.size() > 0){
             if (selectedItemsList.size() > 1)
                 parentActivity.setTitle(selectedItemsList.size()+" éléments");
             else
                 parentActivity.setTitle(selectedItemsList.size()+" élément");
         } else {
-            super.setTitle();
+            parentActivity.setTitle(getDefaultTitle());
         }
-    }
-
-    public abstract void defineListAdapter();
-    public abstract void populateItemsList();
-
-    private void refreshActionBar() {
-        if (menu != null && menu.findItem(R.id.deleteMenuItem) != null)
-            menu.findItem(R.id.deleteMenuItem).setVisible(selectedItemsList.size() > 0);
-        setTitle();
     }
 
     private void deselectAllItems() {
@@ -182,7 +178,7 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
             item.setSelected(false);
         }
         adapter.notifyDataSetChanged();
-        refreshActionBar();
+        invalidateActionBar();
     }
 
     private void deleteAllSelectedItems() {
@@ -212,7 +208,7 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
 
                 selectedItemsList.clear();
                 adapter.notifyDataSetChanged();
-                refreshActionBar();
+                invalidateActionBar();
             }
         });
         alertDialogBuilder.setNegativeButton(getString(R.string.dialog_no), new DialogInterface.OnClickListener() {

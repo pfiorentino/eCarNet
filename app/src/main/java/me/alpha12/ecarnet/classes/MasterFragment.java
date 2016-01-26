@@ -18,8 +18,9 @@ public abstract class MasterFragment extends Fragment implements View.OnClickLis
     protected OnFragmentInteractionListener mListener;
 
     protected Car currentCar;
-    protected int titleResourceId;
-    protected String subTitle;
+
+    private String defaultTitle;
+    private String defaultSubTitle;
 
     public MasterFragment() { }
 
@@ -48,8 +49,7 @@ public abstract class MasterFragment extends Fragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-        setTitle();
-        setSubtitle();
+        invalidateTopBar();
     }
 
     @Override
@@ -61,12 +61,18 @@ public abstract class MasterFragment extends Fragment implements View.OnClickLis
     @Override
     public void onClick(View v) { }
 
-    public void setTitle() {
-        parentActivity.setTitle(titleResourceId);
+    public void setDefaultTitle(String value) {
+        this.defaultTitle = value;
+        invalidateTopBar();
     }
 
-    public void setSubtitle() {
-        parentActivity.setSubTitle(subTitle);
+    public String getDefaultTitle() {
+        return defaultTitle;
+    }
+
+    public void setDefaultSubTitle(String value) {
+        this.defaultSubTitle = value;
+        invalidateTopBar();
     }
 
     public void setFragmentId(int fragmentId) {
@@ -79,5 +85,10 @@ public abstract class MasterFragment extends Fragment implements View.OnClickLis
         fab = (FloatingActionButton) parentActivity.findViewById(fabId);
         fab.setOnClickListener(this);
         parentActivity.registerFloatingActionButton(fragmentId, fab);
+    }
+
+    private void invalidateTopBar() {
+        parentActivity.setTitle(defaultTitle);
+        parentActivity.setSubTitle(defaultSubTitle);
     }
 }
