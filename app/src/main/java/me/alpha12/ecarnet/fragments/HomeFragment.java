@@ -53,6 +53,7 @@ public class HomeFragment extends MasterFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerFloatingActionButton(R.id.addFillupFAB);
+        this.subTitle = currentCar.getPlateNum()+" - "+currentCar.getKilometers()+" km";
     }
 
     @Override
