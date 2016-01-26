@@ -30,6 +30,8 @@ public class OperationsFragment extends MasterFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerFloatingActionButton(R.id.addOperationFAB);
+
+        setDefaultTitle(getString(R.string.title_fragment_operations));
     }
 
     @Override
@@ -58,10 +60,5 @@ public class OperationsFragment extends MasterFragment {
                 startActivity(intent);
                 break;
         }
-    }
-
-    @Override
-    public void setTitle() {
-        parentActivity.setTitle(R.string.title_fragment_operations);
     }
 }

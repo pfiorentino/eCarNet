@@ -24,6 +24,7 @@ public class GasFragment extends MasterFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setDefaultTitle(getString(R.string.title_fragment_gas));
     }
 
     @Override
@@ -43,10 +44,5 @@ public class GasFragment extends MasterFragment {
             priceText.setText(String.valueOf(interventions.get(0).getPrice()));
         }
         return view;
-    }
-
-    @Override
-    public void setTitle() {
-        ((MainActivity) getActivity()).setTitle(R.string.title_fragment_gas);
     }
 }

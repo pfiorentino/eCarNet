@@ -39,9 +39,10 @@ public class TagsFragment extends MasterListFragment<NFCTag> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        titleResourceId = R.string.title_fragment_tags;
         noItemTextResId = R.string.no_tag_found;
         registerFloatingActionButton(R.id.addTagFAB);
+
+        setDefaultTitle(getString(R.string.title_fragment_tags));
     }
 
     @Override

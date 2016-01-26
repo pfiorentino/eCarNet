@@ -21,10 +21,11 @@ public class ReminderFragment extends MasterListFragment<Reminder> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        titleResourceId = R.string.title_fragment_memos;
         noItemTextResId = R.string.no_memo_found;
+
         registerFloatingActionButton(R.id.addMemoFAB);
+
+        setDefaultTitle(getString(R.string.title_fragment_memos));
     }
 
     @Override
