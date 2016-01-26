@@ -13,6 +13,9 @@ public abstract class DBObject {
     public boolean persist() {
         return persist(false);
     }
+    public void update() {
+        persist(true);
+    }
 
     public abstract boolean delete();
 

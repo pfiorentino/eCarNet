@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity
 
         currentCar = newCar;
         TextView drawerTitle = (TextView) headerView.findViewById(R.id.car_name);
-        drawerTitle.setText(currentCar.getCarModel().toString());
+        drawerTitle.setText(currentCar.getModelString());
 
         TextView drawerDesc = (TextView) headerView.findViewById(R.id.car_desc);
         drawerDesc.setText(currentCar.getPlateNum());

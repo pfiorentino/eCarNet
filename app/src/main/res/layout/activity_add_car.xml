@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout android:fitsSystemWindows="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:fitsSystemWindows="true"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context="me.alpha12.ecarnet.activities.AddCarActivity">
-
     <TextView android:id="@+id/titleTextView"
         android:layout_width="match_parent" android:layout_height="120dp" android:gravity="center_vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin" android:paddingRight="@dimen/activity_horizontal_margin"
@@ -14,7 +11,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30dp"
         android:background="@color/colorPrimary"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:elevation="4dp"/>
 
     <LinearLayout android:id="@+id/bottomButtonBar" android:orientation="horizontal"
         android:layout_width="match_parent" android:layout_height="52dp"
@@ -25,18 +23,22 @@
             android:paddingLeft="16dp" android:paddingRight="16dp"
             android:text="Annuler"
             android:background="@drawable/transparent_button" />
+        <Button android:id="@+id/skipButton"
+            android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"
+            android:paddingLeft="16dp" android:paddingRight="16dp"
+            android:text="Sauter cette étape"
+            android:background="@drawable/transparent_button" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent" android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:layout_below="@id/titleTextView"
-        android:layout_above="@id/bottomButtonBar">
+        android:layout_below="@id/titleTextView" android:layout_above="@id/bottomButtonBar">
         <LinearLayout android:orientation="vertical"
-            android:layout_width="match_parent" android:layout_height="match_parent">
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin">
 
             <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
             <LinearLayout
@@ -48,9 +50,8 @@
             <TextView
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Par véhicule" />
+                android:text="Grâce au modèle" />
 
             <LinearLayout android:orientation="horizontal"
                 android:layout_width="match_parent" android:layout_height="wrap_content">
@@ -95,7 +96,7 @@
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Par carte grise" />
+                android:text="Avec la carte grise" />
 
             <LinearLayout android:orientation="horizontal"
                 android:layout_width="match_parent" android:layout_height="wrap_content">
