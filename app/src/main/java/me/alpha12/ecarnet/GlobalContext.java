@@ -61,6 +61,11 @@ public class GlobalContext extends Application {
                 DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_MONTH);
     }
 
+    public static String getFormattedMediumDate(Calendar date) {
+        return DateUtils.formatDateTime(getInstance(), date.getTimeInMillis(),
+                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_MONTH);
+    }
+
     public static String getFormattedSmallDate(Date date) {
         return DateUtils.formatDateTime(getInstance(), date.getTime(),
                 DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_YEAR | DateUtils.FORMAT_ABBREV_MONTH);
