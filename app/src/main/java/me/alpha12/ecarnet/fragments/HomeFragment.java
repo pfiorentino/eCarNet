@@ -53,6 +53,9 @@ public class HomeFragment extends MasterFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerFloatingActionButton(R.id.addFillupFAB);
+
+        setDefaultTitle(currentCar.getCarModel().toString());
+        setDefaultSubTitle(currentCar.getPlateNum()+" - "+currentCar.getKilometers()+" km");
     }
 
     @Override
@@ -213,10 +216,5 @@ public class HomeFragment extends MasterFragment {
                 startActivity(intent);
                 break;
         }
-    }
-
-    @Override
-    public void setTitle() {
-        parentActivity.setTitle(currentCar.getCarModel().toString());
     }
 }

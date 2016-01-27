@@ -20,17 +20,13 @@ public class ShareFragment extends MasterFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setDefaultTitle(getString(R.string.title_fragment_share));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_share, container, false);
-    }
-
-    @Override
-    public void setTitle() {
-        ((MainActivity) getActivity()).setTitle(R.string.title_fragment_share);
     }
 
 }

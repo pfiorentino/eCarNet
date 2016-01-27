@@ -36,6 +36,8 @@ public class OperationsFragment extends MasterFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerFloatingActionButton(R.id.addOperationFAB);
+
+        setDefaultTitle(getString(R.string.title_fragment_operations));
     }
 
     @Override
@@ -76,7 +78,6 @@ public class OperationsFragment extends MasterFragment {
         }
     }
 
-
     public TableRow constructRow(Intervention inter, View v){
         TableRow tr = (TableRow)v.findViewById(R.id.tableRow);
         tr.setId(inter.getId());
@@ -104,9 +105,10 @@ public class OperationsFragment extends MasterFragment {
         int trHeight = (int) (64 * scale + 0.5f);
         return new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, trHeight);
     }
-
+/*
     @Override
     public void setTitle() {
         parentActivity.setTitle(R.string.title_fragment_operations);
     }
+    */
 }
