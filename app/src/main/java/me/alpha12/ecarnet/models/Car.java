@@ -69,7 +69,7 @@ public class Car extends DBObject {
         if (this.model != null)
             return Utils.ucWords(this.model.getBrand()+" "+this.model.getModel())+" - "+this.plateNum;
         else
-            return "Modèle inconnu - "+this.getPlateNum();
+            return "Modèle inconnu";
     }
 
 
@@ -237,5 +237,7 @@ public class Car extends DBObject {
             this.kilometers = kilometers;
     }
 
-
+    public boolean isDefined() {
+        return this.model != null;
+    }
 }
