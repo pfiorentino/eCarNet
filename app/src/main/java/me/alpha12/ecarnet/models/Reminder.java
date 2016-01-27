@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
@@ -13,16 +14,16 @@ import me.alpha12.ecarnet.database.DatabaseManager;
 
 public class Reminder extends DBObject {
     private String title;
-    private Date dateNote;
-    private Date limitDate;
-    private Date modifDate;
+    private Calendar dateNote;
+    private Calendar limitDate;
+    private Calendar modifDate;
     private int kilometers;
     private boolean notifSet;
     private boolean archived;
     private int carId;
 
     /* Contructors */
-    public Reminder(int id, String title, Date date, Date modif, Date limit, int distance, boolean notifSet, boolean archived, int idCar) {
+    public Reminder(int id, String title, Calendar date, Calendar modif, Calendar limit, int distance, boolean notifSet, boolean archived, int idCar) {
         this.setId(id);
 
         this.title = title;
@@ -41,9 +42,9 @@ public class Reminder extends DBObject {
         this.carId      = DatabaseManager.extractInt(cursor, DBModel.C_CAR_ID);
         this.title      = DatabaseManager.extractString(cursor, DBModel.C_TITLE);
         this.kilometers = DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS);
-        this.dateNote   = DatabaseManager.extractDate(cursor, DBModel.C_DATE_CREATED);
-        this.modifDate =  DatabaseManager.extractDate(cursor, DBModel.C_LAST_MODIFICATION);
-        this.limitDate  = DatabaseManager.extractDate(cursor, DBModel.C_DATE_LIMIT_SET);
+        this.dateNote   = DatabaseManager.extractCalendar(cursor, DBModel.C_DATE_CREATED);
+        this.modifDate =  DatabaseManager.extractCalendar(cursor, DBModel.C_LAST_MODIFICATION);
+        this.limitDate  = DatabaseManager.extractCalendar(cursor, DBModel.C_DATE_LIMIT_SET);
         this.notifSet   = DatabaseManager.extractInt(cursor, DBModel.C_NOTIFICATION) == 1;
         this.archived   = DatabaseManager.extractInt(cursor, DBModel.C_ARCHIVED) == 1;
     }
@@ -61,13 +62,13 @@ public class Reminder extends DBObject {
         newValues.put(DBModel.C_TITLE, this.title);
 
         if (this.dateNote != null)
-            newValues.put(DBModel.C_DATE_CREATED, this.dateNote.getTime());
+            newValues.put(DBModel.C_DATE_CREATED, this.dateNote.getTimeInMillis());
 
         if (this.limitDate != null)
-            newValues.put(DBModel.C_DATE_LIMIT_SET, this.limitDate.getTime());
+            newValues.put(DBModel.C_DATE_LIMIT_SET, this.limitDate.getTimeInMillis());
 
         if(this.modifDate != null)
-            newValues.put(DBModel.C_LAST_MODIFICATION, this.modifDate.getTime());
+            newValues.put(DBModel.C_LAST_MODIFICATION, this.modifDate.getTimeInMillis());
 
         newValues.put(DBModel.C_KILOMETERS, this.kilometers);
         newValues.put(DBModel.C_NOTIFICATION, this.notifSet);
@@ -162,7 +163,7 @@ public class Reminder extends DBObject {
         this.title = title;
     }
 
-    public Date getDateNote() {
+    public Calendar getDateNote() {
         return dateNote;
     }
 
@@ -174,11 +175,11 @@ public class Reminder extends DBObject {
         this.kilometers = kilometers;
     }
 
-    public Date getLimitDate() {
+    public Calendar getLimitDate() {
         return limitDate;
     }
 
-    public void setLimitDate(Date limitDate) {
+    public void setLimitDate(Calendar limitDate) {
         this.limitDate = limitDate;
     }
 
@@ -190,11 +191,11 @@ public class Reminder extends DBObject {
         this.archived = archived;
     }
 
-    public Date getModifDate() {
+    public Calendar getModifDate() {
         return modifDate;
     }
 
-    public void setModifDate(Date modifDate) {
+    public void setModifDate(Calendar modifDate) {
         this.modifDate = modifDate;
     }
 
@@ -202,11 +203,13 @@ public class Reminder extends DBObject {
         return carId;
     }
 
+    public boolean isNotifSet(){ return notifSet;}
+
     public String getLimitText() {
-        return this.kilometers + " km ou " + GlobalContext.getFormattedMediumDate(this.limitDate);
+        return this.kilometers + " km ou " + GlobalContext.getFormattedMediumDate(this.limitDate.getTime());
     }
 
     public String getCreationString() {
-        return GlobalContext.getFormattedSmallDate(this.dateNote);
+        return GlobalContext.getFormattedSmallDate(this.dateNote.getTime());
     }
 }

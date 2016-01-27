@@ -46,10 +46,10 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
     private Reminder currentReminder;
     private Car currentCar;
     private Calendar selectedDate;
-    private Date currentDate;
+    private Calendar currentDate;
 
 
-    private Date notificationDateAlarm = new Date();
+    private Calendar notificationDateAlarm = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        currentDate = new Date();
+        currentDate = Calendar.getInstance();
 
         Intent intent = getIntent();
         if(intent.getExtras() != null) {
@@ -83,14 +83,14 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
                 currentReminder = Reminder.get(intent.getExtras().getInt("memoId"));
                 currentCar = Car.get(currentReminder.getCarId());
 
-                selectedDate.setTime(currentReminder.getLimitDate());
+                selectedDate = currentReminder.getLimitDate();
 
                 descriptionEditText.setText(currentReminder.getTitle());
                 distanceLimitEditText.setText(Integer.toString(currentReminder.getKilometers()));
                 dateLimitTextView.setText(GlobalContext.getFormattedDate(currentReminder.getLimitDate()));
 
-                notificationDateAlarm.setTime(getBestValue(getAlarmWithDate(currentReminder.getLimitDate()), getAlarmWithDistance(currentReminder.getKilometers())));
-                if(notificationDateAlarm.getTime()>0) {
+                notificationDateAlarm.setTimeInMillis(getBestValue(getAlarmWithDate(currentReminder.getLimitDate()), getAlarmWithDistance(currentReminder.getKilometers())));
+                if(currentReminder.isNotifSet()) {
                     notificationCheckBox.setChecked(true);
                 }
                 modificationDateTextView.setText(getString(R.string.last_edit_memo, GlobalContext.getFormattedMediumDate(currentReminder.getModifDate())));
@@ -152,7 +152,6 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        Date d = new Date(selectedDate.getTimeInMillis());
         String distanceString = distanceLimitEditText.getText().toString();
         int distance = -1;
         if (!distanceString.equals("")) {
@@ -163,9 +162,9 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
             case R.id.notificationCheckBox:
                 if(notificationCheckBox.isChecked()) {
                     if (distance >= 0) {
-                        notificationDateAlarm.setTime(getBestValue(getAlarmWithDate(d), getAlarmWithDistance(distance)));
+                        notificationDateAlarm.setTimeInMillis(getBestValue(getAlarmWithDate(selectedDate), getAlarmWithDistance(distance)));
                     } else {
-                        notificationDateAlarm.setTime(getBestValue(0, getAlarmWithDate(d)));
+                        notificationDateAlarm.setTimeInMillis(getBestValue(0, getAlarmWithDate(selectedDate)));
                     }
                 }
                 break;
@@ -176,7 +175,7 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
                             descriptionEditText.getText().toString(),
                             currentDate,
                             currentDate,
-                            d,
+                            selectedDate,
                             distance,
                             notificationCheckBox.isChecked(),
                             false,
@@ -185,7 +184,7 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
                 } else {
                     currentReminder.setTitle(descriptionEditText.getText().toString());
                     currentReminder.setModifDate(currentDate);
-                    currentReminder.setLimitDate(d);
+                    currentReminder.setLimitDate(selectedDate);
                     currentReminder.setKilometers(distance);
                     currentReminder.setNotifSet(notificationCheckBox.isChecked());
                     currentReminder.setArchived(false);
@@ -256,8 +255,8 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, id);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if(notificationDateAlarm.getTime()-currentDate.getTime() > 0) {
-            long futureInMillis = SystemClock.elapsedRealtime() + (notificationDateAlarm.getTime()-currentDate.getTime());
+        if(notificationDateAlarm.getTimeInMillis()-currentDate.getTimeInMillis() > 0) {
+            long futureInMillis = SystemClock.elapsedRealtime() + (notificationDateAlarm.getTimeInMillis()-currentDate.getTimeInMillis());
             AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
             alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
         }
@@ -287,9 +286,9 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private long getAlarmWithDate(Date limit) {
+    private long getAlarmWithDate(Calendar limit) {
         if(currentDate.before(limit)) {
-            return limit.getTime();
+            return limit.getTimeInMillis();
         }
         else return 0;
     }
@@ -307,7 +306,7 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
             }
             average = average / myInterventions.size();
             long timeToReach = (long)(1/(average / (float)(distance - currentCar.getKilometers())));
-            return timeToReach + currentDate.getTime();
+            return timeToReach + currentDate.getTimeInMillis();
         }
         else return 0;
     }

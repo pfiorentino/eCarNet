@@ -103,17 +103,12 @@ public class AddCarActivity extends AppCompatActivity {
         mineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(CarModel.existWithTypeMine(mineTypeEditText.getText().toString())) {
-                    Intent intent = new Intent(AddCarActivity.this, SearchCarActivity.class);
-                    intent.putExtra("mine", mineTypeEditText.getText().toString());
-                    startActivityForResult(intent, 0);
-                }
-                else
+                if(mineTypeEditText.getText().toString().length() < 3)
                 {
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddCarActivity.this);
-                    alertDialogBuilder.setMessage("Oups, aucun véhicule n'a été trouvé. Vérifiez le type mine ou cherchez par marque et modèle");
+                    alertDialogBuilder.setMessage("Saisissez au moins 3 caractères du type mine");
                     alertDialogBuilder.setPositiveButton("fermer", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface arg0, int arg1) {
@@ -121,6 +116,25 @@ public class AddCarActivity extends AppCompatActivity {
                     });
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
+                }
+                else {
+                    if (CarModel.existWithTypeMine(mineTypeEditText.getText().toString())) {
+                        Intent mineIntent = new Intent(AddCarActivity.this, SearchCarActivity.class);
+                        mineIntent.putExtra("mine", mineTypeEditText.getText().toString().toUpperCase());
+                        startActivityForResult(mineIntent, 0);
+                    } else {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddCarActivity.this);
+                        alertDialogBuilder.setMessage("Oups, aucun véhicule n'a été trouvé. Vérifiez le type mine ou cherchez par marque et modèle");
+                        alertDialogBuilder.setPositiveButton("fermer", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                            }
+                        });
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                    }
                 }
             }
         });

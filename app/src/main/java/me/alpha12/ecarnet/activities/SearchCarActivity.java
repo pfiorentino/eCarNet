@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,7 +66,14 @@ public class SearchCarActivity extends AppCompatActivity {
             Intent intent = getIntent();
             if(intent.getStringExtra("brand") != null && intent.getStringExtra("model") != null) {
                 allCarModels = CarModel.findByBrandModel(intent.getStringExtra("brand"), intent.getStringExtra("model"));
+                Log.d("brand/model", intent.getStringExtra("brand"));
             }
+            if(intent.getStringExtra("mine") != null)
+            {
+                allCarModels = CarModel.findByTypeMine(intent.getStringExtra("mine"));
+                Log.d("type mime", intent.getStringExtra("mine"));
+            }
+            Log.d("cars", ""+allCarModels.size());
             filteredCarModels = allCarModels;
             isSearchOpened = false;
             currentQuery = "";

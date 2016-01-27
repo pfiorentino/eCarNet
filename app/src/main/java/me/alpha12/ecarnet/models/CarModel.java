@@ -164,11 +164,10 @@ public class CarModel implements Parcelable {
     public static boolean existWithTypeMine(String typeMine) {
         ArrayList<CarModel> result = new ArrayList<>();
         int number = 0;
-        String[] args = {typeMine.toUpperCase()};
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
                 "SELECT " + DBCarModelDetails.C_ID + " FROM " + DBCarModelDetails.TABLE_NAME+
-                        " WHERE " + DBCarModelDetails.C_MINES_TYPE + " = ? LIMIT 1",
-                args
+                        " WHERE " + DBCarModelDetails.C_MINES_TYPE + " LIKE '%"+typeMine.toUpperCase()+"%' LIMIT 1",
+                null
         );
         return cursor.moveToNext();
     }
@@ -176,16 +175,15 @@ public class CarModel implements Parcelable {
     public static ArrayList<CarModel> findByTypeMine(String typeMine) {
         ArrayList<CarModel> result = new ArrayList<>();
 
-        String[] args = {typeMine.toUpperCase()};
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
                 "SELECT md.*, m." + DBCarModel.C_LABEL + " as " + DBCarModelDetails.C_MODEL_NAME + ", b." + DBCarBrand.C_LABEL + " as " + DBCarModelDetails.C_BRAND_NAME + " " +
                         "FROM " + DBCarModelDetails.TABLE_NAME + " md " +
                         "JOIN " + DBCarModel.TABLE_NAME + " m ON md." + DBCarModelDetails.C_MODEL_ID + " = m." + DBCarModel.C_ID + " " +
                         "JOIN " + DBCarBrand.TABLE_NAME + " b ON m." + DBCarModel.C_BRAND_ID + " = b." + DBCarBrand.C_ID + " " +
-                        "WHERE b." + DBCarModelDetails.C_MINES_TYPE + " = ?" +
+                        "WHERE md." + DBCarModelDetails.C_MINES_TYPE + " LIKE '%"+typeMine.toUpperCase()+"%'" +
                         "GROUP BY md." + DBCarModelDetails.C_VERSION + " " +
                         "ORDER BY m." + DBCarModel.C_LABEL + ", md." + DBCarModelDetails.C_VERSION,
-                args
+                null
         );
 
         while(cursor.moveToNext()) {

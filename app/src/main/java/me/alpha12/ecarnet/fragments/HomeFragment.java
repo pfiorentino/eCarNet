@@ -198,8 +198,8 @@ public class HomeFragment extends MasterFragment {
         } else {
             titleMemo.setText(lastMemo.getTitle());
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM", Locale.FRENCH);
-            dateMemo.setText(sdf.format(lastMemo.getDateNote()));
-            limitMemo.setText(lastMemo.getKilometers() + " km ou " + sdf.format(lastMemo.getLimitDate()));
+            dateMemo.setText(sdf.format(lastMemo.getDateNote().getTime()));
+            limitMemo.setText(lastMemo.getKilometers() + " km ou " + sdf.format(lastMemo.getLimitDate().getTime()));
         }
     }
 
