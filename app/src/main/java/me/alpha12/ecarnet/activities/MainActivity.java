@@ -151,11 +151,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_memos:
                 openMainFragment(ReminderFragment.newInstance(menuItemId), menuItemId);
                 break;
-            case R.id.nav_add_car:
+            case R.id.nav_add_car:{
                 Intent intent = new Intent(this, AddCarActivity.class);
                 intent.putExtra(AddCarActivity.FROM_MAIN_ACTIVITY, true);
                 startActivityForResult(intent, 0);
                 break;
+            }
             case R.id.nav_manage_car:
                 openActivity(CarsMgmtActivity.class);
                 break;
