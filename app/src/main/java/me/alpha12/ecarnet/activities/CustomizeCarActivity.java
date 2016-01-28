@@ -262,7 +262,7 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
                 format = Bitmap.CompressFormat.PNG;
 
                 int imageWidth = GlobalContext.getInstance().getResources().getDisplayMetrics().widthPixels;
-                int imageHeight = imageWidth * 9 / 16; // 16/9 yo
+                int imageHeight = imageWidth * 9 / 16;
 
                 outputBitmap = createScaledBitmap(decodeFile(
                         source.getAbsolutePath(),
@@ -274,7 +274,7 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
                 outputFilename += "_picture.png";
                 format = Bitmap.CompressFormat.PNG;
 
-                int imageLength = (int)(72 * density);
+                int imageLength = (int)(64 * density);
 
                 // Preparing the source bitmap
                 outputBitmap = bitmapCirclify(createScaledBitmap(decodeFile(
@@ -287,10 +287,13 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
 
             // Handling writing
             File destination = new File(GlobalContext.getAppPicturePath() + outputFilename);
-            if (!destination.exists()) {
+            if (!destination.getParentFile().exists())
                 destination.getParentFile().mkdirs();
-                destination.createNewFile();
-            }
+
+            if (destination.exists())
+                destination.delete();
+
+            destination.createNewFile();
 
             FileOutputStream fos = new FileOutputStream(destination);
             outputBitmap.compress(format, 45, fos); // The "quality" is ignored for PNG

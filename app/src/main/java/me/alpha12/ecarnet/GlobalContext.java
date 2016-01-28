@@ -75,7 +75,7 @@ public class GlobalContext extends Application {
         return Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator  + "Android" + File.separator
                 + "data" + File.separator + getInstance().getPackageName()
-                + File.separator + "photos" + File.separator;
+                + File.separator + "cars_pictures" + File.separator;
     }
 
     public static void pushNotification(String title, String message) {

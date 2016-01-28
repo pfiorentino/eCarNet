@@ -335,4 +335,8 @@ public class CarModel implements Parcelable {
     public int getGears() {
         return gears;
     }
+
+    public String getDetails() {
+        return version+" - "+body+" - "+energy+" - "+gearboxType;
+    }
 }

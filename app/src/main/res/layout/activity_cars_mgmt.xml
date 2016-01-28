@@ -3,11 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent" android:fitsSystemWindows="true"
-    tools:context="me.alpha12.ecarnet.activities.CarsMgmtActivity">
+    tools:context="me.alpha12.ecarnet.activities.CarsMgmtActivity"
+    android:background="@color/defaultBackgroundColor">
 
     <include layout="@layout/fragment_master_list" />
 
-    <android.support.design.widget.FloatingActionButton android:id="@+id/addOperationFAB"
+    <android.support.design.widget.FloatingActionButton android:id="@+id/addCarFAB"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_content_add_white_24dp" />

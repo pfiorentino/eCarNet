@@ -20,18 +20,22 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
@@ -79,7 +83,10 @@ public class MainActivity extends AppCompatActivity
         supportToolbar  = (Toolbar) findViewById(R.id.supportToolBar);
         setSupportActionBar(supportToolbar);
 
-        cars = Car.findAll();
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        cars = Car.findAllHashMap();
 
         appBarImage = (ImageView) findViewById(R.id.appBarImage);
         subTitle = (TextView) findViewById(R.id.subTitle);
@@ -303,7 +310,6 @@ public class MainActivity extends AppCompatActivity
         if (openFragment) {
             getSupportFragmentManager().popBackStack("FIRST_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             openMainFragment(HomeFragment.newInstance(R.id.nav_home), R.id.nav_home);
-
         }
 
         closeDrawer();

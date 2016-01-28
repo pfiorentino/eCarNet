@@ -1,33 +1,43 @@
 package me.alpha12.ecarnet.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.adapters.NFCTagAdapter;
+import me.alpha12.ecarnet.adapters.CarAdapter;
 import me.alpha12.ecarnet.models.Car;
-import me.alpha12.ecarnet.models.NFCTag;
 
-public class CarsMgmtActivity extends MasterListActivity<NFCTag> {
+public class CarsMgmtActivity extends MasterListActivity<Car> implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutResId = R.layout.activity_cars_mgmt;
         super.onCreate(savedInstanceState);
         setDefaultTitle("Mes véhicules");
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addCarFAB);
+        fab.setOnClickListener(this);
     }
 
     @Override
     public void defineListAdapter() {
-        adapter = new NFCTagAdapter(this, itemsList);
+        adapter = new CarAdapter(this, itemsList);
     }
 
     @Override
     public void populateItemsList() {
-        itemsList.addAll(NFCTag.findAll(NFCTag.DBModel.C_MESSAGE));
+        itemsList.addAll(Car.findAll());
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.addCarFAB:
+                Intent intent = new Intent(this, AddCarActivity.class);
+                intent.putExtra(AddCarActivity.FROM_MAIN_ACTIVITY, true);
+                startActivityForResult(intent, 0);
+                break;
+        }
     }
 }
