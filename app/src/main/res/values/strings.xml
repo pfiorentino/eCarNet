@@ -39,7 +39,7 @@
     <string name="AverageOperationPrice">%1$s€</string>
     <string name="AverageOperationPriceTitle">Coût moyen</string>
     <string name="totalOperationPrice">Montant annuel</string>
-    <string name="operationTitle">Intervention</string>
+    <string name="operationTitle">Description</string>
     <string name="operationCost">Montant</string>
     <string name="operationDate">Date</string>
     <string name="name_text_view">Nom</string>
