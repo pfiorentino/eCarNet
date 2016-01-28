@@ -47,9 +47,7 @@
                     <android.widget.TableLayout
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:id="@+id/OperationList">
-                        <TableRow android:id="@id/tableRow">
 
-                        </TableRow>
                     </android.widget.TableLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
