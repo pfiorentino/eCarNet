@@ -1,16 +1,14 @@
-package me.alpha12.ecarnet.classes;
+package me.alpha12.ecarnet.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -22,10 +20,10 @@ import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.DBObject;
-import me.alpha12.ecarnet.models.NFCTag;
 
-public abstract class MasterListFragment<ItemsType extends DBObject> extends MasterFragment implements View.OnKeyListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public abstract class MasterListActivity<ItemsType extends DBObject> extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     protected Menu menu;
+
     protected ArrayAdapter<ItemsType> adapter;
     protected ArrayList<ItemsType> itemsList;
     protected ArrayList<ItemsType> selectedItemsList;
@@ -34,30 +32,31 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
     protected ImageView noItemImageView;
     protected ListView listView;
 
-    protected Integer noItemTextResId;
+    protected Integer noItemTextResId = null;
+    protected Integer layoutResId = null;
+
+    private String defaultTitle;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         itemsList = new ArrayList<>();
         selectedItemsList = new ArrayList<>();
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_master_list, container, false);
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener(this);
+        if (layoutResId == null) {
+            Log.e("eCarNet error", "You must specify layoutResId into sub-classes");
+        } else {
+            setContentView(layoutResId);
+        }
 
-        noItemTextLayout = (LinearLayout) view.findViewById(R.id.noItemTextLayout);
-        noItemImageView = (ImageView) view.findViewById(R.id.noItemImageView);
-        listView = (ListView) view.findViewById(R.id.listView);
+        noItemTextLayout = (LinearLayout) findViewById(R.id.noItemTextLayout);
+        noItemImageView = (ImageView) findViewById(R.id.noItemImageView);
+        listView = (ListView) findViewById(R.id.listView);
 
         if (noItemTextResId != null)
-            ((TextView) view.findViewById(R.id.noItemTextTitle)).setText(noItemTextResId);
+            ((TextView) findViewById(R.id.noItemTextTitle)).setText(noItemTextResId);
 
         defineListAdapter();
 
@@ -69,8 +68,6 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
 
         listView.setOnItemLongClickListener(this);
         listView.setOnItemClickListener(this);
-
-        return view;
     }
 
     @Override
@@ -96,16 +93,20 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.master_list_fragment_menu, menu);
         this.menu = menu;
+
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             case R.id.deleteMenuItem:
                 deleteAllSelectedItems();
                 return true;
@@ -116,11 +117,6 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        deselectAllItems();
-    }
-
-    @Override
-    public void onClick(View v) {
         deselectAllItems();
     }
 
@@ -142,17 +138,12 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
     }
 
     @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            if (selectedItemsList.size() > 0){
-                deselectAllItems();
-            } else {
-                parentActivity.onBackPressed();
-            }
-            return true;
+    public void onBackPressed() {
+        if (this.selectedItemsList.size() > 0){
+            deselectAllItems();
+        } else {
+            super.onBackPressed();
         }
-
-        return false;
     }
 
     public abstract void defineListAdapter();
@@ -164,11 +155,11 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
 
         if (selectedItemsList.size() > 0){
             if (selectedItemsList.size() > 1)
-                parentActivity.setTitle(selectedItemsList.size()+" éléments");
+                setTitle(selectedItemsList.size()+" éléments");
             else
-                parentActivity.setTitle(selectedItemsList.size()+" élément");
+                setTitle(selectedItemsList.size()+" élément");
         } else {
-            parentActivity.setTitle(getDefaultTitle());
+            setTitle(this.defaultTitle);
         }
     }
 
@@ -182,7 +173,7 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
     }
 
     private void deleteAllSelectedItems() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(parentActivity);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         if (selectedItemsList.size() > 1)
             alertDialogBuilder.setMessage(getString(R.string.dialog_delete_elements, selectedItemsList.size()));
         else
@@ -218,5 +209,10 @@ public abstract class MasterListFragment<ItemsType extends DBObject> extends Mas
         });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    public void setDefaultTitle(String value) {
+        this.defaultTitle = value;
+        invalidateActionBar();
     }
 }

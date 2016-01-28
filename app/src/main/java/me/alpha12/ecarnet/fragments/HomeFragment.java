@@ -23,7 +23,6 @@ import java.util.Locale;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddFillUpActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
-import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Reminder;

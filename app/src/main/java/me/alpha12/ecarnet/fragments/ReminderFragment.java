@@ -8,7 +8,6 @@ import android.widget.AdapterView;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddReminderActivity;
 import me.alpha12.ecarnet.adapters.ReminderAdapter;
-import me.alpha12.ecarnet.classes.MasterListFragment;
 import me.alpha12.ecarnet.models.Reminder;
 
 public class ReminderFragment extends MasterListFragment<Reminder> {
