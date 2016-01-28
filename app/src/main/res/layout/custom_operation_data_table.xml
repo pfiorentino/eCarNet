@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <TableRow android:id="@+id/tableRow" xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center_horizontal">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content" android:layout_width="match_parent"
+    android:orientation="vertical">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content" android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal">
         <TextView
             android:id="@+id/operationTitle"
             android:layout_width="0dp" android:layout_height="match_parent"
-            android:layout_weight="1" android:gravity="center_vertical"
-            android:layout_marginLeft="16dp" android:layout_marginRight="8dp"
+            android:layout_weight="2" android:gravity="center_vertical"
+            android:layout_marginRight="8dp"
             android:text="@string/operationTitle"/>
         <TextView
             android:id="@+id/costOperation"
-            android:layout_width="64dp"
+            android:layout_width="48dp"
             android:layout_marginRight="16dp"
             android:layout_height="match_parent"
             android:gravity="right|center"
             android:text="@string/operationCost"/>
         <TextView
             android:id="@+id/dateOperation"
-            android:layout_width="64dp"
+            android:layout_width="48dp"
+            android:layout_gravity="right"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="@string/operationDate"/>
-    </TableRow>
+        </LinearLayout>
+    <View android:layout_width="match_parent" android:id="@+id/divider" android:layout_height="1dp"
+        android:background="@color/buttonActiveState"
+        android:layout_gravity="bottom">
+    </View>
+</LinearLayout>
