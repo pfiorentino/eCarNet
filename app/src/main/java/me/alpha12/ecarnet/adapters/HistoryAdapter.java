@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.List;
 
 import me.alpha12.ecarnet.R;
@@ -39,7 +40,7 @@ public class HistoryAdapter extends ArrayAdapter<Intervention> {
         Intervention intervention = getItem(position);
 
         viewHolder.name.setText(intervention.getDescription());
-        viewHolder.date.setText(DateUtils.getRelativeDateTimeString(getContext(), intervention.getDate().getTime(), DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0));
+        viewHolder.date.setText(DateUtils.getRelativeTimeSpanString(intervention.getDate().getTime(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS));
         viewHolder.price.setText(NumberFormat.getCurrencyInstance(getContext().getResources().getConfiguration().locale).format(intervention.getPrice()));
 
         return convertView;
