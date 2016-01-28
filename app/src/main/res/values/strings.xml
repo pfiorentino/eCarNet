@@ -64,5 +64,7 @@
     <!-- Add reminder strings -->
     <string name="add_reminder">Ajouter un rappel</string>
     <string name="edit_reminder">Modifier le rappel</string>
+    
+    <string name="title_activity_history">Historique</string>
 </resources>
 

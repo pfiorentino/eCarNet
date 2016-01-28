@@ -9,6 +9,8 @@
             android:title="Interventions" />
         <item android:id="@+id/nav_memos" android:icon="@drawable/ic_notifications_black_24dp"
             android:title="Rappels" />
+        <item android:id="@+id/nav_history" android:icon="@drawable/ic_action_settings"
+            android:title="Historique" />
     </group>
 
     <item android:title="Partage" android:id="@+id/share_group_item">
