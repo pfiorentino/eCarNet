@@ -163,12 +163,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_about:
                 openActivity(AboutActivity.class);
                 break;
-            case R.id.nav_history:{
-                Intent intent = new Intent(this, HistoryActivity.class);
-                intent.putExtra(HistoryActivity.CAR_ID, currentCar.getId());
-                startActivityForResult(intent, 0);
-                break;
-            }
             default:
                 Car selectedCar = cars.get(menuItemId);
                 if (selectedCar != null){
