@@ -79,7 +79,7 @@ public class Intervention {
     public static ArrayList<Intervention> findOtherByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND " + DBModel.C_TYPE + "=" + TYPE_OTHER + " ORDER BY " + DBModel.C_DATE + " ASC",
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND " + DBModel.C_TYPE + "=" + TYPE_OTHER + " ORDER BY " + DBModel.C_DATE + " DESC",
                 null
         );
         while(cursor.moveToNext()) {
@@ -93,19 +93,6 @@ public class Intervention {
         ArrayList<Intervention> result = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
                 "SELECT * FROM " + DBModel.TABLE_NAME + " WHERE " + DBModel.C_CAR_ID + " = " + carId + " ORDER BY " + DBModel.C_DATE + " ASC LIMIT 10",
-                null
-        );
-        while(cursor.moveToNext()) {
-            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
-            result.add(new Intervention(cursor));
-        }
-        return result;
-    }
-
-    public static ArrayList<Intervention> find10OtherByCar(int carId) {
-        ArrayList<Intervention> result = new ArrayList<>();
-        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND " + DBModel.C_TYPE + "=" + TYPE_OTHER + " ORDER BY " + DBModel.C_DATE + " ASC LIMIT 10",
                 null
         );
         while(cursor.moveToNext()) {
