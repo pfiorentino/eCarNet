@@ -2,6 +2,9 @@ package me.alpha12.ecarnet.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -153,13 +158,24 @@ public abstract class MasterListActivity<ItemsType extends DBObject> extends App
         if (menu != null && menu.findItem(R.id.deleteMenuItem) != null)
             menu.findItem(R.id.deleteMenuItem).setVisible(selectedItemsList.size() > 0);
 
+        int actionBarResColor = this.getResources().getColor(R.color.colorPrimary);
+        int statusBarResColor = this.getResources().getColor(R.color.colorPrimary700);
+
         if (selectedItemsList.size() > 0){
+            actionBarResColor = this.getResources().getColor(R.color.selectionActionBarColor);
+            statusBarResColor = this.getResources().getColor(R.color.selectionStatusBarColor);
+
             if (selectedItemsList.size() > 1)
                 setTitle(selectedItemsList.size()+" éléments");
             else
                 setTitle(selectedItemsList.size()+" élément");
         } else {
             setTitle(this.defaultTitle);
+        }
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(actionBarResColor));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(statusBarResColor);
         }
     }
 
@@ -172,7 +188,7 @@ public abstract class MasterListActivity<ItemsType extends DBObject> extends App
         invalidateActionBar();
     }
 
-    private void deleteAllSelectedItems() {
+    protected void deleteAllSelectedItems() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         if (selectedItemsList.size() > 1)
             alertDialogBuilder.setMessage(getString(R.string.dialog_delete_elements, selectedItemsList.size()));
@@ -200,13 +216,11 @@ public abstract class MasterListActivity<ItemsType extends DBObject> extends App
                 selectedItemsList.clear();
                 adapter.notifyDataSetChanged();
                 invalidateActionBar();
+
+                afterDelete();
             }
         });
-        alertDialogBuilder.setNegativeButton(getString(R.string.dialog_no), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-            }
-        });
+        alertDialogBuilder.setNegativeButton(getString(R.string.dialog_no), null);
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
@@ -214,5 +228,9 @@ public abstract class MasterListActivity<ItemsType extends DBObject> extends App
     public void setDefaultTitle(String value) {
         this.defaultTitle = value;
         invalidateActionBar();
+    }
+
+    public void afterDelete() {
+
     }
 }

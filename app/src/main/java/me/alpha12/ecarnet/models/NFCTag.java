@@ -21,6 +21,7 @@ public class NFCTag extends DBObject implements Serializable {
     private String name;
     private String mimeType;
     private String message;
+    private int carId;
 
     /* Contructors */
 
@@ -30,11 +31,19 @@ public class NFCTag extends DBObject implements Serializable {
         this.message = message;
     }
 
-    public NFCTag(int id, String name, String mimeType, String message) {
+    public NFCTag(String name, String mimeType, String message, Integer carId) {
+        this.name = name;
+        this.mimeType = mimeType;
+        this.message = message;
+        this.carId = carId;
+    }
+
+    public NFCTag(int id, String name, String mimeType, String message, Integer carId) {
         this.setId(id);
         this.name = name;
         this.mimeType = mimeType;
         this.message = message;
+        this.carId = carId;
     }
 
     public NFCTag(Cursor cursor) {
@@ -42,6 +51,7 @@ public class NFCTag extends DBObject implements Serializable {
         this.name       = DatabaseManager.extractString(cursor, DBModel.C_NAME);
         this.mimeType   = DatabaseManager.extractString(cursor, DBModel.C_MIME);
         this.message    = DatabaseManager.extractString(cursor, DBModel.C_MESSAGE);
+        this.carId      = DatabaseManager.extractInt(cursor, DBModel.C_CAR_ID);
     }
 
     /* Public methods */
@@ -58,6 +68,9 @@ public class NFCTag extends DBObject implements Serializable {
         newValues.put(DBModel.C_NAME, this.name);
         newValues.put(DBModel.C_MIME, this.mimeType);
         newValues.put(DBModel.C_MESSAGE, this.message);
+
+        if (this.carId > 0)
+            newValues.put(DBModel.C_CAR_ID, this.carId);
 
 
         if (update){
@@ -82,7 +95,7 @@ public class NFCTag extends DBObject implements Serializable {
 
     @Override
     public String toString() {
-        return this.name+" - "+this.mimeType+" - "+this.message;
+        return this.name+" - "+this.mimeType+" - "+this.message+" - "+this.carId;
     }
 
     public String getName() {
@@ -95,6 +108,10 @@ public class NFCTag extends DBObject implements Serializable {
 
     public String getMimeType() {
         return mimeType;
+    }
+
+    public boolean asAssociatedCar() {
+        return this.carId > 0;
     }
 
     public String getMimeTypeDesc() {
@@ -132,13 +149,7 @@ public class NFCTag extends DBObject implements Serializable {
     }
 
     public Car getCar() {
-        try {
-            int carId = Integer.parseInt(this.message);
-            return Car.get(carId);
-        } catch (NumberFormatException e) {
-            Log.e("eCarNet", "Invalid tag message \"" + message + "\"");
-            return null;
-        }
+        return Car.get(this.carId);
     }
 
     /* Static methods */
@@ -177,6 +188,10 @@ public class NFCTag extends DBObject implements Serializable {
         return result;
     }
 
+    public static boolean deleteAllByCar(int carId) {
+        return DatabaseManager.getCurrentDatabase().delete(DBModel.TABLE_NAME, DBModel.C_CAR_ID + " = " + carId, null) > 0;
+    }
+
     /* Database Model */
 
     public static abstract class DBModel implements BaseColumns {
@@ -185,13 +200,15 @@ public class NFCTag extends DBObject implements Serializable {
         public static final String C_NAME = "name";
         public static final String C_MIME = "mime_type";
         public static final String C_MESSAGE = "message";
+        public static final String C_CAR_ID = "car_id";
 
         public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " ("
                         + C_ID + " INTEGER PRIMARY KEY,"
                         + C_NAME + " TEXT NOT NULL,"
                         + C_MIME + " TEXT NOT NULL,"
-                        + C_MESSAGE + " TEXT NOT NULL"
+                        + C_MESSAGE + " TEXT NOT NULL,"
+                        + C_CAR_ID + " INTEGER"
                         + ");";
     }
 }

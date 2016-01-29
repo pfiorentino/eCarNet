@@ -29,10 +29,13 @@
             android:title="À propos" />
     </group>
 
-    <group android:id="@+id/cars_mgmt_group">
+    <group android:id="@+id/cars_mgmt_group" android:orderInCategory="98">
+    </group>
+
+    <group android:id="@+id/cars_mgmt_group_actions" android:orderInCategory="99">
         <item android:id="@+id/nav_add_car" android:icon="@drawable/ic_add_black_24dp"
-            android:title="Ajouter une voiture" android:orderInCategory="98" />
+            android:title="Ajouter une voiture" android:orderInCategory="100" />
         <item android:id="@+id/nav_manage_car" android:icon="@drawable/ic_action_settings"
-            android:title="Gérer mes voitures" android:orderInCategory="99" />
+            android:title="Gérer mes voitures" android:orderInCategory="101" />
     </group>
 </menu>

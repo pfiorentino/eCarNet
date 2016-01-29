@@ -96,6 +96,7 @@ public class Reminder extends DBObject {
         }
     }
 
+    // Static Methods
     public static ArrayList<Reminder> findAllByCar(int carId) {
         ArrayList<Reminder> result = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
@@ -129,6 +130,11 @@ public class Reminder extends DBObject {
         return null;
     }
 
+    public static boolean deleteAllByCar(int carId) {
+        return DatabaseManager.getCurrentDatabase().delete(DBModel.TABLE_NAME, DBModel.C_CAR_ID + " = " + carId, null) > 0;
+    }
+
+    // Database Model
     public static abstract class DBModel implements BaseColumns {
         public static final String TABLE_NAME = "memos";
         public static final String C_ID = "id";
@@ -155,6 +161,7 @@ public class Reminder extends DBObject {
                         + ");";
     }
 
+    // Accessors
     public String getTitle() {
         return title;
     }

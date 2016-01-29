@@ -79,7 +79,16 @@ public class Car extends DBObject {
 
     @Override
     public boolean delete() {
-        return false;
+        Intervention.deleteAllByCar(this.getId());
+        Reminder.deleteAllByCar(this.getId());
+        NFCTag.deleteAllByCar(this.getId());
+
+        File imgFile = new File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_picture.png");
+        imgFile.delete();
+        imgFile = new File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_cover.png");
+        imgFile.delete();
+
+        return DatabaseManager.getCurrentDatabase().delete(DBModel.TABLE_NAME, DBModel.C_ID + " = " + this.getId(), null) > 0;
     }
 
     @Override

@@ -16,4 +16,7 @@
     <color name="listDividerColor">#1E000000</color>
     <color name="defaultBackgroundColor">#FAFAFA</color>
     <color name="defaultCardsBackgroundColor">#EEEEEE</color>
+
+    <color name="selectionActionBarColor">#757575</color>
+    <color name="selectionStatusBarColor">#616161</color>
 </resources>

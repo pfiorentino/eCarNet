@@ -48,7 +48,7 @@ public class TagsFragment extends MasterListFragment<NFCTag> {
 
     @Override
     public void populateItemsList() {
-        itemsList.addAll(NFCTag.findAll(NFCTag.DBModel.C_MESSAGE));
+        itemsList.addAll(NFCTag.findAll(NFCTag.DBModel.C_CAR_ID));
     }
 
     @Override
