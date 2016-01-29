@@ -4,8 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import java.util.Date;
-
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.adapters.HistoryAdapter;
 import me.alpha12.ecarnet.models.Car;

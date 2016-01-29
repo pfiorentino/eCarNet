@@ -4,10 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import me.alpha12.ecarnet.adapters.FillupAdapter;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.models.Intervention;
 
@@ -34,12 +35,11 @@ public class GasFragment extends MasterFragment {
         ArrayList<Intervention> interventions = Intervention.findFillUpByCar(currentCar.getId());
 
         if (interventions != null && interventions.size() > 0) {
-            TextView kmTotalText = (TextView) view.findViewById(R.id.kmTotalValue);
-            kmTotalText.setText(String.valueOf(interventions.get(0).getKilometers()));
-            TextView qteText = (TextView) view.findViewById(R.id.qteValue);
-            qteText.setText(String.valueOf(interventions.get(0).getQuantity()));
-            TextView priceText = (TextView) view.findViewById(R.id.priceValue);
-            priceText.setText(String.valueOf(interventions.get(0).getPrice()));
+
+            ListView listView = (ListView) view.findViewById(R.id.fillup_list_view);
+
+            FillupAdapter adapter = new FillupAdapter(getContext(), interventions);
+            listView.setAdapter(adapter);
         }
         return view;
     }
