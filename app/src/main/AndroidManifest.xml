@@ -125,19 +125,17 @@
         <activity
             android:name=".activities.AddUserActivity"
             android:label="@string/title_activity_add_user"
-            android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.alpha12.ecarnet.activities.MainActivity" />
         </activity>
         <activity
             android:name=".activities.IncompleteConfigActivity"
+            android:label="IncompleteConfigActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize">
+        </activity>
         <activity
             android:name=".activities.AddCarActivity"
             android:screenOrientation="portrait"

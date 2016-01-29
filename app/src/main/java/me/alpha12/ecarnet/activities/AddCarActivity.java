@@ -18,13 +18,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.adapters.DefaultSpinnerValueAdapter;
+import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.CarModel;
 
-public class AddCarActivity extends AppCompatActivity {
+public class AddCarActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String FROM_MAIN_ACTIVITY = "fma";
 
     private Spinner brandSpinner;
@@ -34,6 +36,7 @@ public class AddCarActivity extends AppCompatActivity {
     private Button vehicleButton;
     private Button mineButton;
     private Button cancelButton;
+    private Button skipButton;
 
     private ArrayList<String> brandList;
     private ArrayList<String> modelList = new ArrayList<>();
@@ -140,15 +143,16 @@ public class AddCarActivity extends AppCompatActivity {
         });
 
         cancelButton = (Button) findViewById(R.id.cancelButton);
-        if (getIntent().getBooleanExtra(FROM_MAIN_ACTIVITY, false))
+        skipButton = (Button) findViewById(R.id.skipButton);
+        if (getIntent().getBooleanExtra(FROM_MAIN_ACTIVITY, false)) {
+            skipButton.setVisibility(View.GONE);
             cancelButton.setVisibility(View.VISIBLE);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddCarActivity.this.setResult(GlobalContext.RESULT_CLOSE_ALL);
-                AddCarActivity.this.finish();
-            }
-        });
+            cancelButton.setOnClickListener(this);
+        } else {
+            cancelButton.setVisibility(View.GONE);
+            skipButton.setVisibility(View.VISIBLE);
+            skipButton.setOnClickListener(this);
+        }
     }
 
     private TextWatcher mTextWatcher = new TextWatcher() {
@@ -172,5 +176,26 @@ public class AddCarActivity extends AppCompatActivity {
                 finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.cancelButton:
+                AddCarActivity.this.setResult(GlobalContext.RESULT_CLOSE_ALL);
+                AddCarActivity.this.finish();
+                break;
+            case R.id.skipButton:
+                Car car = new Car(null, 0, null, null);
+                car.persist();
+
+                GlobalContext.setCurrentCar(car.getId());
+
+                Intent intent = new Intent(AddCarActivity.this, MainActivity.class);
+                AddCarActivity.this.startActivity(intent);
+                setResult(GlobalContext.RESULT_CLOSE_ALL);
+                finish();
+                break;
+        }
     }
 }

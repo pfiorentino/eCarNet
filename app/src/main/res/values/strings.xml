@@ -66,5 +66,6 @@
     <string name="edit_reminder">Modifier le rappel</string>
     <string name="chartDesciption">Description : %1$s</string>
     <string name="chartCost">Montant : %1$s</string>
+    <string name="title_activity_history">Historique</string>
 </resources>
 

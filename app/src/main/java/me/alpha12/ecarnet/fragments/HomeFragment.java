@@ -54,7 +54,7 @@ public class HomeFragment extends MasterFragment {
         super.onCreate(savedInstanceState);
         registerFloatingActionButton(R.id.addFillupFAB);
 
-        setDefaultTitle(currentCar.getCarModel().toString());
+        setDefaultTitle(currentCar.getModelString());
         setDefaultSubTitle(currentCar.getPlateNum()+" - "+currentCar.getKilometers()+" km");
     }
 

@@ -16,11 +16,10 @@ import java.util.HashMap;
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.classes.Utils;
+import me.alpha12.ecarnet.database.DBObject;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
-public class Car {
-
-    private int id;
+public class Car extends DBObject {
     private CarModel model;
     private int kilometers;
     private Date buyingDate;
@@ -41,7 +40,7 @@ public class Car {
 
 
     public Car(int id, CarModel model, int kilometers, Date buyingDate, Date circulationDate, String plateNum, double averageConsumption, User owner, ArrayList<User> sharedPeople) {
-        this.id = id;
+        this.setId(id);
         this.model = model;
         this.kilometers = kilometers;
         this.buyingDate = buyingDate;
@@ -54,7 +53,7 @@ public class Car {
 
 
     public Car(int id, CarModel model, int kilometers, Date buyingDate, Date circulationDate, String plateNum, double averageConsumption) {
-        this.id = id;
+        this.setId(id);
         this.kilometers = kilometers;
         this.buyingDate = buyingDate;
         this.circulationDate = circulationDate;
@@ -67,22 +66,33 @@ public class Car {
 
     @Override
     public String toString() {
-        return Utils.ucWords(this.model.getBrand()+" "+this.model.getModel())+" - "+this.plateNum;
+        if (this.model != null)
+            return Utils.ucWords(this.model.getBrand()+" "+this.model.getModel())+" - "+this.plateNum;
+        else
+            return "Modèle inconnu - "+this.getPlateNum();
     }
 
-    public void persist() {
-        persist(false);
+
+    public String getModelString() {
+        if (this.model != null)
+            return this.model.toString();
+        else
+            return "Modèle inconnu";
     }
 
-    public void update() {
-        persist(true);
+    @Override
+    public boolean delete() {
+        return false;
     }
 
-    public void persist(boolean update) {
+    @Override
+    public boolean persist(boolean update) {
         ContentValues newValues = new ContentValues();
 
-        if (this.id > 0)
-            newValues.put(DBModel.C_ID, this.id);
+        if (this.getId() > 0 && update)
+            newValues.put(DBModel.C_ID, this.getId());
+        else if (this.getId() > 0)
+            return false;
         else
             update = false;
 
@@ -95,17 +105,21 @@ public class Car {
             newValues.put(DBModel.C_CIRCULATION_DATE, this.circulationDate.getTime());
 
         newValues.put(DBModel.C_AVERAGE_CONSUMPTION, this.averageConsumption);
-            newValues.put(DBModel.C_PLATE_NUMBER, this.plateNum);
+        newValues.put(DBModel.C_PLATE_NUMBER, this.plateNum);
+
+        if (this.model != null)
             newValues.put(DBModel.C_MODEL_ID, this.model.getId());
 
         if (update){
-            DatabaseManager.getCurrentDatabase().update(DBModel.TABLE_NAME, newValues, DBModel.C_ID+"="+this.id, null);
+            DatabaseManager.getCurrentDatabase().update(DBModel.TABLE_NAME, newValues, DBModel.C_ID+"="+this.getId(), null);
         } else {
             long insertedId = DatabaseManager.getCurrentDatabase().insert(DBModel.TABLE_NAME, null, newValues);
 
-            if (this.id <= 0)
-                this.id = (int) insertedId;
+            if (this.getId() <= 0)
+                this.setId((int) insertedId);
         }
+
+        return true;
     }
 
     public Drawable getCarPicture(Context ctx) {
@@ -193,17 +207,16 @@ public class Car {
                 + C_CIRCULATION_DATE + " INTEGER,"
                 + C_PLATE_NUMBER + " TEXT,"
                 + C_AVERAGE_CONSUMPTION + " REAL NOT NULL,"
-                + C_MODEL_ID + " INTEGER NOT NULL"
+                + C_MODEL_ID + " INTEGER"
                 + ");";
     }
 
     /* Getters & Setters */
-    public int getId() {
-        return this.id;
-    }
-
     public String getPlateNum() {
-        return this.plateNum;
+        if (this.plateNum != null)
+            return this.plateNum;
+        else
+            return "Aucune plaque enregistrée";
     }
 
     public CarModel getCarModel() {
@@ -213,7 +226,6 @@ public class Car {
     public int getKilometers() {
         return this.kilometers;
     }
-
 
     public String getStringCirculationDate() {
         SimpleDateFormat simpleDate =  new SimpleDateFormat("dd/MM/yyyy");
