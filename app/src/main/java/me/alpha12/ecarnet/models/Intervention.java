@@ -37,6 +37,18 @@ public class Intervention {
         this.quantity       = quantity;
     }
 
+    public static int getTotalInterventionPrice(int carId, Date limit)
+    {
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT SUM("+ DBModel.C_PRICE+") FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId+ " AND "+ DBModel.C_DATE +" > " +limit.getTime(),
+                null
+        );
+        if(cursor.moveToFirst()) {
+            return cursor.getInt(0);
+        }
+        else return 0;
+    }
+
     public Intervention(Cursor cursor) {
         this.id         = DatabaseManager.extractInt(cursor, DBModel.C_ID);
         this.carId      = DatabaseManager.extractInt(cursor, DBModel.C_CAR_ID);

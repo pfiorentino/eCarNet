@@ -38,7 +38,7 @@
     <string name="operationDataNotFound">Aucune donnée</string>
     <string name="AverageOperationPrice">%1$s€</string>
     <string name="AverageOperationPriceTitle">Coût moyen</string>
-    <string name="totalOperationPrice">Montant annuel</string>
+    <string name="totalOperationPriceTitle">Montant annuel</string>
     <string name="operationTitle">Description</string>
     <string name="operationCost">Montant</string>
     <string name="operationDate">Date</string>
@@ -64,5 +64,7 @@
     <!-- Add reminder strings -->
     <string name="add_reminder">Ajouter un rappel</string>
     <string name="edit_reminder">Modifier le rappel</string>
+    <string name="chartDesciption">Description : %1$s</string>
+    <string name="chartCost">Montant : %1$s</string>
 </resources>
 
