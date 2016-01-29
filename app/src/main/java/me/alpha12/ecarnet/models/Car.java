@@ -20,13 +20,14 @@ import me.alpha12.ecarnet.database.DBObject;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
 public class Car extends DBObject {
+    public static final int OWNED_CAR = 1;
+    public static final int SHARED_CAR = 2;
+
     private CarModel model;
     private int kilometers;
     private Date buyingDate;
     private Date circulationDate;
     private double averageConsumption;
-    private User owner;
-    private ArrayList<User> sharedPeople;
     private String plateNum;
 
     /* Constructors */
@@ -38,20 +39,6 @@ public class Car extends DBObject {
         this.model = model;
     }
 
-
-    public Car(int id, CarModel model, int kilometers, Date buyingDate, Date circulationDate, String plateNum, double averageConsumption, User owner, ArrayList<User> sharedPeople) {
-        this.setId(id);
-        this.model = model;
-        this.kilometers = kilometers;
-        this.buyingDate = buyingDate;
-        this.circulationDate = circulationDate;
-        this.averageConsumption = averageConsumption;
-        this.owner = owner;
-        this.sharedPeople = sharedPeople;
-        this.plateNum = plateNum;
-    }
-
-
     public Car(int id, CarModel model, int kilometers, Date buyingDate, Date circulationDate, String plateNum, double averageConsumption) {
         this.setId(id);
         this.kilometers = kilometers;
@@ -62,6 +49,16 @@ public class Car extends DBObject {
         this.averageConsumption = averageConsumption;
     }
 
+    public Car(Cursor cursor) {
+        this.setId(DatabaseManager.extractInt(cursor, DBModel.C_ID));
+        this.model = CarModel.findById(DatabaseManager.extractInt(cursor, DBModel.C_MODEL_ID));
+        this.kilometers = DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS);
+        this.buyingDate = DatabaseManager.extractDate(cursor, DBModel.C_BUYING_DATE);
+        this.circulationDate = DatabaseManager.extractDate(cursor, DBModel.C_CIRCULATION_DATE);
+        this.plateNum = DatabaseManager.extractString(cursor, DBModel.C_PLATE_NUMBER);
+        this.averageConsumption = DatabaseManager.extractDouble(cursor, DBModel.C_AVERAGE_CONSUMPTION);
+    }
+
     /* Public methods */
 
     @Override
@@ -69,7 +66,7 @@ public class Car extends DBObject {
         if (this.model != null)
             return Utils.ucWords(this.model.getBrand()+" "+this.model.getModel())+" - "+this.plateNum;
         else
-            return "Modèle inconnu - "+this.getPlateNum();
+            return "Modèle inconnu";
     }
 
 
@@ -82,7 +79,16 @@ public class Car extends DBObject {
 
     @Override
     public boolean delete() {
-        return false;
+        Intervention.deleteAllByCar(this.getId());
+        Reminder.deleteAllByCar(this.getId());
+        NFCTag.deleteAllByCar(this.getId());
+
+        File imgFile = new File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_picture.png");
+        imgFile.delete();
+        imgFile = new File(GlobalContext.getAppPicturePath() + String.valueOf(getId()) +  "_cover.png");
+        imgFile.delete();
+
+        return DatabaseManager.getCurrentDatabase().delete(DBModel.TABLE_NAME, DBModel.C_ID + " = " + this.getId(), null) > 0;
     }
 
     @Override
@@ -146,7 +152,7 @@ public class Car extends DBObject {
 
     /* Static methods */
 
-    public static HashMap<Integer, Car> findAll() {
+    public static HashMap<Integer, Car> findAllHashMap() {
         HashMap<Integer, Car> result = new HashMap<Integer, Car>();
 
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
@@ -156,16 +162,21 @@ public class Car extends DBObject {
         while(cursor.moveToNext()) {
             result.put(
                     DatabaseManager.extractInt(cursor, DBModel.C_ID),
-                    new Car(
-                            DatabaseManager.extractInt(cursor, DBModel.C_ID),
-                            CarModel.findById(DatabaseManager.extractInt(cursor, DBModel.C_MODEL_ID)),
-                            DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
-                            DatabaseManager.extractDate(cursor, DBModel.C_BUYING_DATE),
-                            DatabaseManager.extractDate(cursor, DBModel.C_CIRCULATION_DATE),
-                            DatabaseManager.extractString(cursor, DBModel.C_PLATE_NUMBER),
-                            DatabaseManager.extractDouble(cursor, DBModel.C_AVERAGE_CONSUMPTION)
-                    )
+                    new Car(cursor)
             );
+        }
+        return result;
+    }
+
+    public static ArrayList<Car> findAll() {
+        ArrayList<Car> result = new ArrayList<>();
+
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT * FROM " + DBModel.TABLE_NAME,
+                null
+        );
+        while(cursor.moveToNext()) {
+            result.add(new Car(cursor));
         }
         return result;
     }
@@ -174,15 +185,7 @@ public class Car extends DBObject {
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBModel.TABLE_NAME + " WHERE " + DBModel.C_ID + " = " + carId, null);
 
         if (cursor.moveToNext()) {
-            return new Car(
-                    DatabaseManager.extractInt(cursor, DBModel.C_ID),
-                    CarModel.findById(DatabaseManager.extractInt(cursor, DBModel.C_MODEL_ID)),
-                    DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS),
-                    DatabaseManager.extractDate(cursor, DBModel.C_BUYING_DATE),
-                    DatabaseManager.extractDate(cursor, DBModel.C_CIRCULATION_DATE),
-                    DatabaseManager.extractString(cursor, DBModel.C_PLATE_NUMBER),
-                    DatabaseManager.extractDouble(cursor, DBModel.C_AVERAGE_CONSUMPTION)
-            );
+            return new Car(cursor);
         }
 
         return null;
@@ -237,5 +240,15 @@ public class Car extends DBObject {
             this.kilometers = kilometers;
     }
 
+    public boolean isDefined() {
+        return this.model != null;
+    }
 
+    public int getType() {
+        return OWNED_CAR;
+    }
+
+    public String getDetails() {
+        return getPlateNum()+" - "+getKilometers()+" km";
+    }
 }

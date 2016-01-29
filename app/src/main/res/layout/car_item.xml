@@ -12,18 +12,21 @@
     <LinearLayout android:id="@+id/tagLayout"
         android:orientation="horizontal" android:gravity="center_vertical"
         android:layout_width="match_parent" android:layout_height="match_parent">
-        <ImageView android:id="@+id/tagTypeIcon" android:src="@drawable/ic_nfc_tblack_24dp"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <ImageView android:id="@+id/tagTypeIcon" android:src="@drawable/ic_default_car"
+            android:layout_width="72dp" android:layout_height="72dp"
             android:padding="16dp" android:layout_margin="4dp"/>
         <LinearLayout android:orientation="vertical" android:gravity="center_vertical"
             android:layout_width="match_parent" android:layout_height="match_parent"
             android:paddingRight="4dp" android:paddingTop="4dp" android:paddingBottom="4dp">
             <TextView android:id="@+id/tagNameTextView"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="Tag sans nom" android:textAppearance="@android:style/TextAppearance.Medium"/>
-            <TextView android:id="@+id/tagTypeTextView"
+                android:text="Modèle inconnu" android:textAppearance="@android:style/TextAppearance.Medium"/>
+            <TextView android:id="@+id/tagTypeTextView" android:visibility="gone"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="Nouveau plein"/>
+                android:text="XXXXXX" android:singleLine="true" android:ellipsize="end"/>
+            <TextView android:id="@+id/tagDetailsTextView"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="XX-XXX-XX - XXXXX km" android:singleLine="true"/>
         </LinearLayout>
     </LinearLayout>
     <View android:id="@+id/bottomWhiteSpace" android:visibility="gone"

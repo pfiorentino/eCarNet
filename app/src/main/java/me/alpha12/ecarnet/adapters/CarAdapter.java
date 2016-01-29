@@ -1,7 +1,6 @@
 package me.alpha12.ecarnet.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,14 +13,15 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.models.NFCTag;
+import me.alpha12.ecarnet.classes.Utils;
+import me.alpha12.ecarnet.models.Car;
 
-public class NFCTagAdapter extends ArrayAdapter<NFCTag> implements View.OnTouchListener {
-    private final List<NFCTag> objects;
+public class CarAdapter extends ArrayAdapter<Car> implements View.OnTouchListener {
+    private final List<Car> objects;
     private LayoutInflater mLayoutInflater;
     private Context context;
 
-    public NFCTagAdapter(Context context, List<NFCTag> objects) {
+    public CarAdapter(Context context, List<Car> objects) {
         super(context, 0, objects);
         this.context = context;
         this.objects = objects;
@@ -30,14 +30,15 @@ public class NFCTagAdapter extends ArrayAdapter<NFCTag> implements View.OnTouchL
 
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        NFCTag currentTag = objects.get(position);
+        Car currentCar = objects.get(position);
 
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.nfc_tag_item, null);
+            convertView = mLayoutInflater.inflate(R.layout.car_item, null);
             holder = new ViewHolder();
             holder.tagLayout        =   (LinearLayout) convertView.findViewById(R.id.tagLayout);
             holder.tagNameTextView  =       (TextView) convertView.findViewById(R.id.tagNameTextView);
             holder.tagTypeImageView =      (ImageView) convertView.findViewById(R.id.tagTypeIcon);
+            holder.tagDetailsTextView =     (TextView) convertView.findViewById(R.id.tagDetailsTextView);
             holder.tagTypeTextView  =       (TextView) convertView.findViewById(R.id.tagTypeTextView);
             holder.sectionTextView  =       (TextView) convertView.findViewById(R.id.sectionTextView);
             holder.sectionTextView.setOnTouchListener(this);
@@ -56,11 +57,8 @@ public class NFCTagAdapter extends ArrayAdapter<NFCTag> implements View.OnTouchL
             holder.bottomWhiteSpace.setVisibility(View.GONE);
         }
 
-        if (position == 0 || !currentTag.getMessage().equals(objects.get(position-1).getMessage())) {
-            if (currentTag.asAssociatedCar())
-                holder.sectionTextView.setText(currentTag.getCar().toString());
-            else
-                holder.sectionTextView.setText("Aucun véhicule associé");
+        if (position == 0 || !(currentCar.getType() == objects.get(position-1).getType())) {
+            holder.sectionTextView.setText(currentCar.getType() == Car.OWNED_CAR ? "Mes voitures" : "Voitures partagées");
             holder.sectionTextView.setVisibility(View.VISIBLE);
             holder.sectionDivider.setVisibility(View.VISIBLE);
         } else {
@@ -68,17 +66,22 @@ public class NFCTagAdapter extends ArrayAdapter<NFCTag> implements View.OnTouchL
             holder.sectionDivider.setVisibility(View.GONE);
         }
 
-        if (currentTag.isSelected())
+        if (currentCar.isSelected()) {
             holder.tagLayout.setBackgroundResource(R.color.listDividerColor);
-        else
+            holder.tagTypeImageView.setImageResource(R.drawable.ic_check_circle_black_54pc_40dp);
+        } else {
             holder.tagLayout.setBackgroundResource(android.R.color.transparent);
+            holder.tagTypeImageView.setImageDrawable(currentCar.getCarPicture(context));
+        }
 
-        holder.tagNameTextView.setText(currentTag.getName());
-        holder.tagTypeTextView.setText(currentTag.getMimeTypeDesc());
-        if (currentTag.getMimeTypeIcon() != null)
-            holder.tagTypeImageView.setImageResource(currentTag.getMimeTypeIcon());
-        else
-            holder.tagTypeImageView.setImageResource(R.drawable.ic_nfc_tblack_24dp);
+        holder.tagNameTextView.setText(currentCar.getModelString());
+        if (currentCar.getCarModel() != null) {
+            holder.tagTypeTextView.setVisibility(View.VISIBLE);
+            holder.tagTypeTextView.setText(Utils.ucWords(currentCar.getCarModel().getDetails()));
+        } else {
+            holder.tagTypeTextView.setVisibility(View.GONE);
+        }
+        holder.tagDetailsTextView.setText(currentCar.getDetails());
 
         return convertView;
     }
@@ -89,7 +92,7 @@ public class NFCTagAdapter extends ArrayAdapter<NFCTag> implements View.OnTouchL
     }
 
     @Override
-    public NFCTag getItem(int position) {
+    public Car getItem(int position) {
         return objects.get(position);
     }
 
@@ -107,6 +110,7 @@ public class NFCTagAdapter extends ArrayAdapter<NFCTag> implements View.OnTouchL
         LinearLayout tagLayout;
         ImageView tagTypeImageView;
         TextView tagNameTextView;
+        TextView tagDetailsTextView;
         TextView tagTypeTextView;
         TextView sectionTextView;
         View sectionDivider;

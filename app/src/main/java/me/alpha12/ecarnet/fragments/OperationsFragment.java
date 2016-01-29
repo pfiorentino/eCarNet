@@ -1,16 +1,12 @@
 package me.alpha12.ecarnet.fragments;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,9 +15,6 @@ import java.util.Date;
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddInterventionActivity;
-import me.alpha12.ecarnet.adapters.OperationAdapter;
-import me.alpha12.ecarnet.classes.AdaptedListView;
-import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Intervention;
 
 public class OperationsFragment extends MasterFragment {
