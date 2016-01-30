@@ -3,32 +3,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     >
-    <TextView
-        android:id="@+id/history_item_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Medium"
-        android:layout_marginLeft="10dp"
-        tools:text="Opération" />
+    <LinearLayout android:id="@+id/interventionLayout" android:orientation="horizontal"
+        android:layout_width="match_parent" android:layout_height="64dp"     android:padding="10dp">
+        <ImageView android:id="@+id/selectedIcon" android:src="@drawable/ic_check_tblack_24dp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:paddingLeft="16dp" android:layout_gravity="center"
+            android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/history_item_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Small"
-        android:layout_alignLeft="@+id/history_item_name"
-        android:layout_below="@+id/history_item_name"
-        tools:text="Il y a 10 minutes" />
+        <LinearLayout android:orientation="vertical" android:gravity="center_vertical"
+            android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:paddingLeft="16dp">
+            <TextView
+                android:id="@+id/history_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:layout_marginLeft="10dp"
+                tools:text="Opération" />
 
-    <TextView
-        android:id="@+id/history_item_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="1300€"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textAppearance="@android:style/TextAppearance.Large"
-        android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/history_item_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:layout_alignLeft="@+id/history_item_name"
+                android:layout_below="@+id/history_item_name"
+                tools:text="Il y a 10 minutes" />
+        </LinearLayout>
+            <TextView
+                android:id="@+id/history_item_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="1300€"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:layout_centerVertical="true"/>
+    </LinearLayout>
+
 </RelativeLayout>

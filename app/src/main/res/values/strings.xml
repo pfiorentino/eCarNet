@@ -36,7 +36,7 @@
     <string name="addCover">Ajouter couverture</string>
     <string name="last_edit_memo">Dernière modification : %1$s</string>
     <string name="operationDataNotFound">Aucune donnée</string>
-    <string name="averageOperationPrice">%1$,.2f€</string>
+    <string name="averageOperationPrice">%1$,.2f €</string>
     <string name="averageOperationPriceTitle">Coût moyen</string>
     <string name="totalOperationPriceTitle">Montant annuel</string>
     <string name="operationTitle">Description</string>
@@ -79,7 +79,7 @@
     <string name="gears">rapports</string>
     <string name="unknown">Inconnu</string>
     <string name="chartDesciption">Description : %1$s</string>
-    <string name="chartCost">Montant : %1$,.2f€</string>
+    <string name="chartCost">Montant : %1$,.2f €</string>
     <string name="edit_intervention">Modifier une intervetion</string>
 
 </resources>

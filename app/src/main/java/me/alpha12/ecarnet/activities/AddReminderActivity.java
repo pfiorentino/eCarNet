@@ -1,11 +1,13 @@
 package me.alpha12.ecarnet.activities;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -88,7 +91,8 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
                 selectedDate = currentReminder.getLimitDate();
 
                 descriptionEditText.setText(currentReminder.getTitle());
-                distanceLimitEditText.setText(Integer.toString(currentReminder.getKilometers()));
+                if(currentReminder.getKilometers() == -1) distanceLimitEditText.setText("");
+                else distanceLimitEditText.setText(Integer.toString(currentReminder.getKilometers()));
                 dateLimitTextView.setText(GlobalContext.getFormattedDate(currentReminder.getLimitDate()));
 
                 notificationDateAlarm.setTimeInMillis(getBestValue(getAlarmWithDate(currentReminder.getLimitDate()), getAlarmWithDistance(currentReminder.getKilometers())));
@@ -125,8 +129,8 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
     private void checkForm() {
         boolean isFormValid =
                 !descriptionEditText.getText().toString().matches("") &&
-                !distanceLimitEditText.getText().toString().matches("") &&
-                selectedDate != null;
+                        (!distanceLimitEditText.getText().toString().matches("") ||
+                selectedDate != null);
         addButton.setEnabled(isFormValid);
     }
 
@@ -170,36 +174,63 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case R.id.confirmButton:
-                if(currentReminder == null) {
-                    currentReminder = new Reminder(
-                            -1,
-                            descriptionEditText.getText().toString(),
-                            currentDate,
-                            currentDate,
-                            selectedDate,
-                            distance,
-                            notificationCheckBox.isChecked(),
-                            false,
-                            currentCar.getId()
-                    );
-                } else {
-                    currentReminder.setTitle(descriptionEditText.getText().toString());
-                    currentReminder.setModifDate(currentDate);
-                    currentReminder.setLimitDate(selectedDate);
-                    currentReminder.setKilometers(distance);
-                    currentReminder.setNotifSet(notificationCheckBox.isChecked());
-                    currentReminder.setArchived(false);
+                if(selectedDate.before(currentDate)){
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddReminderActivity.this);
+                    alertDialogBuilder.setMessage("Vous ne pouvez pas saisir une date dans le passé");
+                    alertDialogBuilder.setPositiveButton("fermer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                        }
+                    });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
                 }
-
-                currentReminder.persist(true);
-
-                if (notificationCheckBox.isChecked()){
-                    scheduleNotification(getNotification("Rappel sur intervention : " + descriptionEditText.getText().toString()), currentReminder.getId());
-                } else {
-                    cancelNotification(currentReminder.getId());
+                else if(distance != -1 && distance < currentCar.getKilometers()){
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddReminderActivity.this);
+                    alertDialogBuilder.setMessage("Le véhicule courant a déjà dépassé la limite kilométrique choisie");
+                    alertDialogBuilder.setPositiveButton("fermer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                        }
+                    });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
                 }
+                else {
+                    if (currentReminder == null) {
+                        currentReminder = new Reminder(
+                                -1,
+                                descriptionEditText.getText().toString(),
+                                currentDate,
+                                currentDate,
+                                selectedDate,
+                                distance,
+                                notificationCheckBox.isChecked(),
+                                false,
+                                currentCar.getId()
+                        );
+                    } else {
+                        currentReminder.setTitle(descriptionEditText.getText().toString());
+                        currentReminder.setModifDate(currentDate);
+                        currentReminder.setLimitDate(selectedDate);
+                        currentReminder.setKilometers(distance);
+                        currentReminder.setNotifSet(notificationCheckBox.isChecked());
+                        currentReminder.setArchived(false);
+                    }
 
-                finish();
+                    currentReminder.persist(true);
+
+                    if (notificationCheckBox.isChecked()) {
+                        scheduleNotification(getNotification("Rappel sur intervention : " + descriptionEditText.getText().toString()), currentReminder.getId());
+                    } else {
+                        cancelNotification(currentReminder.getId());
+                    }
+                    finish();
+                }
                 break;
         }
     }
@@ -235,6 +266,9 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
 
             // Create a new instance of DatePickerDialog and return it
             DatePickerDialog dialog = new DatePickerDialog(getActivity(), (AddReminderActivity) getActivity(), year, month, day);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                dialog.getDatePicker().setMinDate(new Date().getTime());
+            }
             return dialog;
         }
 

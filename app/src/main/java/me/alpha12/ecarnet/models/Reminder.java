@@ -213,6 +213,10 @@ public class Reminder extends DBObject {
     public boolean isNotifSet(){ return notifSet;}
 
     public String getLimitText() {
+        if(this.kilometers == -1)
+            return GlobalContext.getFormattedMediumDate(this.limitDate.getTime());
+        if(this.limitDate == null)
+            return this.kilometers + " km";
         return this.kilometers + " km ou " + GlobalContext.getFormattedMediumDate(this.limitDate.getTime());
     }
 
