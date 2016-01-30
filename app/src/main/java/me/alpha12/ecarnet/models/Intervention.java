@@ -8,13 +8,13 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 
+import me.alpha12.ecarnet.database.DBObject;
 import me.alpha12.ecarnet.database.DatabaseManager;
 
-public class Intervention {
+public class Intervention extends DBObject{
     public static final int TYPE_FILLUP = 1;
     public static final int TYPE_OTHER = 0;
 
-    private int id;
     private int carId;
     private int type;
     private String description;
@@ -27,7 +27,7 @@ public class Intervention {
     /* Constructors */
     public Intervention(int id, int carId, int type, String description, int kilometers, Date date, double price, double quantity) {
         if (id > 0)
-            this.id         = id;
+            this.setId(id);
         this.carId          = carId;
         this.type           = type;
         this.description    = description;
@@ -47,6 +47,18 @@ public class Intervention {
             return cursor.getDouble(0);
         }
         else return 0;
+    }
+
+    public static  Intervention get(int id)
+    {
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_ID+" = " + id+ " AND "+ DBModel.C_TYPE + " = " + TYPE_OTHER,
+                null
+        );
+        if(cursor.moveToFirst()) {
+            return new Intervention(cursor);
+        }
+        else return null;
     }
 
 
@@ -79,7 +91,7 @@ public class Intervention {
     }
 
     public Intervention(Cursor cursor) {
-        this.id         = DatabaseManager.extractInt(cursor, DBModel.C_ID);
+        this.setId(DatabaseManager.extractInt(cursor, DBModel.C_ID));
         this.carId      = DatabaseManager.extractInt(cursor, DBModel.C_CAR_ID);
         this.type       = DatabaseManager.extractInt(cursor, DBModel.C_TYPE);
         this.description = DatabaseManager.extractString(cursor, DBModel.C_DESCRIPTION);
@@ -162,11 +174,16 @@ public class Intervention {
     }
 
 
-    public void persist() {
+    @Override
+    public boolean persist(boolean update) {
         ContentValues newValues = new ContentValues();
 
-        if (this.id > 0)
-            newValues.put(DBModel.C_ID, this.id);
+        if (this.getId() > 0 && update)
+            newValues.put(DBModel.C_ID, this.getId());
+        else if (this.getId() > 0)
+            return false;
+        else
+            update = false;
 
         newValues.put(DBModel.C_CAR_ID, this.carId);
         newValues.put(DBModel.C_TYPE, this.type);
@@ -179,10 +196,25 @@ public class Intervention {
         newValues.put(DBModel.C_PRICE, this.price);
         newValues.put(DBModel.C_QUANTITY, this.quantity);
 
-        long insertedId = DatabaseManager.getCurrentDatabase().insert(DBModel.TABLE_NAME, null, newValues);
+        if (update){
+            DatabaseManager.getCurrentDatabase().update(DBModel.TABLE_NAME, newValues, DBModel.C_ID+"="+this.getId(), null);
+        } else {
+            long insertedId = DatabaseManager.getCurrentDatabase().insert(DBModel.TABLE_NAME, null, newValues);
 
-        if (this.id <= 0)
-            this.id = (int) insertedId;
+            if (this.getId() <= 0)
+                this.setId((int) insertedId);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean delete() {
+        if (this.getId() > 0) {
+            return DatabaseManager.getCurrentDatabase().delete(DBModel.TABLE_NAME, DBModel.C_ID + " = " + this.getId(), null) > 0;
+        } else {
+            return false;
+        }
     }
 
     /* Database Model */
@@ -212,10 +244,6 @@ public class Intervention {
 
 
     /* Getters & Setters */
-    public int getId() {
-        return id;
-    }
-
     public int getKilometers() {
         return this.kilometers;
     }
@@ -234,5 +262,30 @@ public class Intervention {
 
     public String getDescription() {
         return description;
+    }
+
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setKilometers(int kilometers) {
+        this.kilometers = kilometers;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getCarId() {
+        return carId;
     }
 }

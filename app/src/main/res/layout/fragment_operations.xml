@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="me.alpha12.ecarnet.fragments.OperationsFragment">
 
     <ScrollView
@@ -96,6 +95,7 @@
             </android.support.v7.widget.CardView>
 
             <LinearLayout
+                android:id="@+id/summaryPrices"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/cards_half_margin"
@@ -153,12 +153,37 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 />
         </LinearLayout>
+
     </ScrollView>
+    <LinearLayout android:id="@+id/noItemTextLayout" android:orientation="vertical"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_centerInParent="true" android:gravity="center"
+        android:paddingBottom="88dp">
+        <TextView android:id="@+id/noItemTextTitle"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textAlignment="center" android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="@color/hintTextColor"
+            android:text="@string/no_item_found"/>
+        <TextView android:id="@+id/noItemTextDesc"
+            android:visibility="gone"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:textAlignment="center"
+            android:textColor="@color/hintTextColor"
+            android:text="@string/no_item_found_new_item"/>
+    </LinearLayout>g
+    <ImageView android:id="@+id/noItemImageView"
+        android:visibility="gone"
+        android:src="@drawable/ic_bottom_right_arrow_black_36pc_128dp"
+        android:layout_width="128dp" android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom" android:layout_alignParentRight="true"
+        android:layout_marginRight="88dp" android:layout_marginBottom="56dp" android:adjustViewBounds="true" />
 
 </FrameLayout>

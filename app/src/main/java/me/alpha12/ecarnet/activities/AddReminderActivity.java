@@ -75,6 +75,8 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
             addButton = (Button) findViewById(R.id.confirmButton);
 
             selectedDate = Calendar.getInstance();
+            currentCar = Car.get(getIntent().getExtras().getInt("carId"));
+
 
             if (intent.getExtras().containsKey("memoId")) {
                 getSupportActionBar().setTitle(getString(R.string.edit_reminder));
@@ -98,7 +100,6 @@ public class AddReminderActivity extends AppCompatActivity implements View.OnCli
                 getSupportActionBar().setTitle(getString(R.string.add_reminder));
                 modificationDateTextView.setVisibility(View.GONE);
 
-                currentCar = Car.get(getIntent().getExtras().getInt("carId"));
             }
 
             dateLimitTextView.setOnClickListener(new View.OnClickListener() {

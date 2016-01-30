@@ -3,10 +3,12 @@ package me.alpha12.ecarnet.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -134,6 +136,21 @@ public class OperationsFragment extends MasterFragment {
             });
 
             }
+        else
+        {
+            CardView chartCard = (CardView) view.findViewById(R.id.chartCard);
+            chartCard.setVisibility(View.GONE);
+            CardView gridCard = (CardView) view.findViewById(R.id.gridCard);
+            gridCard.setVisibility(View.GONE);
+            LinearLayout summaryPrices = (LinearLayout) view.findViewById(R.id.summaryPrices);
+            summaryPrices.setVisibility(View.GONE);
+            TextView noItemTextTitle = (TextView) view.findViewById(R.id.noItemTextTitle);
+            noItemTextTitle.setVisibility(View.VISIBLE);
+            TextView noItemTextDesc = (TextView) view.findViewById(R.id.noItemTextDesc);
+            noItemTextDesc.setVisibility(View.VISIBLE);
+            ImageView noItemImageView = (ImageView) view.findViewById(R.id.noItemImageView);
+            noItemImageView.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 

@@ -42,7 +42,7 @@
         <activity android:name=".activities.HistoryActivity"
             android:label="eCarnet"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar" />
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".activities.AddFillUpActivity"

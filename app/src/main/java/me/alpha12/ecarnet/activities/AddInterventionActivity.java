@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,15 +19,18 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
+import me.alpha12.ecarnet.models.Reminder;
 
 public class AddInterventionActivity extends AppCompatActivity implements OnClickListener, OnDateSetListener {
     private Calendar selectedDate;
     private Car currentCar;
+    private Intervention currentIntervention;
 
     private Button confirmButton;
     private Button cancelButton;
@@ -41,23 +45,41 @@ public class AddInterventionActivity extends AppCompatActivity implements OnClic
         setContentView(R.layout.activity_add_intervention);
 
         int carId = getIntent().getExtras().getInt("carId");
-        currentCar = Car.get(carId);
 
+        currentCar = Car.get(carId);
+        confirmButton   = (Button) findViewById(R.id.confirmButton);
+        cancelButton    = (Button) findViewById(R.id.cancelButton);
+        descEditText    = (EditText) findViewById(R.id.descEditText);
+        kmEditText      = (EditText) findViewById(R.id.kmEditText);
+        priceEditText   = (EditText) findViewById(R.id.priceEditText);
+        dateTextView    = (TextView) findViewById(R.id.dateTextView);
         selectedDate = Calendar.getInstance();
 
-        confirmButton   = (Button) findViewById(R.id.confirmButton);
+
+
+        if (getIntent().getExtras().containsKey("interventionId")) {
+            //getSupportActionBar().setTitle(getString(R.string.edit_intervention));
+
+            currentIntervention = Intervention.get(getIntent().getExtras().getInt("interventionId"));
+            Log.d("current", currentIntervention.getDate().toString());
+            currentCar = Car.get(currentIntervention.getCarId());
+
+            selectedDate.setTime(currentIntervention.getDate());
+
+            descEditText.setText(currentIntervention.getDescription());
+            kmEditText.setText(Integer.toString(currentIntervention.getKilometers()));
+            priceEditText.setText(String.format(Locale.US, "%1$.2f", (float) currentIntervention.getPrice()));
+            confirmButton.setEnabled(true);
+        }
+
+
         confirmButton.setOnClickListener(this);
-        cancelButton      = (Button) findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(this);
 
-        descEditText    = (EditText) findViewById(R.id.descEditText);
         descEditText.addTextChangedListener(mTextWatcher);
-        kmEditText      = (EditText) findViewById(R.id.kmEditText);
         kmEditText.addTextChangedListener(mTextWatcher);
-        priceEditText   = (EditText) findViewById(R.id.priceEditText);
         priceEditText.addTextChangedListener(mTextWatcher);
 
-        dateTextView    = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(GlobalContext.getFormattedDate(selectedDate));
         dateTextView.setOnClickListener(this);
     }
@@ -90,7 +112,8 @@ public class AddInterventionActivity extends AppCompatActivity implements OnClic
             case R.id.confirmButton:
                 int kilometers = Integer.parseInt(kmEditText.getText().toString());
 
-                Intervention newIntervention =  new Intervention(
+                if(currentIntervention == null)
+                currentIntervention =  new Intervention(
                         0,
                         currentCar.getId(),
                         Intervention.TYPE_OTHER,
@@ -100,7 +123,13 @@ public class AddInterventionActivity extends AppCompatActivity implements OnClic
                         (double) Float.parseFloat(priceEditText.getText().toString()),
                         -1
                     );
-                newIntervention.persist();
+                else {
+                    currentIntervention.setDescription(descEditText.getText().toString());
+                    currentIntervention.setPrice(Double.valueOf(priceEditText.getText().toString()));
+                    currentIntervention.setDate(selectedDate.getTime());
+                    currentIntervention.setKilometers(Integer.valueOf(kmEditText.getText().toString()));
+                }
+                currentIntervention.persist(true);
 
                 currentCar.setKilometers(kilometers);
                 currentCar.update();

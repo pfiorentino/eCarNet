@@ -80,6 +80,7 @@
     <string name="unknown">Inconnu</string>
     <string name="chartDesciption">Description : %1$s</string>
     <string name="chartCost">Montant : %1$,.2f€</string>
+    <string name="edit_intervention">Modifier une intervetion</string>
 
 </resources>
 
