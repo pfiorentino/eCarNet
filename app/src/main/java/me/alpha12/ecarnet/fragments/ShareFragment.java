@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.activities.MainActivity;
-import me.alpha12.ecarnet.classes.MasterFragment;
 
 public class ShareFragment extends MasterFragment {
 

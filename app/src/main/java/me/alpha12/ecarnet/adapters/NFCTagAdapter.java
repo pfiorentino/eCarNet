@@ -1,6 +1,7 @@
 package me.alpha12.ecarnet.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,7 +57,10 @@ public class NFCTagAdapter extends ArrayAdapter<NFCTag> implements View.OnTouchL
         }
 
         if (position == 0 || !currentTag.getMessage().equals(objects.get(position-1).getMessage())) {
-            holder.sectionTextView.setText(currentTag.getCar().toString());
+            if (currentTag.asAssociatedCar())
+                holder.sectionTextView.setText(currentTag.getCar().toString());
+            else
+                holder.sectionTextView.setText("Aucun véhicule associé");
             holder.sectionTextView.setVisibility(View.VISIBLE);
             holder.sectionDivider.setVisibility(View.VISIBLE);
         } else {

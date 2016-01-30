@@ -157,6 +157,10 @@ public class Intervention {
         return result;
     }
 
+    public static boolean deleteAllByCar(int carId) {
+        return DatabaseManager.getCurrentDatabase().delete(DBModel.TABLE_NAME, DBModel.C_CAR_ID + " = " + carId, null) > 0;
+    }
+
 
     public void persist() {
         ContentValues newValues = new ContentValues();

@@ -9,8 +9,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import me.alpha12.ecarnet.R;
-import me.alpha12.ecarnet.activities.MainActivity;
-import me.alpha12.ecarnet.classes.MasterFragment;
 import me.alpha12.ecarnet.models.Intervention;
 
 public class GasFragment extends MasterFragment {
