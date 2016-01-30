@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -30,7 +31,9 @@ import java.util.logging.LogRecord;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.activities.AddFillUpActivity;
 import me.alpha12.ecarnet.activities.AddInterventionActivity;
+import me.alpha12.ecarnet.activities.HistoryActivity;
 import me.alpha12.ecarnet.adapters.OperationAdapter;
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.classes.AdaptedListView;
@@ -132,6 +135,16 @@ public class OperationsFragment extends MasterFragment {
                 });
                     myIntervention.addView(child);
                 }
+
+            Button allInterventionButton = (Button) view.findViewById(R.id.allInterventionButton);
+            allInterventionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), HistoryActivity.class);
+                    intent.putExtra("carid", currentCar.getId());
+                    startActivity(intent);
+                }
+            });
 
             }
         return view;

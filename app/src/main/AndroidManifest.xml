@@ -39,6 +39,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar" />
 
+        <activity android:name=".activities.HistoryActivity"
+            android:label="eCarnet"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar" />
+
         <activity
             android:name=".activities.AddFillUpActivity"
             android:label="@string/title_activity_fill_up"

@@ -86,7 +86,12 @@
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:id="@+id/OperationList">
                     </android.widget.TableLayout>
-
+                    <Button android:id="@+id/allInterventionButton" android:minHeight="0dp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:padding="8dp" android:layout_marginRight="8dp"
+                        android:textColor="@color/colorPrimary300"
+                        android:text="Toutes les interventions"
+                        android:background="@drawable/transparent_button" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
