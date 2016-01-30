@@ -23,7 +23,7 @@ public class Utils {
 
         for (int i = 0; i < array.length; i++) {
             if (!Arrays.asList(ROMAN_DIGITS).contains(array[i])){
-                if (array[i].length() <= 3){
+                if (array[i].length() < 3){
                     array[i] = array[i].toUpperCase();
                 } else {
                     array[i] = ucFirst(array[i]);

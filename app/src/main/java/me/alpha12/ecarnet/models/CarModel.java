@@ -336,6 +336,10 @@ public class CarModel implements Parcelable {
         return gears;
     }
 
+    public String getMineType() {
+        return minesType;
+    }
+
     public String getDetails() {
         return version+" - "+body+" - "+energy+" - "+gearboxType;
     }

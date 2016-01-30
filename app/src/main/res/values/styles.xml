@@ -1,8 +1,5 @@
 <resources>
-
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary700</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -13,8 +10,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.TransparentStatusBar" parent="AppTheme.NoActionBar">
-    </style>
+    <style name="AppTheme.NoActionBar.TransparentStatusBar" parent="AppTheme.NoActionBar"></style>
 
     <style name="AppTheme.SplashTheme" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">#212121</item>
@@ -26,7 +22,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.DialogTheme" >
+    <style name="AppTheme.DialogTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowIsFloating">false</item>

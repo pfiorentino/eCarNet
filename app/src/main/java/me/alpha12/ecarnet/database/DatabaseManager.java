@@ -177,14 +177,25 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return cur.getString(cur.getColumnIndex(columnName));
     }
 
-    public static Date extractDate(Cursor cur, String ColumnName) {
-        return new Date(cur.getLong(cur.getColumnIndex(ColumnName)));
+    public static Date extractDate(Cursor cur, String columnName) {
+        long timestamp = cur.getLong(cur.getColumnIndex(columnName));
+
+        if (timestamp > 0) {
+            return new Date(timestamp);
+        } else {
+            return null;
+        }
     }
 
-    public static Calendar extractCalendar(Cursor cur, String ColumName) {
-        Calendar cr = Calendar.getInstance();
-        cr.setTime(new Date(cur.getLong((cur.getColumnIndex(ColumName)))));
-        return cr;
+    public static Calendar extractCalendar(Cursor cur, String columName) {
+        Calendar cal = Calendar.getInstance();
+        Date date = extractDate(cur, columName);
+        if (date != null) {
+            cal.setTime(date);
+            return cal;
+        } else {
+            return null;
+        }
     }
 }
 

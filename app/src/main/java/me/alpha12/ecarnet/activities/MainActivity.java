@@ -20,10 +20,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,11 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
@@ -263,7 +257,7 @@ public class MainActivity extends AppCompatActivity
         drawerTitle.setText(currentCar.getModelString());
 
         TextView drawerDesc = (TextView) headerView.findViewById(R.id.car_desc);
-        drawerDesc.setText(currentCar.getPlateNum());
+        drawerDesc.setText(currentCar.getStringPlateNum());
         brandImageView.setImageDrawable(currentCar.getCarPicture(getBaseContext()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             header.setBackground(currentCar.getCarBanner(getBaseContext()));

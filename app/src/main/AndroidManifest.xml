@@ -122,13 +122,13 @@
             android:label="@string/title_activity_add_user"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.IncompleteConfigActivity"
             android:label="IncompleteConfigActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.AddCarActivity"
             android:screenOrientation="portrait"
@@ -154,6 +154,16 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.alpha12.ecarnet.activities.SearchCarActivity" />
+        </activity>
+        <activity
+            android:name=".activities.CarProfileActivity"
+            android:label="@string/title_activity_car_profile"
+            android:parentActivityName=".activities.CarsMgmtActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.alpha12.ecarnet.activities.CarsMgmtActivity" />
         </activity>
     </application>
 

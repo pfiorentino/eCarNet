@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -22,6 +23,7 @@ import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddFillUpActivity;
+import me.alpha12.ecarnet.activities.CarProfileActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
@@ -55,13 +57,24 @@ public class HomeFragment extends MasterFragment {
 
         setDefaultTitle(currentCar.getModelString());
         if (currentCar.isDefined())
-            setDefaultSubTitle(currentCar.getPlateNum()+" - "+currentCar.getKilometers()+" km");
+            setDefaultSubTitle(currentCar.getStringPlateNum()+" - "+currentCar.getKilometers()+" km");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        Button test = (Button) view.findViewById(R.id.testButton);
+        test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), CarProfileActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
+            }
+        });
+
 
         contentCar = (TextView) view.findViewById(R.id.contentCar);
 
@@ -70,7 +83,7 @@ public class HomeFragment extends MasterFragment {
         limitMemo = (TextView) view.findViewById(R.id.reminderDateTextView);
 
 
-        contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getPlateNum(), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
+        contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getStringPlateNum(), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
 
         lastMemo = Reminder.getLastByCar(currentCar.getId());
 

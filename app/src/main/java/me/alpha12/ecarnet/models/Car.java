@@ -215,11 +215,17 @@ public class Car extends DBObject {
     }
 
     /* Getters & Setters */
-    public String getPlateNum() {
+
+    @Deprecated
+    public String getStringPlateNum() {
         if (this.plateNum != null)
             return this.plateNum;
         else
             return "Aucune plaque enregistrée";
+    }
+
+    public String getPlateNum() {
+        return plateNum;
     }
 
     public CarModel getCarModel() {
@@ -230,9 +236,22 @@ public class Car extends DBObject {
         return this.kilometers;
     }
 
+    public Date getCirculationDate() {
+        return circulationDate;
+    }
+
+    @Deprecated
     public String getStringCirculationDate() {
-        SimpleDateFormat simpleDate =  new SimpleDateFormat("dd/MM/yyyy");
-        return simpleDate.format(circulationDate);
+        if (circulationDate != null) {
+            SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy");
+            return simpleDate.format(circulationDate);
+        } else {
+            return GlobalContext.getInstance().getString(R.string.not_specified);
+        }
+    }
+
+    public Date getBuyingDate() {
+        return buyingDate;
     }
 
     public void setKilometers(int kilometers) {
@@ -249,6 +268,6 @@ public class Car extends DBObject {
     }
 
     public String getDetails() {
-        return getPlateNum()+" - "+getKilometers()+" km";
+        return getStringPlateNum()+" - "+getKilometers()+" km";
     }
 }

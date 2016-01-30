@@ -12,18 +12,30 @@
             android:layout_marginTop="@dimen/cards_margin" android:layout_marginBottom="@dimen/cards_half_margin"
             android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin" >
             <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:layout_width="match_parent" android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_margin="16dp"
                     android:textAppearance="@android:style/TextAppearance.Large"
                     android:text="Votre véhicule"/>
 
                 <TextView android:id="@+id/contentCar"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:text="@string/cars_identity" />
+
+                <LinearLayout android:orientation="horizontal"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_margin="8dp">
+                    <Button android:id="@+id/testButton" android:minHeight="0dp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:textColor="@color/colorPrimary300"
+                        android:text="Voir la fiche du véhicule"
+                        android:background="@drawable/transparent_button" />
+                </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
