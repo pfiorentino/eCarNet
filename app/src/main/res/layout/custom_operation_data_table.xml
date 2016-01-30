@@ -13,13 +13,13 @@
         <TextView
             android:id="@+id/operationTitle"
             android:layout_width="0dp" android:layout_height="match_parent"
-            android:layout_weight="2" android:gravity="center_vertical"
+            android:layout_weight="1" android:gravity="center_vertical"
             android:layout_marginRight="8dp"
             android:text="@string/operationTitle"/>
         <TextView
             android:id="@+id/costOperation"
-            android:layout_width="48dp"
-            android:layout_marginRight="16dp"
+            android:layout_width="64dp"
+            android:layout_marginRight="24dp"
             android:layout_height="match_parent"
             android:gravity="right|center"
             android:text="@string/operationCost"/>

@@ -36,9 +36,9 @@
     <string name="addCover">Ajouter couverture</string>
     <string name="last_edit_memo">Dernière modification : %1$s</string>
     <string name="operationDataNotFound">Aucune donnée</string>
-    <string name="AverageOperationPrice">%1$s€</string>
-    <string name="AverageOperationPriceTitle">Coût moyen</string>
-    <string name="totalOperationPrice">Montant annuel</string>
+    <string name="averageOperationPrice">%1$,.2f€</string>
+    <string name="averageOperationPriceTitle">Coût moyen</string>
+    <string name="totalOperationPriceTitle">Montant annuel</string>
     <string name="operationTitle">Description</string>
     <string name="operationCost">Montant</string>
     <string name="operationDate">Date</string>
@@ -78,6 +78,8 @@
     <string name="not_specified_f">Non renseignée</string>
     <string name="gears">rapports</string>
     <string name="unknown">Inconnu</string>
+    <string name="chartDesciption">Description : %1$s</string>
+    <string name="chartCost">Montant : %1$,.2f€</string>
 
 </resources>
 
