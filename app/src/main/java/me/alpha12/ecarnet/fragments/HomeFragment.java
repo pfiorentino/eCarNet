@@ -36,11 +36,8 @@ public class HomeFragment extends MasterFragment {
     private ArrayList<Intervention> allMyInterventions = new ArrayList<>();
     private ArrayList<Intervention> myFillsUp = new ArrayList<>();
 
-    private TextView contentCar;
-
     private TextView titleMemo;
     private TextView limitMemo;
-    private TextView dateMemo;
 
     public static HomeFragment newInstance(int fragmentId) {
         HomeFragment fragment = new HomeFragment();
@@ -65,34 +62,14 @@ public class HomeFragment extends MasterFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        Button test = (Button) view.findViewById(R.id.testButton);
-        test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), CarProfileActivity.class);
-                intent.putExtra("carId", currentCar.getId());
-                startActivity(intent);
-            }
-        });
-
-
-        contentCar = (TextView) view.findViewById(R.id.contentCar);
-
         titleMemo = (TextView) view.findViewById(R.id.reminderTitleTextView);
-        dateMemo = (TextView) view.findViewById(R.id.dateMemo);
         limitMemo = (TextView) view.findViewById(R.id.reminderDateTextView);
-
-
-        contentCar.setText(String.format(getResources().getString(R.string.cars_identity), currentCar.getStringPlateNum(), currentCar.getStringCirculationDate(), currentCar.getKilometers()));
 
         lastMemo = Reminder.getLastByCar(currentCar.getId());
 
         TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
         LineChart kilometersLine = (LineChart) view.findViewById(R.id.kilometersChart);
         TextView kilometersText = (TextView) view.findViewById(R.id.kilometersData);
-
-        LineChart costLine = (LineChart) view.findViewById(R.id.costChart);
-        TextView costText = (TextView) view.findViewById(R.id.costData);
 
         Calendar c = Calendar.getInstance();
         Date limit = c.getTime();
@@ -122,19 +99,14 @@ public class HomeFragment extends MasterFragment {
             kilometersText.setText(Integer.toString(sum) + " km effectués");
             kilometersText.setTextSize(16);
 
-            LineChartCustom costLineCustom = new LineChartCustom(costLine, fillUpChart, "", getLineChartLabels(myFillsUp, 0), null);
-
             float floatSum = 0f;
             for(int i = 0; i<fillUpChart.size(); i++)
             {
                 floatSum+= fillUpChart.get(i).getVal();
             }
-            costText.setText(String.format("%.2f€", floatSum)+ " dépensés");
-            costText.setTextSize(16);
             animateTextView(0.0f, getConsumption(), consumption);
         } else {
-            view.findViewById(R.id.costCard).setVisibility(View.GONE);
-            view.findViewById(R.id.topCharts).setVisibility(View.GONE);
+            //view.findViewById(R.id.topCharts).setVisibility(View.GONE);
         }
 
         return view;
@@ -214,7 +186,6 @@ public class HomeFragment extends MasterFragment {
         } else {
             titleMemo.setText(lastMemo.getTitle());
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM", Locale.FRENCH);
-            dateMemo.setText(sdf.format(lastMemo.getDateNote().getTime()));
             limitMemo.setText(lastMemo.getKilometers() + " km ou " + sdf.format(lastMemo.getLimitDate().getTime()));
         }
     }

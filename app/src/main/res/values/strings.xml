@@ -28,7 +28,6 @@
     <string name="title_activity_car_search">CarSearchActivity</string>
     <string name="site_url">www.ecarnet.fr</string>
 
-    <string name="cars_identity">Immatriculation : %1$s\nPremière mise en circulation : %2$s\nCompteur total : %3$d km</string>
     <string name="title_activity_about">À propos</string>
     <string name="keep_in_touch_text">Suivez-nous sur les réseaux sociaux pour obtenir de l\'aide, disposer des dernières informations, nous aider à améliorer eCarNet et construire une grande communauté d\'utilisateurs</string>
     <string name="title_activity_add_operation">Ajouter une intervention</string>
