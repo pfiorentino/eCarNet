@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.alpha12.ecarnet.R;
@@ -19,6 +20,7 @@ public class CarProfileActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private CollapsingToolbarLayout toolbarLayout;
     private TextView subtitleTextView;
+    private ImageView toolbarBackgroundImage;
 
     private Car currentCar;
 
@@ -43,6 +45,7 @@ public class CarProfileActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         subtitleTextView = (TextView) findViewById(R.id.subtitle);
+        toolbarBackgroundImage = (ImageView) findViewById(R.id.toolbarBackgroundImage);
 
         if (currentCar == null){
             Log.e("eCarNet error", "Car not found");
@@ -51,6 +54,7 @@ public class CarProfileActivity extends AppCompatActivity {
             toolbar.setTitle(currentCar.getModelString());
             if (currentCar.isDefined())
                 subtitleTextView.setText(currentCar.getDetails());
+            toolbarBackgroundImage.setImageDrawable(currentCar.getCarBanner(this));
         }
 
     }
