@@ -24,6 +24,7 @@ public class GasFragment extends MasterFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDefaultTitle(getString(R.string.title_fragment_gas));
+        registerFloatingActionButton(R.id.addFillupFAB);
     }
 
     @Override
@@ -32,6 +33,7 @@ public class GasFragment extends MasterFragment {
 
         View view = inflater.inflate(R.layout.fragment_gas, container, false);
 
+
         ArrayList<Intervention> interventions = Intervention.findFillUpByCar(currentCar.getId());
 
         if (interventions != null && interventions.size() > 0) {
@@ -39,8 +41,10 @@ public class GasFragment extends MasterFragment {
             ListView listView = (ListView) view.findViewById(R.id.fillup_list_view);
 
             FillupAdapter adapter = new FillupAdapter(getContext(), interventions);
+
             listView.setAdapter(adapter);
         }
+
         return view;
     }
 }
