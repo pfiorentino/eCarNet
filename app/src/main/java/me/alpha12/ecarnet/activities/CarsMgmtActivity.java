@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.adapters.CarAdapter;
@@ -32,6 +33,15 @@ public class CarsMgmtActivity extends MasterListActivity<Car> implements View.On
     @Override
     public void populateItemsList() {
         itemsList.addAll(Car.findAll());
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        super.onItemClick(parent, view, position, id);
+
+        Intent intent = new Intent(this, CarProfileActivity.class);
+        intent.putExtra("carId", itemsList.get(position).getId());
+        startActivity(intent);
     }
 
     @Override

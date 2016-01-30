@@ -56,9 +56,22 @@ public class GlobalContext extends Application {
                 DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH);
     }
 
+    public static String getFormattedMediumDate(long millis, boolean longMonth) {
+        if (longMonth) {
+            return DateUtils.formatDateTime(getInstance(), millis,
+                    DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR);
+        } else {
+            return DateUtils.formatDateTime(getInstance(), millis,
+                    DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_MONTH);
+        }
+    }
+
+    public static String getFormattedMediumDate(Date date, boolean longMonth) {
+        return getFormattedMediumDate(date.getTime(), longMonth);
+    }
+
     public static String getFormattedMediumDate(Date date) {
-        return DateUtils.formatDateTime(getInstance(), date.getTime(),
-                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_MONTH);
+        return getFormattedMediumDate(date.getTime(), false);
     }
 
     public static String getFormattedMediumDate(Calendar date) {
