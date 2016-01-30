@@ -73,10 +73,7 @@ public class OperationsFragment extends MasterFragment {
         chartDataCost = (TextView) view.findViewById(R.id.chartDataCost);
         chartDataDate = (TextView) view.findViewById(R.id.chartDataDate);
 
-        final ArrayList<Intervention> interventionList = Intervention.find10ByCar(currentCar.getId());
-        interventionList.add(new Intervention(0, currentCar.getId(), 1, "vidange et filtre a gazoil", 15000, new Date(), 80.4, 45.3));
-        interventionList.add(new Intervention(0, currentCar.getId(), 1, "vidange", 15000, new Date(), 135.4, 45.3));
-        interventionList.add(new Intervention(0, currentCar.getId(), 1, "courroie", 15000, new Date(), 32.75, 45.3));
+        final ArrayList<Intervention> interventionList = Intervention.findInterventionByNumericLimit(currentCar.getId(), 5);
         ArrayList<Entry> entries = new ArrayList<>();
         ArrayList<String> labels = new ArrayList<>();
 
@@ -86,11 +83,14 @@ public class OperationsFragment extends MasterFragment {
 
             LineChart operationChart = (LineChart) view.findViewById(R.id.operationChart);
             chartDataDescription.setText(String.format(getResources().getString(R.string.chartDesciption), interventionList.get(0).getDescription()));
-            chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), interventionList.get(0).getPrice()));
+            chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) interventionList.get(0).getPrice()));
             chartDataDate.setText(GlobalContext.getFormattedSmallDate(interventionList.get(0).getDate()));
 
             TextView totalPrice = (TextView) view.findViewById(R.id.totalPrice);
-            totalPrice.setText(String.valueOf(Intervention.getTotalInterventionPrice(currentCar.getId(), limit)));
+            totalPrice.setText(String.format(getResources().getString(R.string.averageOperationPrice), Intervention.getTotalInterventionPrice(currentCar.getId(), limit)));
+            TextView averagePrice = (TextView) view.findViewById(R.id.averagePrice);
+            averagePrice.setText(String.format(getResources().getString(R.string.averageOperationPrice), Intervention.getAverageInterventionPrice(currentCar.getId())));
+
 
             TableLayout myIntervention;
 
@@ -107,7 +107,7 @@ public class OperationsFragment extends MasterFragment {
                 TextView cost = (TextView) child.findViewById(R.id.costOperation);
                 TextView date = (TextView) child.findViewById(R.id.dateOperation);
                 name.setText(interventionList.get(i).getDescription());
-                cost.setText(String.valueOf(interventionList.get(i).getPrice()));
+                cost.setText(String.format("%1$,.2f€", interventionList.get(i).getPrice()));
                 date.setText(GlobalContext.getFormattedSmallDate(interventionList.get(i).getDate()));
                 if (i == interventionList.size() - 1) {
                     View divider = (View) child.findViewById(R.id.divider);
@@ -122,7 +122,7 @@ public class OperationsFragment extends MasterFragment {
 
                     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                         chartDataDescription.setText(String.format(getResources().getString(R.string.chartDesciption), interventionList.get(e.getXIndex()).getDescription()));
-                        chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), e.getVal()));
+                        chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) e.getVal()));
                         chartDataDate.setText(GlobalContext.getFormattedSmallDate(interventionList.get(e.getXIndex()).getDate()));
                     }
 

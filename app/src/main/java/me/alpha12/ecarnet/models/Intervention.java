@@ -37,16 +37,45 @@ public class Intervention {
         this.quantity       = quantity;
     }
 
-    public static int getTotalInterventionPrice(int carId, Date limit)
+    public static double getTotalInterventionPrice(int carId, Date limit)
     {
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT SUM("+ DBModel.C_PRICE+") FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId+ " AND "+ DBModel.C_DATE +" > " +limit.getTime(),
+                "SELECT SUM("+ DBModel.C_PRICE+") FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId+ " AND "+ DBModel.C_TYPE + " = " + TYPE_OTHER + " AND " + DBModel.C_DATE +" > " +limit.getTime(),
                 null
         );
         if(cursor.moveToFirst()) {
-            return cursor.getInt(0);
+            return cursor.getDouble(0);
         }
         else return 0;
+    }
+
+
+
+    public static double getAverageInterventionPrice(int carId)
+    {
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT AVG("+ DBModel.C_PRICE+") FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId+ " AND "+ DBModel.C_TYPE + " = " + TYPE_OTHER,
+                null
+        );
+        if(cursor.moveToFirst()) {
+            Log.d("value", ""+cursor.getDouble(0));
+            return cursor.getDouble(0);
+        }
+        else return 0;
+    }
+
+
+    public static ArrayList<Intervention> findInterventionByNumericLimit(int carId, int limit){
+        ArrayList<Intervention> result = new ArrayList<>();
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId+ " AND "+DBModel.C_TYPE +" = " + TYPE_OTHER + " LIMIT " +limit,
+                null
+        );
+        while(cursor.moveToNext()) {
+            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
+            result.add(new Intervention(cursor));
+        }
+        return result;
     }
 
     public Intervention(Cursor cursor) {

@@ -36,8 +36,8 @@
     <string name="addCover">Ajouter couverture</string>
     <string name="last_edit_memo">Dernière modification : %1$s</string>
     <string name="operationDataNotFound">Aucune donnée</string>
-    <string name="AverageOperationPrice">%1$s€</string>
-    <string name="AverageOperationPriceTitle">Coût moyen</string>
+    <string name="averageOperationPrice">%1$,.2f€</string>
+    <string name="averageOperationPriceTitle">Coût moyen</string>
     <string name="totalOperationPriceTitle">Montant annuel</string>
     <string name="operationTitle">Description</string>
     <string name="operationCost">Montant</string>
@@ -65,7 +65,7 @@
     <string name="add_reminder">Ajouter un rappel</string>
     <string name="edit_reminder">Modifier le rappel</string>
     <string name="chartDesciption">Description : %1$s</string>
-    <string name="chartCost">Montant : %1$s</string>
+    <string name="chartCost">Montant : %1$,.2f€</string>
     <string name="title_activity_history">Historique</string>
 </resources>
 
