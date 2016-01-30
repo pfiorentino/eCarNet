@@ -1,4 +1,4 @@
-package me.alpha12.ecarnet.classes;
+package me.alpha12.ecarnet.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;

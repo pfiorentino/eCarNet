@@ -5,19 +5,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 
-import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.database.DatabaseManager;
 import me.alpha12.ecarnet.models.Car;
@@ -71,7 +61,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         protected Void doInBackground(Void... arg0) {
             DatabaseManager.initialize();
             this.currentUser = User.getUser();
-            this.cars = Car.findAll();
+            this.cars = Car.findAllHashMap();
 
             return null;
         }

@@ -50,6 +50,7 @@
     <string name="written_tag_description">La puce a été marquée\navec succès !</string>
 
     <!-- Dialog strings -->
+    <string name="dialog_ok">OK</string>
     <string name="dialog_yes">Oui</string>
     <string name="dialog_no">Non</string>
     <string name="dialog_delete_element">Supprimer l\'élément sélectionné ?</string>
@@ -64,8 +65,21 @@
     <!-- Add reminder strings -->
     <string name="add_reminder">Ajouter un rappel</string>
     <string name="edit_reminder">Modifier le rappel</string>
+
+    <!-- Car's profile activity -->
+    <string name="title_activity_car_profile">CarProfileActivity</string>
+    <string name="pager_first_tab_title">Véhicule</string>
+    <string name="pager_second_tab_title">Modèle</string>
+
+
+    <!-- Misc -->
+    <string name="title_activity_history">Historique</string>
+    <string name="not_specified">Non renseigné</string>
+    <string name="not_specified_f">Non renseignée</string>
+    <string name="gears">rapports</string>
+    <string name="unknown">Inconnu</string>
     <string name="chartDesciption">Description : %1$s</string>
     <string name="chartCost">Montant : %1$,.2f€</string>
-    <string name="title_activity_history">Historique</string>
+
 </resources>
 

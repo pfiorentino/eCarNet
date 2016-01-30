@@ -20,7 +20,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,6 +47,7 @@ import me.alpha12.ecarnet.models.Car;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
     public static final String FRAGMENT_MENU_ENTRY_ID = "fmei";
+    private static final int CARS_MGMT_INTENT = 1;
 
     private TextView subTitle;
 
@@ -78,7 +79,10 @@ public class MainActivity extends AppCompatActivity
         supportToolbar  = (Toolbar) findViewById(R.id.supportToolBar);
         setSupportActionBar(supportToolbar);
 
-        cars = Car.findAll();
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        cars = Car.findAllHashMap();
 
         appBarImage = (ImageView) findViewById(R.id.appBarImage);
         subTitle = (TextView) findViewById(R.id.subTitle);
@@ -109,6 +113,20 @@ public class MainActivity extends AppCompatActivity
             changeCar(savedCar, true);
         } else {
             changeCar(cars.entrySet().iterator().next().getValue(), true);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CARS_MGMT_INTENT) {
+            if (resultCode == CarsMgmtActivity.CARS_DELETED_RESULT){
+                Intent intent = new Intent(this, MainActivity.class);
+                this.startActivity(intent);
+                finish();
+            } else {
+                isProfilesMenuOpen = false;
+                refreshProfilesMenu();
+            }
         }
     }
 
@@ -158,7 +176,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
             case R.id.nav_manage_car:
-                openActivity(CarsMgmtActivity.class);
+                Intent intent = new Intent(this, CarsMgmtActivity.class);
+                startActivityForResult(intent, CARS_MGMT_INTENT);
                 break;
             case R.id.nav_about:
                 openActivity(AboutActivity.class);
@@ -231,7 +250,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().removeItem(newCar.getId());
 
         isProfilesMenuOpen = false;
-
         refreshProfilesMenu();
 
         currentCar = newCar;
@@ -239,7 +257,7 @@ public class MainActivity extends AppCompatActivity
         drawerTitle.setText(currentCar.getModelString());
 
         TextView drawerDesc = (TextView) headerView.findViewById(R.id.car_desc);
-        drawerDesc.setText(currentCar.getPlateNum());
+        drawerDesc.setText(currentCar.getStringPlateNum());
         brandImageView.setImageDrawable(currentCar.getCarPicture(getBaseContext()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
             header.setBackground(currentCar.getCarBanner(getBaseContext()));
@@ -303,7 +321,6 @@ public class MainActivity extends AppCompatActivity
         if (openFragment) {
             getSupportFragmentManager().popBackStack("FIRST_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             openMainFragment(HomeFragment.newInstance(R.id.nav_home), R.id.nav_home);
-
         }
 
         closeDrawer();
@@ -315,6 +332,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().findItem(R.id.share_group_item).setVisible(!isProfilesMenuOpen);
 
         navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, isProfilesMenuOpen);
+        navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group_actions, isProfilesMenuOpen);
 
         ImageView spinnerTrigger = (ImageView) headerView.findViewById(R.id.spinner_trigger);
         if (!isProfilesMenuOpen){
@@ -348,6 +366,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group, false);
+        navigationView.getMenu().setGroupVisible(R.id.cars_mgmt_group_actions, false);
 
         headerView = navigationView.getHeaderView(0);
         LinearLayout profileSpinner = (LinearLayout) headerView.findViewById(R.id.profile_spinner);

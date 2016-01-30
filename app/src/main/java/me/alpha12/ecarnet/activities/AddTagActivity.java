@@ -79,7 +79,8 @@ public class AddTagActivity extends AppCompatActivity implements View.OnClickLis
                 if (tagNameEditText.getText().toString().equals(""))
                     name = "Tag sans nom";
 
-                NFCTag tag = new NFCTag(name, selectedType.getMimeType(), String.valueOf(currentCarId));
+                NFCTag tag = new NFCTag(name, selectedType.getMimeType(), String.valueOf(currentCarId), currentCarId);
+                Log.d("New Tag", tag.toString());
 
                 Intent intent = new Intent(this, WriteTagActivity.class);
                 intent.putExtra("nfcTag", tag);
