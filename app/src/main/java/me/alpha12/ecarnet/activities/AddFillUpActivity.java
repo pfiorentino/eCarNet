@@ -148,8 +148,8 @@ public class AddFillUpActivity extends AppCompatActivity implements View.OnClick
                             "fill_up_intervention",
                             kilometers,
                             new Date(d.getTime()),
-                            (double) Float.parseFloat(price.getText().toString()),
-                            (double) Float.parseFloat(amount.getText().toString())
+                            Float.parseFloat(price.getText().toString()),
+                            Float.parseFloat(amount.getText().toString())
                         );
                     inter.persist();
 

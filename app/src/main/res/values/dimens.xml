@@ -20,6 +20,7 @@
     <dimen name="raised_button_min_width">88dp</dimen>
 
     <!-- Cards values -->
-    <dimen name="cards_margin">16dp</dimen>
+    <dimen name="cards_margin">8dp</dimen>
     <dimen name="cards_half_margin">4dp</dimen>
+    <dimen name="value_card_height">128dp</dimen>
 </resources>

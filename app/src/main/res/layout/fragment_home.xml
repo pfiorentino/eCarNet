@@ -6,69 +6,34 @@
     android:background="@color/defaultCardsBackgroundColor">
 
     <LinearLayout android:orientation="vertical"
-        android:layout_width="match_parent" android:layout_height="wrap_content">
-        <android.support.v7.widget.CardView
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:padding="@dimen/cards_half_margin">
+
+        <android.support.v7.widget.CardView android:id="@+id/next_reminder_card"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/cards_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin" >
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:textAppearance="@android:style/TextAppearance.Large"
-                    android:text="Votre véhicule"/>
-
-                <TextView android:id="@+id/contentCar"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="@string/cars_identity" />
-
-                <LinearLayout android:orientation="horizontal"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_margin="8dp">
-                    <Button android:id="@+id/testButton" android:minHeight="0dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:textColor="@color/colorPrimary300"
-                        android:text="Voir la fiche du véhicule"
-                        android:background="@drawable/transparent_button" />
-                </LinearLayout>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView android:id="@+id/newNoteCard"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin" >
+            android:layout_margin="@dimen/cards_half_margin" >
 
             <LinearLayout android:orientation="vertical"
                 android:layout_width="match_parent" android:layout_height="wrap_content" >
 
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp" android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="16dp" android:layout_marginRight="16dp">
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Rappel" android:textAppearance="@android:style/TextAppearance.Large"/>
-                    <TextView android:id="@+id/dateMemo" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="1 janv." android:textAppearance="@android:style/TextAppearance.Small"/>
-                </LinearLayout>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp" android:layout_marginBottom="4dp"
+                    android:text="Prochaine intervention" android:textAppearance="@android:style/TextAppearance.Large"/>
 
-
-                <TextView android:id="@+id/reminderTitleTextView"
+                <TextView android:id="@+id/reminder_title_text_view"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:layout_marginBottom="4dp" android:layout_marginLeft="16dp"
-                    android:text="Vidange + filtre gasoil" />
+                    android:singleLine="true" android:ellipsize="end"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+                    android:text="Rappel sans nom" />
 
-                <TextView android:id="@+id/reminderDateTextView"
+                <TextView android:id="@+id/reminder_limit_text_view"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp" android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp" android:layout_marginLeft="16dp"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="15 avr. 2016 ou 15 000 km"
+                    android:text="Aucun rappel défini"
                     android:drawableLeft="@drawable/ic_notifications_black_18dp"
                     android:drawablePadding="4dp"/>
 
@@ -84,90 +49,128 @@
                     <Button android:id="@+id/reminderEditButton" android:minHeight="0dp"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:padding="8dp"
-                        android:textColor="@color/colorPrimary300"
-                        android:text="Modifier"
+                        android:text="Repousser"
                         android:background="@drawable/transparent_button" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
+        <LinearLayout android:id="@+id/fill_up_info_layout" android:orientation="horizontal"
+            android:layout_width="match_parent" android:layout_height="wrap_content">
 
-        <LinearLayout android:orientation="horizontal" android:id="@+id/topCharts"
-            android:layout_width="match_parent" android:layout_height="wrap_content" >
-            <android.support.v7.widget.CardView android:id="@+id/kilometerscard"
-                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-                android:layout_marginRight="@dimen/cards_half_margin" android:layout_marginLeft="@dimen/cards_margin">
-                <LinearLayout android:orientation="vertical"
-                    android:layout_width="match_parent" android:layout_height="match_parent" >
-                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/kilometersChart"
-                        android:layout_width="match_parent" android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="16dp" android:layout_marginBottom="8dp"/>
-                    <TextView android:id="@+id/kilometersData" android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="Aucune données"
-                        android:gravity="bottom"
-                        android:textAlignment="center" />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView android:id="@+id/consumption_card"
+                android:layout_width="0dp" android:layout_height="@dimen/value_card_height" android:layout_weight="1"
+                android:layout_margin="@dimen/cards_half_margin">
 
-
-            <android.support.v7.widget.CardView android:id="@+id/consumptionCard"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-                android:layout_marginRight="@dimen/cards_margin" android:layout_marginLeft="@dimen/cards_half_margin">
-
-                <LinearLayout android:orientation="vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
                     <LinearLayout android:orientation="horizontal"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:gravity="center" >
-                        <TextView android:id="@+id/consumptionValue"
-                            android:layout_width="wrap_content" android:layout_height="80dp" android:gravity="center"
-                            android:layout_marginTop="16dp"
-                            android:text="0"
-                            android:textStyle="bold" android:textSize="32sp" android:textAlignment="center"  />
+                        android:paddingBottom="32dp"
+                        android:layout_centerInParent="true" android:gravity="center|bottom">
+
+                        <TextView android:id="@+id/consumption_text_view"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:textAppearance="@android:style/TextAppearance.Large"
+                            android:text="0" android:textSize="32sp" />
 
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
                             android:layout_marginLeft="4dp"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:textSize="12sp"
-                            android:text="l/100km"/>
+                            android:textAppearance="@android:style/TextAppearance.Small"
+                            android:text="l/100km" />
                     </LinearLayout>
 
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp" android:layout_marginBottom="16dp"
-                        android:textAlignment="center"
-                        android:text="Consommation"
-                        android:textSize="16sp" />
-                </LinearLayout>
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="16dp" android:textAlignment="center"
+                        android:text="Consommation" android:textSize="16sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView android:id="@+id/kilometers_card"
+                android:layout_width="0dp" android:layout_height="@dimen/value_card_height" android:layout_weight="1"
+                android:layout_margin="@dimen/cards_half_margin">
+                <RelativeLayout
+                    android:layout_width="match_parent" android:layout_height="match_parent" >
+                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/kilometers_chart"
+                        android:layout_width="match_parent" android:layout_height="80dp"
+                        android:layout_margin="8dp"/>
+                    <TextView android:id="@+id/kilometers_text_view"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="16dp" android:textAlignment="center"
+                        android:text="Aucune donnée" android:textSize="16sp"
+                        android:singleLine="true" android:ellipsize="end"/>
+                </RelativeLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>
 
-        <android.support.v7.widget.CardView android:id="@+id/costCard"
+        <android.support.v7.widget.CardView android:id="@+id/fill_up_card"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_margin"
-            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin">
+            android:layout_margin="@dimen/cards_half_margin">
             <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content" >
-                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/costChart"
-                        android:layout_width="match_parent" android:layout_height="140dp"
-                        android:layout_margin="16dp"/>
-                <TextView android:id="@+id/costData"
-                    android:layout_width="match_parent" android:layout_height="24dp"
-                    android:text="Aucune données"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:gravity="bottom"
-                    android:layout_marginBottom="16dp"/>
+                android:layout_width="match_parent" android:layout_height="match_parent" >
+                <LinearLayout android:orientation="vertical"
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+                        android:layout_marginTop="16dp" android:layout_marginBottom="8dp"
+                        android:text="Essence" android:textAppearance="@android:style/TextAppearance.Large"/>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+                        android:text="Dernier plein" />
+
+                    <LinearLayout android:orientation="horizontal" android:gravity="center|bottom"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+                        android:layout_marginBottom="8dp">
+                        <TextView android:id="@+id/last_fill_up_qty_text_view"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="43,00" android:textSize="48sp" android:textAppearance="@android:style/TextAppearance.Large" />
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp" android:layout_marginRight="16dp"
+                            android:textAppearance="@android:style/TextAppearance.Small"
+                            android:text="litres" />
+
+                        <TextView android:id="@+id/last_fill_up_amount_text_view"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:text="54,72" android:textAppearance="@android:style/TextAppearance.Large" />
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:textAppearance="@android:style/TextAppearance.Small"
+                            android:text="euros" android:textSize="10sp"/>
+                    </LinearLayout>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+                        android:text="Historique" />
                 </LinearLayout>
+
+                <com.github.mikephil.charting.charts.LineChart android:id="@+id/fill_up_chart"
+                    android:layout_width="match_parent" android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp" android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp" android:layout_marginRight="16dp"/>
+
+                <LinearLayout android:orientation="horizontal"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_margin="8dp">
+                    <Button android:id="@+id/fill_up_details_button" android:minHeight="0dp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:padding="8dp" android:layout_marginRight="8dp"
+                        android:textColor="@color/colorPrimary300"
+                        android:text="Détails"
+                        android:background="@drawable/transparent_button" />
+                </LinearLayout>
+            </LinearLayout>
         </android.support.v7.widget.CardView>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            />
+
+        <View android:layout_width="match_parent" android:layout_height="72dp" />
     </LinearLayout>
 </ScrollView>

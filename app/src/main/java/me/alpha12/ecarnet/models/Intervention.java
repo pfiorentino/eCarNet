@@ -20,12 +20,12 @@ public class Intervention extends DBObject{
     private String description;
     private int kilometers;
     private Date date;
-    private double price;
-    private double quantity;
+    private float price;
+    private float quantity;
 
 
     /* Constructors */
-    public Intervention(int id, int carId, int type, String description, int kilometers, Date date, double price, double quantity) {
+    public Intervention(int id, int carId, int type, String description, int kilometers, Date date, float price, float quantity) {
         if (id > 0)
             this.setId(id);
         this.carId          = carId;
@@ -97,42 +97,46 @@ public class Intervention extends DBObject{
         this.description = DatabaseManager.extractString(cursor, DBModel.C_DESCRIPTION);
         this.kilometers = DatabaseManager.extractInt(cursor, DBModel.C_KILOMETERS);
         this.date       = DatabaseManager.extractDate(cursor, DBModel.C_DATE);
-        this.price      = DatabaseManager.extractDouble(cursor, DBModel.C_PRICE);
-        this.quantity   = DatabaseManager.extractDouble(cursor, DBModel.C_QUANTITY);
+        this.price      = DatabaseManager.extractFloat(cursor, DBModel.C_PRICE);
+        this.quantity   = DatabaseManager.extractFloat(cursor, DBModel.C_QUANTITY);
     }
 
     /* Static methods */
 
     public static ArrayList<Intervention> findAllByCar(int carId) {
-        ArrayList<Intervention> result = new ArrayList<>();
-        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId,
-                null
-        );
-        while(cursor.moveToNext()) {
-            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
-            result.add(new Intervention(cursor));
-        }
-        return result;
+        return findAllByCar(carId, -1);
     }
 
     public static ArrayList<Intervention> findFillUpByCar(int carId) {
+        return findFillUpsByCar(carId, -1);
+    }
+
+    public static ArrayList<Intervention> findFillUpsByCar(int carId, int limit) {
         ArrayList<Intervention> result = new ArrayList<>();
-        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND "+DBModel.C_TYPE + "=" + TYPE_FILLUP + " ORDER BY "+ DBModel.C_DATE+", "+DBModel.C_ID+" DESC",
-                null
-        );
+
+        String query =  "SELECT * " +
+                        "FROM " + DBModel.TABLE_NAME + " " +
+                        "WHERE " + DBModel.C_CAR_ID + " = " + carId + " " +
+                            "AND " + DBModel.C_TYPE + " = " + TYPE_FILLUP + " " +
+                        "ORDER BY " + DBModel.C_DATE + ", " + DBModel.C_ID;
+
+        if (limit > 0) {
+            query += " LIMIT "+limit;
+        }
+
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(query, null);
+
         while(cursor.moveToNext()) {
-            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
             result.add(new Intervention(cursor));
         }
+
         return result;
     }
 
     public static ArrayList<Intervention> findOtherByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND " + DBModel.C_TYPE + "=" + TYPE_OTHER + " ORDER BY " + DBModel.C_DATE + " DESC",
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND " + DBModel.C_TYPE + "=" + TYPE_OTHER + " ORDER BY " + DBModel.C_DATE + ", " + DBModel.C_ID,
                 null
         );
         while(cursor.moveToNext()) {
@@ -142,6 +146,28 @@ public class Intervention extends DBObject{
         return result;
     }
 
+    public static ArrayList<Intervention> findAllByCar(int carId, int limit){
+        ArrayList<Intervention> result = new ArrayList<>();
+
+        String query = "SELECT * FROM " + DBModel.TABLE_NAME + " WHERE " + DBModel.C_CAR_ID + " = " + carId + " ORDER BY " + DBModel.C_DATE + " ASC";
+
+        if (limit > 0) {
+            query += " LIMIT "+limit;
+        }
+
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(query, null);
+        while (cursor.moveToNext()){
+            result.add(new Intervention(cursor));
+        }
+
+        return result;
+    }
+
+    /**
+     * @deprecated
+     * Use findAllByCar(carId, limit) instead
+     */
+    @Deprecated
     public static ArrayList<Intervention> find10ByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
@@ -171,6 +197,23 @@ public class Intervention extends DBObject{
 
     public static boolean deleteAllByCar(int carId) {
         return DatabaseManager.getCurrentDatabase().delete(DBModel.TABLE_NAME, DBModel.C_CAR_ID + " = " + carId, null) > 0;
+    }
+
+    public static float getAverageConsumption(int carId) {
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT (MAX("+ DBModel.C_KILOMETERS +") - MIN("+ DBModel.C_KILOMETERS +")) as dist, " +
+                    "SUM("+DBModel.C_QUANTITY+") as qty_tot " +
+                "FROM " + DBModel.TABLE_NAME + " " +
+                "WHERE " + DBModel.C_CAR_ID + " = " + carId + " AND " + DBModel.C_TYPE + " = " + TYPE_FILLUP
+        , null);
+        cursor.moveToNext();
+
+        float consumption = -1;
+        if (DatabaseManager.extractFloat(cursor, "dist") > 0){
+            consumption = DatabaseManager.extractFloat(cursor, "qty_tot")/DatabaseManager.extractFloat(cursor, "dist");
+        }
+
+        return consumption;
     }
 
 
@@ -252,11 +295,11 @@ public class Intervention extends DBObject{
         return this.date;
     }
 
-    public double getQuantity() {
+    public float getQuantity() {
         return this.quantity;
     }
 
-    public double getPrice() {
+    public float getPrice() {
         return this.price;
     }
 
@@ -277,11 +320,11 @@ public class Intervention extends DBObject{
         this.date = date;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 

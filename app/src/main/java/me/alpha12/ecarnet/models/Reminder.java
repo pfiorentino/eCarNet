@@ -6,7 +6,6 @@ import android.provider.BaseColumns;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.database.DBObject;
@@ -109,7 +108,22 @@ public class Reminder extends DBObject {
         return result;
     }
 
-    public static Reminder getLastByCar(int carId) {
+    public static Reminder findNextIntervention(int carId) {
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT * " +
+                "FROM " + DBModel.TABLE_NAME + " " +
+                "WHERE " + DBModel.C_CAR_ID + " = " + carId + " AND " + DBModel.C_ARCHIVED + " = 0 " +
+                "ORDER BY " + DBModel.C_DATE_LIMIT_SET +", " +DBModel.C_KILOMETERS + " " +
+                "LIMIT 1", null
+        );
+
+        if (cursor.moveToNext())
+            return new Reminder(cursor);
+
+        return null;
+    }
+
+    public static Reminder findLastByCar(int carId) {
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery("SELECT * FROM " + DBModel.TABLE_NAME +
                 " WHERE car_id = " + carId + " ORDER BY " + DBModel.C_DATE_LIMIT_SET +", " +DBModel.C_KILOMETERS + " DESC LIMIT 1", null);
 
@@ -213,11 +227,15 @@ public class Reminder extends DBObject {
     public boolean isNotifSet(){ return notifSet;}
 
     public String getLimitText() {
-        if(this.kilometers == -1)
-            return GlobalContext.getFormattedMediumDate(this.limitDate.getTime());
-        if(this.limitDate == null)
+        if (this.kilometers > 0 && this.limitDate != null) {
+            return this.kilometers + " km ou " + GlobalContext.getFormattedMediumDate(this.limitDate, true);
+        } else if (this.kilometers > 0) {
             return this.kilometers + " km";
-        return this.kilometers + " km ou " + GlobalContext.getFormattedMediumDate(this.limitDate.getTime());
+        } else if (this.limitDate != null) {
+            return GlobalContext.getFormattedMediumDate(this.limitDate, true);
+        } else {
+            return "Aucune limite définie";
+        }
     }
 
     public String getCreationString() {

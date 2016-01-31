@@ -169,8 +169,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return cur.getInt(cur.getColumnIndex(columnName));
     }
 
+    @Deprecated
     public static double extractDouble(Cursor cur, String columnName){
         return cur.getDouble(cur.getColumnIndex(columnName));
+    }
+
+    public static float extractFloat(Cursor cur, String columnName){
+        return cur.getFloat(cur.getColumnIndex(columnName));
     }
 
     public static String extractString(Cursor cur, String columnName){
