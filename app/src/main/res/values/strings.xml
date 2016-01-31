@@ -70,6 +70,12 @@
     <string name="pager_first_tab_title">Véhicule</string>
     <string name="pager_second_tab_title">Modèle</string>
 
+    <!-- Home fragment -->
+    <string name="chartKilomters">Kilométrage : %1$d km</string>
+    <string name="unfinished_configuration_text">Nous avons détecté que la configuration de votre véhicule est incomplète.\nAfin d\'avoir accès à toutes les fonctionnalités d\'eCarNet, vous pouvez achever cette étape en cliquant sur le bouton ci-dessous.</string>
+    <string name="no_fill_up_text">Tout est presque prêt !\nCommencez dès maintenant à renseigner les pleins d\'essence effectués sur ce véhicule.</string>
+    <string name="no_intervention_text">Une intervention a été effectuée sur votre voiture ? Cliquez sur le bouton ci-dessous pour la renseigner.</string>
+
 
     <!-- Misc -->
     <string name="title_activity_history">Historique</string>
@@ -80,7 +86,5 @@
     <string name="chartDesciption">Description : %1$s</string>
     <string name="chartCost">Montant : %1$,.2f €</string>
     <string name="edit_intervention">Modifier une intervetion</string>
-    <string name="chartKilomters">Kilométrage : %1$d km</string>
-
 </resources>
 

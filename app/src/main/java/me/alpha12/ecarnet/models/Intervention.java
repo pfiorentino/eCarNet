@@ -133,15 +133,27 @@ public class Intervention extends DBObject{
     }
 
     public static ArrayList<Intervention> findOtherByCar(int carId) {
+        return findOtherByCar(carId, -1);
+    }
+
+    public static ArrayList<Intervention> findOtherByCar(int carId, int limit) {
         ArrayList<Intervention> result = new ArrayList<>();
-        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND " + DBModel.C_TYPE + "=" + TYPE_OTHER + " ORDER BY " + DBModel.C_DATE + ", " + DBModel.C_ID,
-                null
-        );
+
+        String query =  "SELECT * " +
+                        "FROM "+DBModel.TABLE_NAME+" " +
+                        "WHERE "+DBModel.C_CAR_ID+" = " + carId + " " +
+                            "AND " + DBModel.C_TYPE + "=" + TYPE_OTHER + " " +
+                        "ORDER BY " + DBModel.C_DATE + ", " + DBModel.C_ID;
+
+        if (limit > 0) {
+            query += " LIMIT "+limit;
+        }
+
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(query,null);
         while(cursor.moveToNext()) {
-            int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
             result.add(new Intervention(cursor));
         }
+
         return result;
     }
 
@@ -197,15 +209,16 @@ public class Intervention extends DBObject{
     public static float getAverageConsumption(int carId) {
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
                 "SELECT (MAX("+ DBModel.C_KILOMETERS +") - MIN("+ DBModel.C_KILOMETERS +")) as dist, " +
-                    "SUM("+DBModel.C_QUANTITY+") as qty_tot " +
+                    "(SUM("+DBModel.C_QUANTITY+") - " + DBModel.C_QUANTITY + ") as qty_tot " +
                 "FROM " + DBModel.TABLE_NAME + " " +
-                "WHERE " + DBModel.C_CAR_ID + " = " + carId + " AND " + DBModel.C_TYPE + " = " + TYPE_FILLUP
+                "WHERE " + DBModel.C_CAR_ID + " = " + carId + " AND " + DBModel.C_TYPE + " = " + TYPE_FILLUP + " " +
+                "ORDER BY " + DBModel.C_KILOMETERS
         , null);
         cursor.moveToNext();
 
         float consumption = -1;
         if (DatabaseManager.extractFloat(cursor, "dist") > 0){
-            consumption = DatabaseManager.extractFloat(cursor, "qty_tot")/DatabaseManager.extractFloat(cursor, "dist");
+            consumption = (DatabaseManager.extractFloat(cursor, "qty_tot")/DatabaseManager.extractFloat(cursor, "dist"))*100;
         }
 
         return consumption;

@@ -30,5 +30,5 @@
 
     <View android:id="@+id/bottomWhiteSpace" android:visibility="gone"
         android:layout_width="match_parent" android:layout_height="88dp"
-        android:background="#EEEEEE"/>
+        android:background="@color/defaultBackgroundColor"/>
 </LinearLayout>

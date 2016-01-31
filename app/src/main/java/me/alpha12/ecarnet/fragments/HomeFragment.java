@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -21,13 +22,18 @@ import java.util.Locale;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.activities.AddCarActivity;
 import me.alpha12.ecarnet.activities.AddFillUpActivity;
+import me.alpha12.ecarnet.activities.AddInterventionActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Reminder;
 
 public class HomeFragment extends MasterFragment {
+    private CardView unfinishedConfigurationCard;
+    private Button completeConfigButton;
+
     private CardView nextReminderCard;
     private TextView reminderTitleTextView;
     private TextView reminderLimitTextView;
@@ -43,10 +49,14 @@ public class HomeFragment extends MasterFragment {
     private TextView lastFillUpQtyTextView;
     private TextView lastFillUpAmountTextView;
     private LineChart fillUpChart;
+    private TextView fillUpChartDataKilometers;
+    private TextView fillUpChartDataCost;
+    private TextView fillUpChartDataDate;
 
-    private TextView chartDataKilometers;
-    private TextView chartDataCost;
-    private TextView chartDataDate;
+    private CardView noFillUpCard;
+    private Button addFillUpButton;
+    private CardView noInterventionCard;
+    private Button addInterventionButton;
 
     public static HomeFragment newInstance(int fragmentId) {
         HomeFragment fragment = new HomeFragment();
@@ -69,6 +79,9 @@ public class HomeFragment extends MasterFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        this.unfinishedConfigurationCard = (CardView) view.findViewById(R.id.unfinished_configuration_card);
+        this.completeConfigButton = (Button) view.findViewById(R.id.complete_config_button);
+
         this.nextReminderCard = (CardView) view.findViewById(R.id.next_reminder_card);
         this.reminderTitleTextView = (TextView) view.findViewById(R.id.reminder_title_text_view);
         this.reminderLimitTextView = (TextView) view.findViewById(R.id.reminder_limit_text_view);
@@ -84,10 +97,16 @@ public class HomeFragment extends MasterFragment {
         this.lastFillUpQtyTextView = (TextView) view.findViewById(R.id.last_fill_up_qty_text_view);
         this.lastFillUpAmountTextView = (TextView) view.findViewById(R.id.last_fill_up_amount_text_view);
         this.fillUpChart = (LineChart) view.findViewById(R.id.fill_up_chart);
+        this.fillUpChartDataKilometers = (TextView) view.findViewById(R.id.chartDataDescription);
+        this.fillUpChartDataCost = (TextView) view.findViewById(R.id.chartDataCost);
+        this.fillUpChartDataDate = (TextView) view.findViewById(R.id.chartDataDate);
 
-        this.chartDataKilometers = (TextView) view.findViewById(R.id.chartDataDescription);
-        this.chartDataCost = (TextView) view.findViewById(R.id.chartDataCost);
-        this.chartDataDate = (TextView) view.findViewById(R.id.chartDataDate);
+        this.noFillUpCard = (CardView) view.findViewById(R.id.no_fill_up_card);
+        this.addFillUpButton = (Button) view.findViewById(R.id.add_fill_up_button);
+        this.addFillUpButton.setOnClickListener(this);
+        this.noInterventionCard = (CardView) view.findViewById(R.id.no_intervention_card);
+        this.addInterventionButton = (Button) view.findViewById(R.id.add_intervention_button);
+        this.addInterventionButton.setOnClickListener(this);
 
         return view;
     }
@@ -100,10 +119,21 @@ public class HomeFragment extends MasterFragment {
         if (currentCar.isDefined())
             setDefaultSubTitle(currentCar.getDetails());
 
+        refreshUnfinishedConfigurationCard();
         refreshConsumptionCard();
         refreshReminderCard();
         refreshKilometersCard();
         refreshFillUpCard();
+        refreshInterventionCard();
+    }
+
+    private void refreshUnfinishedConfigurationCard() {
+        if (currentCar.isDefined()){
+            this.unfinishedConfigurationCard.setVisibility(View.GONE);
+        } else {
+            this.unfinishedConfigurationCard.setVisibility(View.VISIBLE);
+            this.completeConfigButton.setOnClickListener(this);
+        }
     }
 
     private void refreshReminderCard() {
@@ -154,21 +184,18 @@ public class HomeFragment extends MasterFragment {
             ArrayList<Entry> chartData = getInterventionsAmounts(lastFillUps);
             ArrayList<String> chartLabels = getInterventionsChartLabels(lastFillUps, 0);
 
-            chartDataKilometers.setText(String.format(getResources().getString(R.string.chartKilomters), lastFillUps.get(0).getKilometers()));
-            chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) lastFillUps.get(0).getPrice()));
-            chartDataDate.setText(GlobalContext.getFormattedSmallDate(lastFillUps.get(0).getDate()));
+            fillUpChartDataKilometers.setText(String.format(getResources().getString(R.string.chartKilomters), lastFillUps.get(0).getKilometers()));
+            fillUpChartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) lastFillUps.get(0).getPrice()));
+            fillUpChartDataDate.setText(GlobalContext.getFormattedSmallDate(lastFillUps.get(0).getDate()));
 
             LineChartCustom lcc = new LineChartCustom(this.fillUpChart, chartData, "", chartLabels, null);
             lcc.getChart().setTouchEnabled(true);
             lcc.getChart().setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-
-
                 @Override
-
                 public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                    chartDataKilometers.setText(String.format(getResources().getString(R.string.chartKilomters), lastFillUps.get(e.getXIndex()).getKilometers()));
-                    chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) e.getVal()));
-                    chartDataDate.setText(GlobalContext.getFormattedSmallDate(lastFillUps.get(e.getXIndex()).getDate()));
+                    fillUpChartDataKilometers.setText(String.format(getResources().getString(R.string.chartKilomters), lastFillUps.get(e.getXIndex()).getKilometers()));
+                    fillUpChartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) e.getVal()));
+                    fillUpChartDataDate.setText(GlobalContext.getFormattedSmallDate(lastFillUps.get(e.getXIndex()).getDate()));
                 }
 
                 @Override
@@ -176,22 +203,37 @@ public class HomeFragment extends MasterFragment {
                 }
             });
 
-
-            Intervention lastFillUp = lastFillUps.get(lastFillUps.size()-1);
+            Intervention lastFillUp = lastFillUps.get(lastFillUps.size() - 1);
             animateTextView(0, lastFillUp.getQuantity(), this.lastFillUpQtyTextView);
             animateTextView(0, lastFillUp.getPrice(), this.lastFillUpAmountTextView);
 
             this.fillUpCard.setVisibility(View.VISIBLE);
+            this.noFillUpCard.setVisibility(View.GONE);
         } else {
             this.fillUpCard.setVisibility(View.GONE);
+            this.noFillUpCard.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private void refreshInterventionCard() {
+        ArrayList<Intervention> lastInterventions = Intervention.findOtherByCar(currentCar.getId(), 10);
+
+        if (lastInterventions.size() > 0) {
+            this.noInterventionCard.setVisibility(View.GONE);
+        } else {
+            this.noInterventionCard.setVisibility(View.VISIBLE);
         }
 
     }
 
     public void animateTextView(float initialValue, float finalValue, final TextView textview) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (finalValue > 10)
+                initialValue = finalValue-10;
+
             ValueAnimator valueAnimator = ValueAnimator.ofFloat(initialValue, finalValue);
-            valueAnimator.setDuration(1500);
+            valueAnimator.setDuration(1800);
 
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -255,9 +297,22 @@ public class HomeFragment extends MasterFragment {
 
     @Override
     public void onClick(View v) {
+        Intent intent;
+
         switch (v.getId()) {
             case R.id.addFillupFAB:
-                Intent intent = new Intent(v.getContext(), AddFillUpActivity.class);
+            case R.id.add_fill_up_button:
+                intent = new Intent(v.getContext(), AddFillUpActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
+                break;
+            case R.id.complete_config_button:
+                intent = new Intent(v.getContext(), AddCarActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivityForResult(intent, 0);
+                break;
+            case R.id.add_intervention_button:
+                intent = new Intent(v.getContext(), AddInterventionActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
                 break;

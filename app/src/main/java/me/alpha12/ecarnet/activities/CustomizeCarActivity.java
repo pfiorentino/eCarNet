@@ -122,7 +122,13 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
                         Integer.parseInt(kilometers.getText().toString()),
                         new Date(selectedDate.getTimeInMillis()),
                         selectedCar);
-                car.persist();
+
+                if (getIntent().hasExtra("carId")){
+                    int carId = getIntent().getExtras().getInt("carId");
+                    if (carId > 0)
+                        car.setId(carId);
+                }
+                car.persist(true);
 
                 GlobalContext.setCurrentCar(car.getId());
 
@@ -171,48 +177,6 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
     private static String getFormattedDate(Context ctx, Calendar c) {
         return DateUtils.formatDateTime(ctx, c.getTimeInMillis(),
                 DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH);
-    }
-
-    public static class DatePickerFragment extends DialogFragment {
-        private OnDateSetListener onDateSetListener;
-
-        public static DatePickerFragment newInstance(Calendar date, OnDateSetListener onDateSetListener) {
-            DatePickerFragment pickerFragment = new DatePickerFragment();
-            pickerFragment.setOnDateSetListener(onDateSetListener);
-
-            //Pass the date in a bundle.
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("SELECTED_DATE", date);
-            pickerFragment.setArguments(bundle);
-            return pickerFragment;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Calendar initialDate = (Calendar) getArguments().getSerializable("SELECTED_DATE");
-
-            final Calendar c;
-            if (initialDate != null) {
-                c = initialDate;
-            } else {
-                c = Calendar.getInstance();
-            }
-
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of DatePickerDialog and return it
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(), (CustomizeCarActivity) getActivity(), year, month, day);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                dialog.getDatePicker().setMaxDate(new Date().getTime());
-            }
-            return dialog;
-        }
-
-        private void setOnDateSetListener(OnDateSetListener listener) {
-            this.onDateSetListener = listener;
-        }
     }
 
     @Override
@@ -318,5 +282,47 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         cursor.close();
 
         return string;
+    }
+
+    public static class DatePickerFragment extends DialogFragment {
+        private OnDateSetListener onDateSetListener;
+
+        public static DatePickerFragment newInstance(Calendar date, OnDateSetListener onDateSetListener) {
+            DatePickerFragment pickerFragment = new DatePickerFragment();
+            pickerFragment.setOnDateSetListener(onDateSetListener);
+
+            //Pass the date in a bundle.
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("SELECTED_DATE", date);
+            pickerFragment.setArguments(bundle);
+            return pickerFragment;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            Calendar initialDate = (Calendar) getArguments().getSerializable("SELECTED_DATE");
+
+            final Calendar c;
+            if (initialDate != null) {
+                c = initialDate;
+            } else {
+                c = Calendar.getInstance();
+            }
+
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), (CustomizeCarActivity) getActivity(), year, month, day);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                dialog.getDatePicker().setMaxDate(new Date().getTime());
+            }
+            return dialog;
+        }
+
+        private void setOnDateSetListener(OnDateSetListener listener) {
+            this.onDateSetListener = listener;
+        }
     }
 }
