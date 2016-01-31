@@ -119,7 +119,7 @@ public class Intervention extends DBObject{
     public static ArrayList<Intervention> findFillUpByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND "+DBModel.C_QUANTITY+" > 0 ORDER BY " + DBModel.C_DATE+", "+DBModel.C_ID+" DESC",
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND "+DBModel.C_TYPE + "=" + TYPE_FILLUP + " ORDER BY "+ DBModel.C_DATE+", "+DBModel.C_ID+" DESC",
                 null
         );
         while(cursor.moveToNext()) {

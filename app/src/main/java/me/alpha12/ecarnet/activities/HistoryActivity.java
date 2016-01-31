@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
+
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.adapters.HistoryAdapter;
 import me.alpha12.ecarnet.models.Car;
@@ -14,7 +15,6 @@ public class HistoryActivity extends MasterListActivity<Intervention> implements
     public static final String CAR_ID = "carid";
 
     private Car currentCar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutResId = R.layout.activity_history;
