@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -21,23 +20,31 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddFillUpActivity;
-import me.alpha12.ecarnet.activities.CarProfileActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Reminder;
 
 public class HomeFragment extends MasterFragment {
-    private Reminder lastMemo;
-
     private ArrayList<Intervention> myInterventions = new ArrayList<>();
     private ArrayList<Intervention> allMyInterventions = new ArrayList<>();
     private ArrayList<Intervention> myFillsUp = new ArrayList<>();
 
-    private TextView titleMemo;
-    private TextView limitMemo;
+
+
+
+    private CardView next_reminder_card;
+    private TextView reminder_title_text_view;
+    private TextView reminder_limit_text_view;
+
+    private CardView consumption_card;
+    private TextView consumption_text_view;
+
+
+
 
     public static HomeFragment newInstance(int fragmentId) {
         HomeFragment fragment = new HomeFragment();
@@ -53,8 +60,6 @@ public class HomeFragment extends MasterFragment {
         registerFloatingActionButton(R.id.addFillupFAB);
 
         setDefaultTitle(currentCar.getModelString());
-        if (currentCar.isDefined())
-            setDefaultSubTitle(currentCar.getStringPlateNum()+" - "+currentCar.getKilometers()+" km");
     }
 
     @Override
@@ -62,12 +67,22 @@ public class HomeFragment extends MasterFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        titleMemo = (TextView) view.findViewById(R.id.reminderTitleTextView);
-        limitMemo = (TextView) view.findViewById(R.id.reminderDateTextView);
+        this.next_reminder_card = (CardView) view.findViewById(R.id.next_reminder_card);
+        this.reminder_title_text_view = (TextView) view.findViewById(R.id.reminder_title_text_view);
+        this.reminder_limit_text_view = (TextView) view.findViewById(R.id.reminder_limit_text_view);
 
-        lastMemo = Reminder.getLastByCar(currentCar.getId());
+        this.consumption_card = (CardView) view.findViewById(R.id.consumption_card);
+        this.consumption_text_view = (TextView) view.findViewById(R.id.consumption_text_view);
 
-        TextView consumption = (TextView) view.findViewById(R.id.consumptionValue);
+
+
+
+
+
+
+
+
+
         LineChart kilometersLine = (LineChart) view.findViewById(R.id.kilometersChart);
         TextView kilometersText = (TextView) view.findViewById(R.id.kilometersData);
 
@@ -79,10 +94,6 @@ public class HomeFragment extends MasterFragment {
 
         myInterventions = Intervention.find10ByCar(currentCar.getId());
         allMyInterventions = Intervention.findAllByCar(currentCar.getId());
-
-        //prepare note if exist
-        //lastMemo = new Memo(0,"Vidange + filtre à diesel", limit, 15000, false, true, false, currentCar.getId());
-        useNotedCard(view);
 
         if(myInterventions.size() != 0) {
             ArrayList<Entry> kilometersChart = getKilometers(myInterventions, currentCar);
@@ -104,7 +115,6 @@ public class HomeFragment extends MasterFragment {
             {
                 floatSum+= fillUpChart.get(i).getVal();
             }
-            animateTextView(0.0f, getConsumption(), consumption);
         } else {
             //view.findViewById(R.id.topCharts).setVisibility(View.GONE);
         }
@@ -112,21 +122,39 @@ public class HomeFragment extends MasterFragment {
         return view;
     }
 
-    public float getConsumption() {
-        float totalConsumption = 0;
-        float currentConsumption;
-        int numberOfInters = 0;
-        for(int i=1; i<myInterventions.size(); i++) {
-            if(myInterventions.get(i).getQuantity()!=0 && myInterventions.get(i-1).getKilometers() < myInterventions.get(1).getKilometers()) {
-                currentConsumption = (float)myInterventions.get(i).getQuantity() * 100 / (myInterventions.get(i).getKilometers() - myInterventions.get(i-1).getKilometers());
-                totalConsumption +=currentConsumption;
-            }
-        }
-        return totalConsumption/(myInterventions.size()-1);
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (currentCar.isDefined())
+            setDefaultSubTitle(currentCar.getDetails());
+
+        refreshConsumptionCard();
+        refreshReminderCard();
     }
 
-    public ArrayList<String> getLineChartLabels(ArrayList<Intervention> myInterventions, int start)
-    {
+    private void refreshReminderCard() {
+        Reminder nextIntervention = Reminder.findNextIntervention(currentCar.getId());
+
+        if (nextIntervention != null) {
+            this.reminder_title_text_view.setText(nextIntervention.getTitle());
+            this.reminder_limit_text_view.setText(nextIntervention.getLimitText());
+        } else {
+            next_reminder_card.setVisibility(View.GONE);
+        }
+    }
+
+    private void refreshConsumptionCard() {
+        float avgConsumption = Intervention.getAverageConsumption(currentCar.getId());
+
+        if (avgConsumption >= 0.0f) {
+            animateTextView(0.0f, avgConsumption, consumption_text_view);
+        } else {
+            consumption_card.setVisibility(View.GONE);
+        }
+    }
+
+    public ArrayList<String> getLineChartLabels(ArrayList<Intervention> myInterventions, int start) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM yy", Locale.FRENCH);
         ArrayList<String> labs = new ArrayList<>();
         for(int i=start; i<myInterventions.size(); i++)
@@ -140,7 +168,7 @@ public class HomeFragment extends MasterFragment {
 
 
 
-    public void animateTextView(float initialValue, float finalValue, final TextView  textview) {
+    public void animateTextView(float initialValue, float finalValue, final TextView textview) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             ValueAnimator valueAnimator = ValueAnimator.ofFloat(initialValue, finalValue);
             valueAnimator.setDuration(1800);
@@ -150,11 +178,13 @@ public class HomeFragment extends MasterFragment {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                         float value = Float.parseFloat(valueAnimator.getAnimatedValue().toString());
-                        textview.setText(String.format("%.1f", value));
+                        textview.setText(String.format("%.2f", value));
                     }
                 }
             });
             valueAnimator.start();
+        } else {
+            textview.setText(String.format("%.2f", finalValue));
         }
     }
 
@@ -176,18 +206,6 @@ public class HomeFragment extends MasterFragment {
         }
         Log.d("nb kil", sumOfkilmeters.size()+"");
         return sumOfkilmeters;
-    }
-
-
-    private void useNotedCard(View view) {
-        if (lastMemo == null) {
-            CardView card = (CardView) view.findViewById(R.id.newNoteCard);
-            card.setVisibility(View.GONE);
-        } else {
-            titleMemo.setText(lastMemo.getTitle());
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM", Locale.FRENCH);
-            limitMemo.setText(lastMemo.getKilometers() + " km ou " + sdf.format(lastMemo.getLimitDate().getTime()));
-        }
     }
 
 

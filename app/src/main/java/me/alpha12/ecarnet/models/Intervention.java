@@ -173,6 +173,23 @@ public class Intervention extends DBObject{
         return DatabaseManager.getCurrentDatabase().delete(DBModel.TABLE_NAME, DBModel.C_CAR_ID + " = " + carId, null) > 0;
     }
 
+    public static float getAverageConsumption(int carId) {
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
+                "SELECT (MAX("+ DBModel.C_KILOMETERS +") - MIN("+ DBModel.C_KILOMETERS +")) as dist, " +
+                    "SUM("+DBModel.C_QUANTITY+") as qty_tot " +
+                "FROM " + DBModel.TABLE_NAME + " " +
+                "WHERE " + DBModel.C_CAR_ID + " = " + carId + " AND " + DBModel.C_TYPE + " = " + TYPE_FILLUP
+        , null);
+        cursor.moveToNext();
+
+        float consumption = -1;
+        if (DatabaseManager.extractFloat(cursor, "dist") > 0){
+            consumption = DatabaseManager.extractFloat(cursor, "qty_tot")/DatabaseManager.extractFloat(cursor, "dist");
+        }
+
+        return consumption;
+    }
+
 
     @Override
     public boolean persist(boolean update) {

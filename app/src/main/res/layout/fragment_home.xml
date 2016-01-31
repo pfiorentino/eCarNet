@@ -6,12 +6,12 @@
     android:background="@color/defaultCardsBackgroundColor">
 
     <LinearLayout android:orientation="vertical"
-        android:layout_width="match_parent" android:layout_height="wrap_content">
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:padding="@dimen/cards_half_margin">
 
-        <android.support.v7.widget.CardView android:id="@+id/newNoteCard"
+        <android.support.v7.widget.CardView android:id="@+id/next_reminder_card"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/cards_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-            android:layout_marginLeft="@dimen/cards_margin" android:layout_marginRight="@dimen/cards_margin" >
+            android:layout_margin="@dimen/cards_half_margin" >
 
             <LinearLayout android:orientation="vertical"
                 android:layout_width="match_parent" android:layout_height="wrap_content" >
@@ -21,7 +21,7 @@
                     android:layout_marginTop="16dp" android:layout_marginBottom="4dp"
                     android:text="Prochaine intervention" android:textAppearance="@android:style/TextAppearance.Large"/>
 
-                <TextView android:id="@+id/reminderTitleTextView"
+                <TextView android:id="@+id/reminder_title_text_view"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:textAppearance="@android:style/TextAppearance.Medium"
                     android:singleLine="true" android:ellipsize="end"
@@ -29,7 +29,7 @@
                     android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
                     android:text="Rappel sans nom" />
 
-                <TextView android:id="@+id/reminderDateTextView"
+                <TextView android:id="@+id/reminder_limit_text_view"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp" android:layout_marginLeft="16dp"
                     android:textAppearance="@android:style/TextAppearance.Small"
@@ -58,10 +58,9 @@
         <LinearLayout android:id="@+id/fill_up_info_layout" android:orientation="horizontal"
             android:layout_width="match_parent" android:layout_height="wrap_content">
 
-            <android.support.v7.widget.CardView android:id="@+id/consumptionCard"
+            <android.support.v7.widget.CardView android:id="@+id/consumption_card"
                 android:layout_width="0dp" android:layout_height="@dimen/value_card_height" android:layout_weight="1"
-                android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-                android:layout_marginRight="@dimen/cards_half_margin" android:layout_marginLeft="@dimen/cards_margin">
+                android:layout_margin="@dimen/cards_half_margin">
 
                 <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
                     <LinearLayout android:orientation="horizontal"
@@ -69,7 +68,7 @@
                         android:paddingBottom="32dp"
                         android:layout_centerInParent="true" android:gravity="center|bottom">
 
-                        <TextView android:id="@+id/consumptionValue"
+                        <TextView android:id="@+id/consumption_text_view"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:textAppearance="@android:style/TextAppearance.Large"
                             android:text="0" android:textSize="32sp" />
@@ -89,8 +88,7 @@
 
             <android.support.v7.widget.CardView android:id="@+id/kilometerscard"
                 android:layout_width="0dp" android:layout_height="@dimen/value_card_height" android:layout_weight="1"
-                android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_half_margin"
-                android:layout_marginRight="@dimen/cards_margin" android:layout_marginLeft="@dimen/cards_half_margin">
+                android:layout_margin="@dimen/cards_half_margin">
                 <RelativeLayout
                     android:layout_width="match_parent" android:layout_height="match_parent" >
                     <com.github.mikephil.charting.charts.LineChart android:id="@+id/kilometersChart"
@@ -100,15 +98,15 @@
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_margin="16dp" android:textAlignment="center"
-                        android:text="Aucune donnée" android:textSize="16sp" />
+                        android:text="Aucune donnée" android:textSize="16sp"
+                        android:singleLine="true" android:ellipsize="end"/>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>
 
         <android.support.v7.widget.CardView android:id="@+id/fill_up_card"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/cards_half_margin" android:layout_marginBottom="@dimen/cards_margin"
-            android:layout_marginRight="@dimen/cards_margin" android:layout_marginLeft="@dimen/cards_margin">
+            android:layout_margin="@dimen/cards_half_margin">
             <LinearLayout android:orientation="vertical"
                 android:layout_width="match_parent" android:layout_height="match_parent" >
                 <LinearLayout android:orientation="vertical"
@@ -140,7 +138,7 @@
                         <TextView android:id="@+id/last_fill_up_amount_text_view"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
-                            android:text="54,72" android:textAppearance="@android:style/TextAppearance.Medium" />
+                            android:text="54,72" android:textAppearance="@android:style/TextAppearance.Large" />
 
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:layout_marginLeft="4dp"
