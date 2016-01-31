@@ -31,6 +31,9 @@ import me.alpha12.ecarnet.models.Intervention;
 
 public class OperationsFragment extends MasterFragment {
     private FloatingActionButton fab;
+    private ArrayList<Intervention> interventionListForGrid;
+    private ArrayList<Intervention> interventionListForChart;
+
     LinearLayout dateChartDetails;
     TextView chartDataDescription;
     TextView chartDataCost;
@@ -47,8 +50,14 @@ public class OperationsFragment extends MasterFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerFloatingActionButton(R.id.addOperationFAB);
-
         setDefaultTitle(getString(R.string.title_fragment_operations));
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        updateLists();
     }
 
     @Override
@@ -65,18 +74,20 @@ public class OperationsFragment extends MasterFragment {
         chartDataCost = (TextView) view.findViewById(R.id.chartDataCost);
         chartDataDate = (TextView) view.findViewById(R.id.chartDataDate);
 
-        final ArrayList<Intervention> interventionList = Intervention.findInterventionByNumericLimit(currentCar.getId(), 5);
+        interventionListForGrid = Intervention.findInterventionByNumericLimit(currentCar.getId(), 3);
+        interventionListForChart = Intervention.findOtherByCar(currentCar.getId());
+
         ArrayList<Entry> entries = new ArrayList<>();
         ArrayList<String> labels = new ArrayList<>();
 
-        if (!interventionList.isEmpty()) {
+        if (!interventionListForGrid.isEmpty()) {
             TextView operationChartTitle = (TextView) view.findViewById(R.id.operationChartTitle);
             operationChartTitle.setText("Mes dernières interventions");
 
             LineChart operationChart = (LineChart) view.findViewById(R.id.operationChart);
-            chartDataDescription.setText(String.format(getResources().getString(R.string.chartDesciption), interventionList.get(0).getDescription()));
-            chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) interventionList.get(0).getPrice()));
-            chartDataDate.setText(GlobalContext.getFormattedSmallDate(interventionList.get(0).getDate()));
+            chartDataDescription.setText(String.format(getResources().getString(R.string.chartDesciption), interventionListForGrid.get(0).getDescription()));
+            chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) interventionListForGrid.get(0).getPrice()));
+            chartDataDate.setText(GlobalContext.getFormattedSmallDate(interventionListForGrid.get(0).getDate()));
 
             TextView totalPrice = (TextView) view.findViewById(R.id.totalPrice);
             totalPrice.setText(String.format(getResources().getString(R.string.averageOperationPrice), Intervention.getTotalInterventionPrice(currentCar.getId(), limit)));
@@ -90,18 +101,20 @@ public class OperationsFragment extends MasterFragment {
             View child = inflater.inflate(R.layout.custom_operation_data_table, null);
             myIntervention.addView(child);
 
-            for (int i = 0; i < interventionList.size(); i++) {
-                entries.add(new Entry((float)interventionList.get(i).getPrice(), i));
-                labels.add(GlobalContext.getFormattedSmallDate(interventionList.get(i).getDate()));
+            for(int i=0; i< interventionListForChart.size(); i++) {
+                entries.add(new Entry((float)interventionListForGrid.get(i).getPrice(), i));
+                labels.add(GlobalContext.getFormattedSmallDate(interventionListForGrid.get(i).getDate()));
+            }
 
+            for (int i = 0; i < interventionListForGrid.size(); i++) {
                 child = inflater.inflate(R.layout.custom_operation_data_table, null);
                 TextView name = (TextView) child.findViewById(R.id.operationTitle);
                 TextView cost = (TextView) child.findViewById(R.id.costOperation);
                 TextView date = (TextView) child.findViewById(R.id.dateOperation);
-                name.setText(interventionList.get(i).getDescription());
-                cost.setText(String.format("%1$,.2f€", interventionList.get(i).getPrice()));
-                date.setText(GlobalContext.getFormattedSmallDate(interventionList.get(i).getDate()));
-                if (i == interventionList.size() - 1) {
+                name.setText(interventionListForGrid.get(i).getDescription());
+                cost.setText(String.format("%1$,.2f €", interventionListForGrid.get(i).getPrice()));
+                date.setText(GlobalContext.getFormattedSmallDate(interventionListForGrid.get(i).getDate()));
+                if (i == interventionListForGrid.size() - 1) {
                     View divider = (View) child.findViewById(R.id.divider);
                     divider.setVisibility(View.GONE);
                 }
@@ -113,9 +126,9 @@ public class OperationsFragment extends MasterFragment {
                     @Override
 
                     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                        chartDataDescription.setText(String.format(getResources().getString(R.string.chartDesciption), interventionList.get(e.getXIndex()).getDescription()));
+                        chartDataDescription.setText(String.format(getResources().getString(R.string.chartDesciption), interventionListForGrid.get(e.getXIndex()).getDescription()));
                         chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) e.getVal()));
-                        chartDataDate.setText(GlobalContext.getFormattedSmallDate(interventionList.get(e.getXIndex()).getDate()));
+                        chartDataDate.setText(GlobalContext.getFormattedSmallDate(interventionListForGrid.get(e.getXIndex()).getDate()));
                     }
 
                     @Override
@@ -163,5 +176,11 @@ public class OperationsFragment extends MasterFragment {
                 startActivity(intent);
                 break;
         }
+    }
+
+    public void updateLists()
+    {
+        interventionListForGrid.addAll(Intervention.findInterventionByNumericLimit(currentCar.getId(), 3));
+        interventionListForChart.addAll(Intervention.findOtherByCar(currentCar.getId()));
     }
 }

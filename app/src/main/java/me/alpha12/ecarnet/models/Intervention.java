@@ -136,7 +136,7 @@ public class Intervention extends DBObject{
     public static ArrayList<Intervention> findOtherByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND " + DBModel.C_TYPE + "=" + TYPE_OTHER + " ORDER BY " + DBModel.C_DATE + " DESC",
+                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId + " AND " + DBModel.C_TYPE + "=" + TYPE_OTHER + " ORDER BY " + DBModel.C_DATE + ", " + DBModel.C_ID,
                 null
         );
         while(cursor.moveToNext()) {

@@ -6,7 +6,6 @@ import android.provider.BaseColumns;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.database.DBObject;

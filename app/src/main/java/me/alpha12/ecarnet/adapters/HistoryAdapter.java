@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
@@ -30,6 +32,8 @@ public class HistoryAdapter extends ArrayAdapter<Intervention> {
         if(viewHolder == null) {
             viewHolder = new HistoryItemViewHolder();
 
+            viewHolder.reminderLayout = (LinearLayout) convertView.findViewById(R.id.interventionLayout);
+            viewHolder.selectedIcon = (ImageView) convertView.findViewById(R.id.selectedIcon);
             viewHolder.name = (TextView) convertView.findViewById(R.id.history_item_name);
             viewHolder.date = (TextView) convertView.findViewById(R.id.history_item_date);
             viewHolder.price = (TextView) convertView.findViewById(R.id.history_item_price);
@@ -39,9 +43,18 @@ public class HistoryAdapter extends ArrayAdapter<Intervention> {
 
         Intervention intervention = getItem(position);
 
+        if (intervention.isSelected()){
+            viewHolder.reminderLayout.setBackgroundResource(R.color.listDividerColor);
+            viewHolder.selectedIcon.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.reminderLayout.setBackgroundResource(android.R.color.transparent);
+            viewHolder.selectedIcon.setVisibility(View.GONE);
+        }
+
         viewHolder.name.setText(intervention.getDescription());
         viewHolder.date.setText(DateUtils.getRelativeTimeSpanString(intervention.getDate().getTime(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS));
         viewHolder.price.setText(NumberFormat.getCurrencyInstance(getContext().getResources().getConfiguration().locale).format(intervention.getPrice()));
+
 
         return convertView;
     }
@@ -50,5 +63,8 @@ public class HistoryAdapter extends ArrayAdapter<Intervention> {
         public TextView name;
         public TextView date;
         public TextView price;
+        public ImageView selectedIcon;
+        public LinearLayout reminderLayout;
+
     }
 }
