@@ -18,10 +18,14 @@ public class HistoryActivity extends MasterListActivity<Intervention> implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutResId = R.layout.activity_history;
+        noItemTextResId = R.string.empty_history_text;
         super.onCreate(savedInstanceState);
+
         currentCar = Car.get(getIntent().getIntExtra(CAR_ID, 0));
         if (currentCar == null)
             finish();
+
+        setDefaultTitle(getString(R.string.title_activity_history));
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -35,9 +39,9 @@ public class HistoryActivity extends MasterListActivity<Intervention> implements
     @Override
     public void afterDelete(){
         super.afterDelete();
-        setResult(0);
+/*
         if(itemsList.isEmpty())
-            onBackPressed();
+            finish();*/
     }
 
 

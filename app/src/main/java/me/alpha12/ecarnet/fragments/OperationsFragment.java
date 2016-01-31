@@ -31,7 +31,6 @@ import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.models.Intervention;
 
 public class OperationsFragment extends MasterFragment {
-    private FloatingActionButton fab;
     private ArrayList<Intervention> interventionListForGrid;
     private ArrayList<Intervention> interventionListForChart;
 

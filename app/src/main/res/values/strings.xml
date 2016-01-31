@@ -58,8 +58,10 @@
     <!-- Lists views strings -->
     <string name="no_item_found">Aucun élément trouvé.</string>
     <string name="no_item_found_new_item">Pour en créer un, touchez\nle bouton ci-dessous</string>
+    <string name="no_intervention_found">Aucune intervention trouvée</string>
+    <string name="no_intervention_found_new_item">Pour en créer une, touchez\nle bouton ci-dessous</string>
     <string name="no_memo_found">Aucun rappel trouvé</string>
-    <string name="no_tag_found">Aucun tag trouvé.</string>
+    <string name="no_tag_found">Aucun tag trouvé</string>
 
     <!-- Add reminder strings -->
     <string name="add_reminder">Ajouter un rappel</string>
@@ -76,15 +78,20 @@
     <string name="no_fill_up_text">Tout est presque prêt !\nCommencez dès maintenant à renseigner les pleins d\'essence effectués sur ce véhicule.</string>
     <string name="no_intervention_text">Une intervention a été effectuée sur votre voiture ? Cliquez sur le bouton ci-dessous pour la renseigner.</string>
 
+    <!-- Interventions fragment -->
+    <string name="title_activity_history">Historique des interventions</string>
+    <string name="empty_history_text">L\'historique est vide</string>
+    <string name="edit_intervention">Modifier une intervention</string>
+
 
     <!-- Misc -->
-    <string name="title_activity_history">Historique</string>
+
     <string name="not_specified">Non renseigné</string>
     <string name="not_specified_f">Non renseignée</string>
     <string name="gears">rapports</string>
     <string name="unknown">Inconnu</string>
     <string name="chartDesciption">Description : %1$s</string>
     <string name="chartCost">Montant : %1$,.2f €</string>
-    <string name="edit_intervention">Modifier une intervetion</string>
+
 </resources>
 
