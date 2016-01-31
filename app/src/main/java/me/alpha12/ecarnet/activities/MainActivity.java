@@ -21,6 +21,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -228,13 +229,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void refreshFABs(int fragmentId) {
+        FloatingActionButton fabToShow = fabs.get(fragmentId);
+
         for(Map.Entry<Integer, FloatingActionButton> entry : fabs.entrySet()) {
-            if (entry.getKey() == fragmentId){
-                entry.getValue().show();
-            } else {
+            if (entry.getValue() != fabToShow)
                 entry.getValue().hide();
-            }
         }
+
+        if (fabToShow != null)
+            fabToShow.show();
     }
 
     public void changeCar(Car newCar, boolean openFragment) {

@@ -70,6 +70,10 @@ public class GlobalContext extends Application {
         return getFormattedMediumDate(date.getTime(), longMonth);
     }
 
+    public static String getFormattedMediumDate(Calendar date, boolean longMonth) {
+        return getFormattedMediumDate(date.getTimeInMillis(), longMonth);
+    }
+
     public static String getFormattedMediumDate(Date date) {
         return getFormattedMediumDate(date.getTime(), false);
     }
