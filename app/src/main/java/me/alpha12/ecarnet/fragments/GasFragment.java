@@ -1,13 +1,18 @@
 package me.alpha12.ecarnet.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import me.alpha12.ecarnet.activities.AddFillUpActivity;
+import me.alpha12.ecarnet.activities.AddReminderActivity;
 import me.alpha12.ecarnet.adapters.FillupAdapter;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.models.Intervention;
@@ -24,7 +29,6 @@ public class GasFragment extends MasterFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDefaultTitle(getString(R.string.title_fragment_gas));
-        registerFloatingActionButton(R.id.addFillupFAB);
     }
 
     @Override
@@ -32,6 +36,7 @@ public class GasFragment extends MasterFragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_gas, container, false);
+        registerFloatingActionButton(R.id.addFillupFromFillupFAB);
 
 
         ArrayList<Intervention> interventions = Intervention.findFillUpByCar(currentCar.getId());
@@ -46,5 +51,16 @@ public class GasFragment extends MasterFragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addFillupFromFillupFAB:
+                Intent intent = new Intent(v.getContext(), AddFillUpActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
+                break;
+        }
     }
 }

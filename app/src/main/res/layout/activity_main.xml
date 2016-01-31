@@ -56,9 +56,15 @@
         </android.support.v4.widget.NestedScrollView>
 
         <android.support.design.widget.FloatingActionButton android:id="@+id/addFillupFAB"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_add_gas" />
+
+        <android.support.design.widget.FloatingActionButton android:id="@+id/addFillupFromFillupFAB"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_add_gas" />
+            android:visibility="gone"
+            android:src="@drawable/ic_content_add_white_24dp" />
 
         <android.support.design.widget.FloatingActionButton android:id="@+id/addOperationFAB"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
