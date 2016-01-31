@@ -77,12 +77,11 @@ public class Intervention extends DBObject{
     }
 
 
-    public static ArrayList<Intervention> findInterventionByNumericLimit(int carId, int limit){
+    public static ArrayList<Intervention> findInterventionByNumericLimit(int carId, String order, int limit){
         ArrayList<Intervention> result = new ArrayList<>();
-        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
-                "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId+ " AND "+DBModel.C_TYPE +" = " + TYPE_OTHER + " LIMIT " +limit,
-                null
-        );
+        String query = "SELECT * FROM "+DBModel.TABLE_NAME+" WHERE "+DBModel.C_CAR_ID+" = " + carId+ " AND "+DBModel.C_TYPE +" = " + TYPE_OTHER + order;
+        if(limit>0) query += " LIMIT " +limit;
+        Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(query, null);
         while(cursor.moveToNext()) {
             int id = DatabaseManager.extractInt(cursor, DBModel.C_ID);
             result.add(new Intervention(cursor));
@@ -163,10 +162,6 @@ public class Intervention extends DBObject{
         return result;
     }
 
-    /**
-     * @deprecated
-     * Use findAllByCar(carId, limit) instead
-     */
     @Deprecated
     public static ArrayList<Intervention> find10ByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
