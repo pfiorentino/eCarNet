@@ -190,7 +190,7 @@ public class HomeFragment extends MasterFragment {
     public ArrayList<Entry> getInterventionsAmounts(ArrayList<Intervention> interventionsList) {
         ArrayList<Entry> amounts = new ArrayList<>();
 
-        for(int i = 1; i < interventionsList.size(); i++) {
+        for(int i = 0; i < interventionsList.size(); i++) {
             amounts.add(new Entry(interventionsList.get(i).getPrice(), i));
         }
 
@@ -202,7 +202,7 @@ public class HomeFragment extends MasterFragment {
 
         ArrayList<String> labels = new ArrayList<>();
 
-        for(int i = 1; i < interventionsList.size(); i++) {
+        for(int i = firstIndex; i < interventionsList.size(); i++) {
             String dateOutput = sdf.format(interventionsList.get(i).getDate());
             labels.add(dateOutput);
         }
