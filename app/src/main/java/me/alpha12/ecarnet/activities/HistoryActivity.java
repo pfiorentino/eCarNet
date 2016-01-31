@@ -32,6 +32,14 @@ public class HistoryActivity extends MasterListActivity<Intervention> implements
         startActivity(intent);
     }
 
+    @Override
+    public void afterDelete(){
+        super.afterDelete();
+        setResult(0);
+        if(itemsList.isEmpty())
+            onBackPressed();
+    }
+
 
     @Override
     public void defineListAdapter() {
