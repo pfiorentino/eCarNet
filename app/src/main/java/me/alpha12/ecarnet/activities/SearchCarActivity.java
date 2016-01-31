@@ -27,8 +27,6 @@ import me.alpha12.ecarnet.adapters.ModelAdapter;
 import me.alpha12.ecarnet.models.CarModel;
 
 public class SearchCarActivity extends AppCompatActivity {
-
-
     //affiliated to search bar
     private List<CarModel> allCarModels;
     private List<CarModel> filteredCarModels;
@@ -106,6 +104,8 @@ public class SearchCarActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(SearchCarActivity.this, CustomizeCarActivity.class);
                 intent.putExtra("id", model.getId());
+                if (getIntent().hasExtra("carId"))
+                    intent.putExtra("carId", getIntent().getExtras().getInt("carId"));
                 SearchCarActivity.this.startActivityForResult(intent, 0);
             }
         });

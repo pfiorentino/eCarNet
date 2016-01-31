@@ -30,17 +30,18 @@ import me.alpha12.ecarnet.classes.Utils;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
 
-public class AddFillUpActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddFillUpActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
     private boolean isCalledFromTag = false;
 
-    private static TextView mDateTextView;
-    private Calendar mCurrentDate;
+    private TextView dateTextView;
     private TextView kilometersTextView;
     private TextView amount;
     private TextView price;
     private Button addButton;
     private Button backButton;
     private Car currentCar;
+
+    private Calendar selectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +51,20 @@ public class AddFillUpActivity extends AppCompatActivity implements View.OnClick
         int carId = getIntent().getExtras().getInt("carId");
         currentCar = Car.get(carId);
 
-        mCurrentDate = Calendar.getInstance();
+        selectedDate = Calendar.getInstance();
 
-        mDateTextView = (TextView) findViewById(R.id.date);
-        mDateTextView.setText(getFormattedDate(this, mCurrentDate));
-        mDateTextView.setOnClickListener(new View.OnClickListener() {
+        dateTextView = (TextView) findViewById(R.id.fillup_date_text_view);
+        dateTextView.setText(GlobalContext.getFormattedDate(selectedDate));
+        dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new DatePickerFragment();
+                DialogFragment newFragment = DatePickerFragment.newInstance(
+                        AddFillUpActivity.this.selectedDate,
+                        AddFillUpActivity.this
+                );
                 newFragment.show(getSupportFragmentManager(), "datePicker");
             }
         });
-        mDateTextView.addTextChangedListener(mTextWatcher);
 
         kilometersTextView = (TextView) findViewById(R.id.total);
         kilometersTextView.addTextChangedListener(mTextWatcher);
@@ -104,31 +107,6 @@ public class AddFillUpActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private TextWatcher mTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
-        @Override
-        public void afterTextChanged(Editable editable) {
-            addButton.setEnabled(
-                    !kilometersTextView.getText().toString().matches("") &&
-                    !amount.getText().toString().matches("") &&
-                    !price.getText().toString().matches("") &&
-                    !mDateTextView.getText().toString().matches("")
-            );
-        }
-    };
-
-    private static String getFormattedDate(Context ctx, Calendar c) {
-        return DateUtils.formatDateTime(ctx, c.getTimeInMillis(),
-                                        DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH);
-    }
-
-    private static String getFormattedTime(Context ctx, Calendar c) {
-        return DateUtils.formatDateTime(ctx, c.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME);
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -136,59 +114,100 @@ public class AddFillUpActivity extends AppCompatActivity implements View.OnClick
                 onBackPressed();
                 break;
             case R.id.addFillUpButton:
-                SimpleDateFormat sdf = new SimpleDateFormat("EEE d MMM yyyy", Locale.FRENCH);
-                try {
-                    Date d = sdf.parse(mDateTextView.getText().toString());
-                    int kilometers = Integer.parseInt(kilometersTextView.getText().toString());
+                int kilometers = Integer.parseInt(kilometersTextView.getText().toString());
 
-                    Intervention inter = new Intervention(
-                            0,
-                            currentCar.getId(),
-                            Intervention.TYPE_FILLUP,
-                            "fill_up_intervention",
-                            kilometers,
-                            new Date(d.getTime()),
-                            Float.parseFloat(price.getText().toString()),
-                            Float.parseFloat(amount.getText().toString())
-                        );
-                    inter.persist();
+                Intervention inter = new Intervention(
+                        0,
+                        currentCar.getId(),
+                        Intervention.TYPE_FILLUP,
+                        "fill_up_intervention",
+                        kilometers,
+                        selectedDate.getTime(),
+                        Float.parseFloat(price.getText().toString()),
+                        Float.parseFloat(amount.getText().toString())
+                );
+                inter.persist();
 
-                    currentCar.setKilometers(kilometers);
-                    currentCar.update();
+                currentCar.setKilometers(kilometers);
+                currentCar.update();
 
-                    if (isCalledFromTag){
-                        GlobalContext.pushNotification("eCarNet", "Le plein a bien été ajouté à votre "+currentCar.getCarModel().toString());
-                    }
-
-                    onBackPressed();
-                    finish();
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                if (isCalledFromTag){
+                    GlobalContext.pushNotification("eCarNet", "Le plein a bien été ajouté à votre "+currentCar.getCarModel().toString());
                 }
+
+                onBackPressed();
+                finish();
                 break;
         }
     }
 
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        selectedDate = Calendar.getInstance();
+        selectedDate.set(year, monthOfYear, dayOfMonth);
+        dateTextView.setText(GlobalContext.getFormattedDate(selectedDate));
+        checkForm();
+    }
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+        @Override
+        public void afterTextChanged(Editable editable) {
+            checkForm();
+        }
+    };
+
+    private void checkForm() {
+        addButton.setEnabled(
+                !kilometersTextView.getText().toString().matches("") &&
+                        !amount.getText().toString().matches("") &&
+                        !price.getText().toString().matches("") &&
+                        selectedDate != null
+        );
+    }
+
+    public static class DatePickerFragment extends DialogFragment {
+        private DatePickerDialog.OnDateSetListener onDateSetListener;
+
+        public static DatePickerFragment newInstance(Calendar date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+            DatePickerFragment pickerFragment = new DatePickerFragment();
+            pickerFragment.setOnDateSetListener(onDateSetListener);
+
+            //Pass the date in a bundle.
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("SELECTED_DATE", date);
+            pickerFragment.setArguments(bundle);
+            return pickerFragment;
+        }
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
+            Calendar initialDate = (Calendar) getArguments().getSerializable("SELECTED_DATE");
+
+            final Calendar c;
+            if (initialDate != null) {
+                c = initialDate;
+            } else {
+                c = Calendar.getInstance();
+            }
+
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
             // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), (AddFillUpActivity) getActivity(), year, month, day);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                dialog.getDatePicker().setMaxDate(new Date().getTime());
+            }
+            return dialog;
         }
 
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            final Calendar c = Calendar.getInstance();
-            c.set(year, month, day);
-            mDateTextView.setText(getFormattedDate(this.getContext(), c));
+        private void setOnDateSetListener(DatePickerDialog.OnDateSetListener listener) {
+            this.onDateSetListener = listener;
         }
     }
-
 }

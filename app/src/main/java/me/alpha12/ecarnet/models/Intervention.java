@@ -163,10 +163,6 @@ public class Intervention extends DBObject{
         return result;
     }
 
-    /**
-     * @deprecated
-     * Use findAllByCar(carId, limit) instead
-     */
     @Deprecated
     public static ArrayList<Intervention> find10ByCar(int carId) {
         ArrayList<Intervention> result = new ArrayList<>();
@@ -202,15 +198,16 @@ public class Intervention extends DBObject{
     public static float getAverageConsumption(int carId) {
         Cursor cursor = DatabaseManager.getCurrentDatabase().rawQuery(
                 "SELECT (MAX("+ DBModel.C_KILOMETERS +") - MIN("+ DBModel.C_KILOMETERS +")) as dist, " +
-                    "SUM("+DBModel.C_QUANTITY+") as qty_tot " +
+                    "(SUM("+DBModel.C_QUANTITY+") - " + DBModel.C_QUANTITY + ") as qty_tot " +
                 "FROM " + DBModel.TABLE_NAME + " " +
-                "WHERE " + DBModel.C_CAR_ID + " = " + carId + " AND " + DBModel.C_TYPE + " = " + TYPE_FILLUP
+                "WHERE " + DBModel.C_CAR_ID + " = " + carId + " AND " + DBModel.C_TYPE + " = " + TYPE_FILLUP + " " +
+                "ORDER BY " + DBModel.C_KILOMETERS
         , null);
         cursor.moveToNext();
 
         float consumption = -1;
         if (DatabaseManager.extractFloat(cursor, "dist") > 0){
-            consumption = DatabaseManager.extractFloat(cursor, "qty_tot")/DatabaseManager.extractFloat(cursor, "dist");
+            consumption = (DatabaseManager.extractFloat(cursor, "qty_tot")/DatabaseManager.extractFloat(cursor, "dist"))*100;
         }
 
         return consumption;

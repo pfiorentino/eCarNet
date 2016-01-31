@@ -9,6 +9,37 @@
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:padding="@dimen/cards_half_margin">
 
+        <android.support.v7.widget.CardView android:id="@+id/unfinished_configuration_card"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_margin="@dimen/cards_half_margin" >
+
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="match_parent" android:layout_height="wrap_content" >
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp" android:layout_marginBottom="4dp"
+                    android:text="Configuration du véhicule" android:textAppearance="@android:style/TextAppearance.Large"/>
+
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp" android:layout_marginLeft="16dp"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:text="@string/unfinished_configuration_text"/>
+
+                <LinearLayout android:orientation="horizontal"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_margin="8dp">
+                    <Button android:id="@+id/complete_config_button" android:minHeight="0dp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:padding="8dp" android:layout_marginRight="8dp"
+                        android:textColor="@color/colorPrimary300"
+                        android:text="Reprendre la configuration"
+                        android:background="@drawable/transparent_button" />
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView android:id="@+id/next_reminder_card"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_margin="@dimen/cards_half_margin" >

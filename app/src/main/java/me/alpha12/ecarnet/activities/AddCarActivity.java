@@ -92,55 +92,10 @@ public class AddCarActivity extends AppCompatActivity implements View.OnClickLis
         mineTypeEditText.addTextChangedListener(mTextWatcher);
 
         vehicleButton = (Button) findViewById(R.id.vehicleButton);
-        vehicleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AddCarActivity.this, SearchCarActivity.class);
-                intent.putExtra("brand", brandSpinner.getSelectedItem().toString().toUpperCase());
-                intent.putExtra("model", modelSpinner.getSelectedItem().toString().toUpperCase());
-                startActivityForResult(intent, 0);
-            }
-        });
+        vehicleButton.setOnClickListener(this);
 
         mineButton = (Button) findViewById(R.id.mineButton);
-        mineButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mineTypeEditText.getText().toString().length() < 3)
-                {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddCarActivity.this);
-                    alertDialogBuilder.setMessage("Saisissez au moins 3 caractères du type mine");
-                    alertDialogBuilder.setPositiveButton("fermer", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                        }
-                    });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-                }
-                else {
-                    if (CarModel.existWithTypeMine(mineTypeEditText.getText().toString())) {
-                        Intent mineIntent = new Intent(AddCarActivity.this, SearchCarActivity.class);
-                        mineIntent.putExtra("mine", mineTypeEditText.getText().toString().toUpperCase());
-                        startActivityForResult(mineIntent, 0);
-                    } else {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddCarActivity.this);
-                        alertDialogBuilder.setMessage("Oups, aucun véhicule n'a été trouvé. Vérifiez le type mine ou cherchez par marque et modèle");
-                        alertDialogBuilder.setPositiveButton("fermer", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                            }
-                        });
-                        AlertDialog alertDialog = alertDialogBuilder.create();
-                        alertDialog.show();
-                    }
-                }
-            }
-        });
+        mineButton.setOnClickListener(this);
 
         cancelButton = (Button) findViewById(R.id.cancelButton);
         skipButton = (Button) findViewById(R.id.skipButton);
@@ -163,7 +118,8 @@ public class AddCarActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void afterTextChanged(Editable editable) {
             mineButton.setEnabled(
-                    !mineTypeEditText.getText().toString().matches("")
+                !mineTypeEditText.getText().toString().matches("") &&
+                mineTypeEditText.getText().length() >= 3
             );
         }
     };
@@ -180,7 +136,35 @@ public class AddCarActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
+            case R.id.vehicleButton:
+                intent = new Intent(AddCarActivity.this, SearchCarActivity.class);
+                intent.putExtra("brand", brandSpinner.getSelectedItem().toString().toUpperCase());
+                intent.putExtra("model", modelSpinner.getSelectedItem().toString().toUpperCase());
+
+                if (getIntent().hasExtra("carId"))
+                    intent.putExtra("carId", getIntent().getExtras().getInt("carId"));
+
+                startActivityForResult(intent, 0);
+                break;
+            case R.id.mineButton:
+                if (CarModel.existWithTypeMine(mineTypeEditText.getText().toString())) {
+                    Intent mineIntent = new Intent(AddCarActivity.this, SearchCarActivity.class);
+                    mineIntent.putExtra("mine", mineTypeEditText.getText().toString().toUpperCase());
+                    if (getIntent().hasExtra("carId"))
+                        mineIntent.putExtra("carId", getIntent().getExtras().getInt("carId"));
+                    startActivityForResult(mineIntent, 0);
+                } else {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddCarActivity.this);
+                    alertDialogBuilder.setMessage("Oups, aucun véhicule n'a été trouvé. Vérifiez le type mine ou cherchez par marque et modèle");
+                    alertDialogBuilder.setNegativeButton("fermer", null);
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+                break;
             case R.id.cancelButton:
                 AddCarActivity.this.setResult(GlobalContext.RESULT_CLOSE_ALL);
                 AddCarActivity.this.finish();
@@ -191,7 +175,7 @@ public class AddCarActivity extends AppCompatActivity implements View.OnClickLis
 
                 GlobalContext.setCurrentCar(car.getId());
 
-                Intent intent = new Intent(AddCarActivity.this, MainActivity.class);
+                intent = new Intent(AddCarActivity.this, MainActivity.class);
                 AddCarActivity.this.startActivity(intent);
                 setResult(GlobalContext.RESULT_CLOSE_ALL);
                 finish();

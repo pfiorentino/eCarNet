@@ -80,6 +80,7 @@
     <string name="chartDesciption">Description : %1$s</string>
     <string name="chartCost">Montant : %1$,.2f €</string>
     <string name="edit_intervention">Modifier une intervetion</string>
+    <string name="unfinished_configuration_text">Nous avons détecté que la configuration de votre véhicule est incomplète.\nAfin d\'avoir accès à toutes les fonctionnalités d\'eCarNet, vous pouvez achever cette étape en cliquant sur le bouton ci-dessous.</string>
 
 </resources>
 

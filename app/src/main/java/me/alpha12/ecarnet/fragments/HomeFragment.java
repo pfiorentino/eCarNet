@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import me.alpha12.ecarnet.R;
+import me.alpha12.ecarnet.activities.AddCarActivity;
 import me.alpha12.ecarnet.activities.AddFillUpActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.models.Car;
@@ -25,6 +27,9 @@ import me.alpha12.ecarnet.models.Intervention;
 import me.alpha12.ecarnet.models.Reminder;
 
 public class HomeFragment extends MasterFragment {
+    private CardView unfinishedConfigurationCard;
+    private Button completeConfigButton;
+
     private CardView nextReminderCard;
     private TextView reminderTitleTextView;
     private TextView reminderLimitTextView;
@@ -62,6 +67,9 @@ public class HomeFragment extends MasterFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        this.unfinishedConfigurationCard = (CardView) view.findViewById(R.id.unfinished_configuration_card);
+        this.completeConfigButton = (Button) view.findViewById(R.id.complete_config_button);
+
         this.nextReminderCard = (CardView) view.findViewById(R.id.next_reminder_card);
         this.reminderTitleTextView = (TextView) view.findViewById(R.id.reminder_title_text_view);
         this.reminderLimitTextView = (TextView) view.findViewById(R.id.reminder_limit_text_view);
@@ -89,10 +97,20 @@ public class HomeFragment extends MasterFragment {
         if (currentCar.isDefined())
             setDefaultSubTitle(currentCar.getDetails());
 
+        refreshUnfinishedConfigurationCard();
         refreshConsumptionCard();
         refreshReminderCard();
         refreshKilometersCard();
         refreshFillUpCard();
+    }
+
+    private void refreshUnfinishedConfigurationCard() {
+        if (currentCar.isDefined()){
+            this.unfinishedConfigurationCard.setVisibility(View.GONE);
+        } else {
+            this.unfinishedConfigurationCard.setVisibility(View.VISIBLE);
+            this.completeConfigButton.setOnClickListener(this);
+        }
     }
 
     private void refreshReminderCard() {
@@ -157,8 +175,11 @@ public class HomeFragment extends MasterFragment {
 
     public void animateTextView(float initialValue, float finalValue, final TextView textview) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (finalValue > 10)
+                initialValue = finalValue-10;
+
             ValueAnimator valueAnimator = ValueAnimator.ofFloat(initialValue, finalValue);
-            valueAnimator.setDuration(1500);
+            valueAnimator.setDuration(1800);
 
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -222,11 +243,18 @@ public class HomeFragment extends MasterFragment {
 
     @Override
     public void onClick(View v) {
+        Intent intent;
+
         switch (v.getId()) {
             case R.id.addFillupFAB:
-                Intent intent = new Intent(v.getContext(), AddFillUpActivity.class);
+                intent = new Intent(v.getContext(), AddFillUpActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
+                break;
+            case R.id.complete_config_button:
+                intent = new Intent(v.getContext(), AddCarActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivityForResult(intent, 0);
                 break;
         }
     }
