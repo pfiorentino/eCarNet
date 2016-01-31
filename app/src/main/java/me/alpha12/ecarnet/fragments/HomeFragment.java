@@ -12,11 +12,14 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import me.alpha12.ecarnet.GlobalContext;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddFillUpActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
@@ -40,6 +43,10 @@ public class HomeFragment extends MasterFragment {
     private TextView lastFillUpQtyTextView;
     private TextView lastFillUpAmountTextView;
     private LineChart fillUpChart;
+
+    private TextView chartDataKilometers;
+    private TextView chartDataCost;
+    private TextView chartDataDate;
 
     public static HomeFragment newInstance(int fragmentId) {
         HomeFragment fragment = new HomeFragment();
@@ -77,6 +84,10 @@ public class HomeFragment extends MasterFragment {
         this.lastFillUpQtyTextView = (TextView) view.findViewById(R.id.last_fill_up_qty_text_view);
         this.lastFillUpAmountTextView = (TextView) view.findViewById(R.id.last_fill_up_amount_text_view);
         this.fillUpChart = (LineChart) view.findViewById(R.id.fill_up_chart);
+
+        this.chartDataKilometers = (TextView) view.findViewById(R.id.chartDataDescription);
+        this.chartDataCost = (TextView) view.findViewById(R.id.chartDataCost);
+        this.chartDataDate = (TextView) view.findViewById(R.id.chartDataDate);
 
         return view;
     }
@@ -127,6 +138,7 @@ public class HomeFragment extends MasterFragment {
 
             new LineChartCustom(this.kilometersChart, chartData, "", chartLabels, null);
 
+
             int totalDistance = getTotalDistance(lastInterventions);
             this.kilometersTextView.setText(totalDistance + " km effectués");
             this.kilometersCard.setVisibility(View.VISIBLE);
@@ -136,13 +148,34 @@ public class HomeFragment extends MasterFragment {
     }
 
     private void refreshFillUpCard() {
-        ArrayList<Intervention> lastFillUps = Intervention.findFillUpsByCar(currentCar.getId(), 10);
+        final ArrayList<Intervention> lastFillUps = Intervention.findFillUpsByCar(currentCar.getId(), 10);
 
         if (lastFillUps.size() > 0) {
             ArrayList<Entry> chartData = getInterventionsAmounts(lastFillUps);
             ArrayList<String> chartLabels = getInterventionsChartLabels(lastFillUps, 0);
 
-            new LineChartCustom(this.fillUpChart, chartData, "", chartLabels, null);
+            chartDataKilometers.setText(String.format(getResources().getString(R.string.chartKilomters), lastFillUps.get(0).getKilometers()));
+            chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) lastFillUps.get(0).getPrice()));
+            chartDataDate.setText(GlobalContext.getFormattedSmallDate(lastFillUps.get(0).getDate()));
+
+            LineChartCustom lcc = new LineChartCustom(this.fillUpChart, chartData, "", chartLabels, null);
+            lcc.getChart().setTouchEnabled(true);
+            lcc.getChart().setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+
+
+                @Override
+
+                public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                    chartDataKilometers.setText(String.format(getResources().getString(R.string.chartKilomters), lastFillUps.get(e.getXIndex()).getKilometers()));
+                    chartDataCost.setText(String.format(getResources().getString(R.string.chartCost), (float) e.getVal()));
+                    chartDataDate.setText(GlobalContext.getFormattedSmallDate(lastFillUps.get(e.getXIndex()).getDate()));
+                }
+
+                @Override
+                public void onNothingSelected() {
+                }
+            });
+
 
             Intervention lastFillUp = lastFillUps.get(lastFillUps.size()-1);
             animateTextView(0, lastFillUp.getQuantity(), this.lastFillUpQtyTextView);
