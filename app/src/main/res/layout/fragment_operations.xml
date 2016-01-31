@@ -182,14 +182,14 @@
             android:visibility="gone"
             android:textAppearance="@android:style/TextAppearance.Large"
             android:textColor="@color/hintTextColor"
-            android:text="@string/no_item_found"/>
+            android:text="@string/no_intervention_found"/>
         <TextView android:id="@+id/noItemTextDesc"
             android:visibility="gone"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:textAppearance="@android:style/TextAppearance.Medium"
             android:textAlignment="center"
             android:textColor="@color/hintTextColor"
-            android:text="@string/no_item_found_new_item"/>
+            android:text="@string/no_intervention_found_new_item"/>
     </LinearLayout>
     <ImageView android:id="@+id/noItemImageView"
         android:visibility="gone"

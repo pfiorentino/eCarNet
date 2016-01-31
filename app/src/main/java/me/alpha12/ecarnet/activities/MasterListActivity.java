@@ -41,6 +41,7 @@ public abstract class MasterListActivity<ItemsType extends DBObject> extends App
     protected Integer layoutResId = null;
 
     private String defaultTitle;
+    private boolean hasFloatingActionButton = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -209,7 +210,10 @@ public abstract class MasterListActivity<ItemsType extends DBObject> extends App
                     listView.setVisibility(View.VISIBLE);
                 } else {
                     noItemTextLayout.setVisibility(View.VISIBLE);
-                    noItemImageView.setVisibility(View.VISIBLE);
+                    if (hasFloatingActionButton)
+                        noItemImageView.setVisibility(View.VISIBLE);
+                    else
+                        noItemImageView.setVisibility(View.GONE);
                     listView.setVisibility(View.GONE);
                 }
 
@@ -228,6 +232,10 @@ public abstract class MasterListActivity<ItemsType extends DBObject> extends App
     public void setDefaultTitle(String value) {
         this.defaultTitle = value;
         invalidateActionBar();
+    }
+
+    public void hasFloatingActionButton(boolean hasFloatingActionButton) {
+        this.hasFloatingActionButton = hasFloatingActionButton;
     }
 
     public void afterDelete() {
