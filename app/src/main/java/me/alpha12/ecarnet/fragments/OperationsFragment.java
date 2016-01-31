@@ -66,12 +66,33 @@ public class OperationsFragment extends MasterFragment {
         super.onResume();
         updateLists();
         if(!interventionListForGrid.isEmpty()) {
+            CardView chartCard = (CardView) view.findViewById(R.id.chartCard);
+            chartCard.setVisibility(View.VISIBLE);
+            CardView gridCard = (CardView) view.findViewById(R.id.gridCard);
+            gridCard.setVisibility(View.VISIBLE);
+            LinearLayout summaryPrices = (LinearLayout) view.findViewById(R.id.summaryPrices);
+            summaryPrices.setVisibility(View.VISIBLE);
+            TextView noItemTextTitle = (TextView) view.findViewById(R.id.noItemTextTitle);
+            noItemTextTitle.setVisibility(View.GONE);
+            TextView noItemTextDesc = (TextView) view.findViewById(R.id.noItemTextDesc);
+            noItemTextDesc.setVisibility(View.GONE);
+            ImageView noItemImageView = (ImageView) view.findViewById(R.id.noItemImageView);
+            noItemImageView.setVisibility(View.GONE);
             updateGrid();
             updateChart();
             Date limit = mCurrentDate.getTime();
             limit.setMonth(0);
             limit.setDate(0);
             updatePrices(limit);
+            Button allInterventionButton = (Button) view.findViewById(R.id.allInterventionButton);
+            allInterventionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), HistoryActivity.class);
+                    intent.putExtra("carid", currentCar.getId());
+                    startActivity(intent);
+                }
+            });
         }
         else {
             CardView chartCard = (CardView) view.findViewById(R.id.chartCard);
@@ -113,19 +134,6 @@ public class OperationsFragment extends MasterFragment {
 
         ArrayList<Entry> entries = new ArrayList<>();
         ArrayList<String> labels = new ArrayList<>();
-
-        if (!interventionListForGrid.isEmpty()) {
-            Button allInterventionButton = (Button) view.findViewById(R.id.allInterventionButton);
-            allInterventionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), HistoryActivity.class);
-                    intent.putExtra("carid", currentCar.getId());
-                    startActivity(intent);
-                }
-            });
-
-            }
         return view;
     }
 
