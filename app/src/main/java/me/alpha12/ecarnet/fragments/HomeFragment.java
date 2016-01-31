@@ -21,6 +21,7 @@ import java.util.Locale;
 import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddCarActivity;
 import me.alpha12.ecarnet.activities.AddFillUpActivity;
+import me.alpha12.ecarnet.activities.AddInterventionActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
@@ -45,6 +46,11 @@ public class HomeFragment extends MasterFragment {
     private TextView lastFillUpQtyTextView;
     private TextView lastFillUpAmountTextView;
     private LineChart fillUpChart;
+
+    private CardView noFillUpCard;
+    private Button addFillUpButton;
+    private CardView noInterventionCard;
+    private Button addInterventionButton;
 
     public static HomeFragment newInstance(int fragmentId) {
         HomeFragment fragment = new HomeFragment();
@@ -86,6 +92,13 @@ public class HomeFragment extends MasterFragment {
         this.lastFillUpAmountTextView = (TextView) view.findViewById(R.id.last_fill_up_amount_text_view);
         this.fillUpChart = (LineChart) view.findViewById(R.id.fill_up_chart);
 
+        this.noFillUpCard = (CardView) view.findViewById(R.id.no_fill_up_card);
+        this.addFillUpButton = (Button) view.findViewById(R.id.add_fill_up_button);
+        this.addFillUpButton.setOnClickListener(this);
+        this.noInterventionCard = (CardView) view.findViewById(R.id.no_intervention_card);
+        this.addInterventionButton = (Button) view.findViewById(R.id.add_intervention_button);
+        this.addInterventionButton.setOnClickListener(this);
+
         return view;
     }
 
@@ -102,6 +115,7 @@ public class HomeFragment extends MasterFragment {
         refreshReminderCard();
         refreshKilometersCard();
         refreshFillUpCard();
+        refreshInterventionCard();
     }
 
     private void refreshUnfinishedConfigurationCard() {
@@ -162,13 +176,26 @@ public class HomeFragment extends MasterFragment {
 
             new LineChartCustom(this.fillUpChart, chartData, "", chartLabels, null);
 
-            Intervention lastFillUp = lastFillUps.get(lastFillUps.size()-1);
+            Intervention lastFillUp = lastFillUps.get(lastFillUps.size() - 1);
             animateTextView(0, lastFillUp.getQuantity(), this.lastFillUpQtyTextView);
             animateTextView(0, lastFillUp.getPrice(), this.lastFillUpAmountTextView);
 
             this.fillUpCard.setVisibility(View.VISIBLE);
+            this.noFillUpCard.setVisibility(View.GONE);
         } else {
             this.fillUpCard.setVisibility(View.GONE);
+            this.noFillUpCard.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private void refreshInterventionCard() {
+        ArrayList<Intervention> lastInterventions = Intervention.findOtherByCar(currentCar.getId(), 10);
+
+        if (lastInterventions.size() > 0) {
+            this.noInterventionCard.setVisibility(View.GONE);
+        } else {
+            this.noInterventionCard.setVisibility(View.VISIBLE);
         }
 
     }
@@ -247,6 +274,7 @@ public class HomeFragment extends MasterFragment {
 
         switch (v.getId()) {
             case R.id.addFillupFAB:
+            case R.id.add_fill_up_button:
                 intent = new Intent(v.getContext(), AddFillUpActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivity(intent);
@@ -255,6 +283,11 @@ public class HomeFragment extends MasterFragment {
                 intent = new Intent(v.getContext(), AddCarActivity.class);
                 intent.putExtra("carId", currentCar.getId());
                 startActivityForResult(intent, 0);
+                break;
+            case R.id.add_intervention_button:
+                intent = new Intent(v.getContext(), AddInterventionActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
                 break;
         }
     }
