@@ -120,12 +120,12 @@ public class AddInterventionActivity extends AppCompatActivity implements OnClic
                         descEditText.getText().toString(),
                         kilometers,
                         selectedDate.getTime(),
-                        (double) Float.parseFloat(priceEditText.getText().toString()),
+                        Float.parseFloat(priceEditText.getText().toString()),
                         -1
                     );
                 else {
                     currentIntervention.setDescription(descEditText.getText().toString());
-                    currentIntervention.setPrice(Double.valueOf(priceEditText.getText().toString()));
+                    currentIntervention.setPrice(Float.valueOf(priceEditText.getText().toString()));
                     currentIntervention.setDate(selectedDate.getTime());
                     currentIntervention.setKilometers(Integer.valueOf(kmEditText.getText().toString()));
                 }

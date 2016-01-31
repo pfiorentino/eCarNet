@@ -86,15 +86,15 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView android:id="@+id/kilometerscard"
+            <android.support.v7.widget.CardView android:id="@+id/kilometers_card"
                 android:layout_width="0dp" android:layout_height="@dimen/value_card_height" android:layout_weight="1"
                 android:layout_margin="@dimen/cards_half_margin">
                 <RelativeLayout
                     android:layout_width="match_parent" android:layout_height="match_parent" >
-                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/kilometersChart"
+                    <com.github.mikephil.charting.charts.LineChart android:id="@+id/kilometers_chart"
                         android:layout_width="match_parent" android:layout_height="80dp"
                         android:layout_margin="8dp"/>
-                    <TextView android:id="@+id/kilometersData"
+                    <TextView android:id="@+id/kilometers_text_view"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_margin="16dp" android:textAlignment="center"
@@ -157,11 +157,6 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp" android:layout_marginBottom="8dp"
                     android:layout_marginLeft="16dp" android:layout_marginRight="16dp"/>
-                <TextView android:id="@+id/fill_up_chart_data"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="Aucune donnée"
-                    android:textAlignment="center" />
 
                 <LinearLayout android:orientation="horizontal"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
