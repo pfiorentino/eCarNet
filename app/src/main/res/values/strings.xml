@@ -21,7 +21,7 @@
     <string name="fragment_gas_price">Prix</string>
 
 
-    <string name="title_activity_add_car">AddCarActivity</string>
+    <string name="title_activity_add_car">Modèle et Finitions</string>
     <string name="title_activity_cars_management">CarsManagementActivity</string>
     <string name="title_activity_cars_mgmt">CarsMgmtActivity</string>
     <string name="title_activity_add_user">AddUserActivity</string>
