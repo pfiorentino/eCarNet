@@ -2,14 +2,20 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fitsSystemWindows="true" android:background="@android:color/black"
     tools:context="me.alpha12.ecarnet.activities.CarProfileActivity">
+
+    <android.support.v4.view.ViewPager android:id="@+id/viewpager"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:paddingTop="0dp" android:paddingBottom="0dp" android:layout_margin="0dp"
+        android:background="@color/defaultBackgroundColor"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay" android:fitsSystemWindows="true">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout android:id="@+id/toolbarLayout"
             android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -44,24 +50,11 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:layout_collapseMode="pin"/>
         </android.support.design.widget.CollapsingToolbarLayout>
+
+        <android.support.design.widget.TabLayout android:id="@+id/tabs"
+            android:layout_width="match_parent" android:layout_height="48dp"
+            android:background="@color/defaultBackgroundColor"
+            app:tabSelectedTextColor="@color/textColor" app:tabTextColor="@color/secondaryTextColor"
+            app:tabMode="fixed" />
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView android:id="@+id/scrollView"
-        android:layout_width="match_parent" android:layout_height="match_parent"
-        android:clipToPadding="false" android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout android:orientation="vertical"
-            android:layout_width="match_parent" android:layout_height="wrap_content">
-
-            <android.support.design.widget.TabLayout android:id="@+id/tabs"
-                android:layout_width="match_parent" android:layout_height="48dp"
-                app:tabMode="fixed" />
-
-            <android.support.v4.view.ViewPager android:id="@+id/viewpager"
-                android:layout_width="match_parent" android:layout_height="match_parent"
-                android:paddingTop="0dp" android:paddingBottom="0dp"/>
-
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

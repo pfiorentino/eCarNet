@@ -1,101 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <LinearLayout android:orientation="horizontal" android:gravity="center"
-        android:layout_width="match_parent" android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="24dp" android:layout_marginBottom="24dp"
-            android:layout_marginLeft="16dp" android:layout_marginRight="24dp"
-            android:src="@drawable/ic_plate_black_54pc_24dp"/>
-        <LinearLayout android:orientation="vertical"
+        <LinearLayout android:orientation="horizontal" android:gravity="center"
             android:layout_width="match_parent" android:layout_height="wrap_content">
-            <TextView android:id="@+id/plate_number_text_view"
+            <ImageView
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.Medium"
-                android:text="@string/not_specified"/>
-            <TextView
+                android:layout_marginTop="24dp" android:layout_marginBottom="24dp"
+                android:layout_marginLeft="16dp" android:layout_marginRight="24dp"
+                android:src="@drawable/ic_plate_black_54pc_24dp"/>
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Small"
+                    android:text="Immatriculation"/>
+                <TextView android:id="@+id/plate_number_text_view"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Medium"
+                    android:text="@string/not_specified"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent" android:layout_height="1dp"
+            android:layout_marginLeft="64dp"
+            android:background="@color/listDividerColor" />
+
+        <LinearLayout android:orientation="horizontal" android:gravity="center"
+            android:layout_width="match_parent" android:layout_height="wrap_content">
+            <ImageView
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.Small"
-                android:text="Immatriculation"/>
+                android:layout_marginTop="24dp" android:layout_marginBottom="24dp"
+                android:layout_marginLeft="16dp" android:layout_marginRight="24dp"
+                android:src="@drawable/ic_distance_black_54pc_24dp"/>
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Small"
+                    android:text="Compteur total"/>
+                <TextView android:id="@+id/total_distance_text_view"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Medium"
+                    android:text="@string/not_specified"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent" android:layout_height="1dp"
+            android:layout_marginLeft="64dp"
+            android:background="@color/listDividerColor" />
+
+        <LinearLayout
+            android:orientation="horizontal" android:gravity="center"
+            android:layout_width="match_parent" android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="24dp" android:layout_marginBottom="24dp"
+                android:layout_marginLeft="16dp" android:layout_marginRight="24dp"
+                android:src="@drawable/ic_buy_date_black_54pc_24dp"/>
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Small"
+                    android:text="Date d'achat"/>
+                <TextView android:id="@+id/buying_date_text_view"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Medium"
+                    android:text="@string/not_specified"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent" android:layout_height="1dp"
+            android:layout_marginLeft="64dp"
+            android:background="@color/listDividerColor" />
+
+        <LinearLayout android:orientation="horizontal" android:gravity="center"
+            android:layout_width="match_parent" android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="24dp" android:layout_marginBottom="24dp"
+                android:layout_marginLeft="16dp" android:layout_marginRight="24dp"
+                android:src="@drawable/ic_circulation_date_black_54pc_24dp"/>
+            <LinearLayout android:orientation="vertical"
+                android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Small"
+                    android:text="Première mise en circulation"/>
+                <TextView android:id="@+id/circulation_date_text_view"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Medium"
+                    android:text="@string/not_specified"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent" android:layout_height="1dp"
-        android:layout_marginLeft="64dp"
-        android:background="@color/listDividerColor" />
-
-    <LinearLayout android:orientation="horizontal" android:gravity="center"
-        android:layout_width="match_parent" android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="24dp" android:layout_marginBottom="24dp"
-            android:layout_marginLeft="16dp" android:layout_marginRight="24dp"
-            android:src="@drawable/ic_distance_black_54pc_24dp"/>
-        <LinearLayout android:orientation="vertical"
-            android:layout_width="match_parent" android:layout_height="wrap_content">
-            <TextView android:id="@+id/total_distance_text_view"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.Medium"
-                android:text="@string/not_specified"/>
-            <TextView
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.Small"
-                android:text="Compteur total"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent" android:layout_height="1dp"
-        android:layout_marginLeft="64dp"
-        android:background="@color/listDividerColor" />
-
-    <LinearLayout
-        android:orientation="horizontal" android:gravity="center"
-        android:layout_width="match_parent" android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="24dp" android:layout_marginBottom="24dp"
-            android:layout_marginLeft="16dp" android:layout_marginRight="24dp"
-            android:src="@drawable/ic_buy_date_black_54pc_24dp"/>
-        <LinearLayout android:orientation="vertical"
-            android:layout_width="match_parent" android:layout_height="wrap_content">
-            <TextView android:id="@+id/buying_date_text_view"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.Medium"
-                android:text="@string/not_specified"/>
-            <TextView
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.Small"
-                android:text="Date d'achat"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent" android:layout_height="1dp"
-        android:layout_marginLeft="64dp"
-        android:background="@color/listDividerColor" />
-
-    <LinearLayout android:orientation="horizontal" android:gravity="center"
-        android:layout_width="match_parent" android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="24dp" android:layout_marginBottom="24dp"
-            android:layout_marginLeft="16dp" android:layout_marginRight="24dp"
-            android:src="@drawable/ic_circulation_date_black_54pc_24dp"/>
-        <LinearLayout android:orientation="vertical"
-            android:layout_width="match_parent" android:layout_height="wrap_content">
-            <TextView android:id="@+id/circulation_date_text_view"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.Medium"
-                android:text="@string/not_specified"/>
-            <TextView
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.Small"
-                android:text="Première mise en circulation"/>
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>

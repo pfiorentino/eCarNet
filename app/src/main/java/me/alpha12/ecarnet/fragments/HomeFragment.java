@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,6 +29,7 @@ import me.alpha12.ecarnet.R;
 import me.alpha12.ecarnet.activities.AddCarActivity;
 import me.alpha12.ecarnet.activities.AddFillUpActivity;
 import me.alpha12.ecarnet.activities.AddInterventionActivity;
+import me.alpha12.ecarnet.activities.CarProfileActivity;
 import me.alpha12.ecarnet.charts.LineChartCustom;
 import me.alpha12.ecarnet.models.Car;
 import me.alpha12.ecarnet.models.Intervention;
@@ -69,6 +74,7 @@ public class HomeFragment extends MasterFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         registerFloatingActionButton(R.id.addFillupFAB);
 
         setDefaultTitle(currentCar.getModelString());
@@ -125,6 +131,26 @@ public class HomeFragment extends MasterFragment {
         refreshKilometersCard();
         refreshFillUpCard();
         refreshInterventionCard();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.home_fragment_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.car_info_menu_item:
+                Intent intent = new Intent(this.getContext(), CarProfileActivity.class);
+                intent.putExtra("carId", currentCar.getId());
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void refreshUnfinishedConfigurationCard() {
