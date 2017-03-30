@@ -22,8 +22,9 @@
                     android:layout_marginBottom="8dp"
                     android:text="eCarNet" android:textAppearance="@android:style/TextAppearance.Large"/>
                 <TextView
+                    android:id="@+id/version_text_view"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Version : 0.9 - janvier 2016"/>
+                    android:text="Version : Unknown"/>
                 <TextView
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="Copyright 2016 - ENGLAN - FIORENTINO"
