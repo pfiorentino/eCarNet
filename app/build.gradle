@@ -1,15 +1,17 @@
 apply plugin: 'com.android.application'
 
+def vcode = (int)(((new Date().getTime()/1000) - 1483225200) / 3600)
+
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "me.alpha12.ecarnet"
         minSdkVersion 8
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode vcode
+        versionName "0.9"
     }
 
     buildTypes {
