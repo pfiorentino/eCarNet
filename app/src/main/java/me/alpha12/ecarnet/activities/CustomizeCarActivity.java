@@ -1,10 +1,12 @@
 package me.alpha12.ecarnet.activities;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,6 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -40,7 +44,9 @@ import static me.alpha12.ecarnet.classes.ScalingUtilities.bitmapCirclify;
 import static me.alpha12.ecarnet.classes.ScalingUtilities.createScaledBitmap;
 import static me.alpha12.ecarnet.classes.ScalingUtilities.decodeFile;
 
-public class CustomizeCarActivity extends AppCompatActivity implements OnDateSetListener {
+public class CustomizeCarActivity
+        extends AppCompatActivity
+        implements OnDateSetListener, ActivityCompat.OnRequestPermissionsResultCallback, View.OnClickListener {
     private static final int SELECT_PICTURE_INTENT = 1;
     private static final int SELECT_COVER_INTENT = 2;
 
@@ -76,75 +82,16 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         kilometers.addTextChangedListener(mTextWatcher);
 
         dateTextView = (TextView) findViewById(R.id.dateTextView);
-        dateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment newFragment = DatePickerFragment.newInstance(
-                        CustomizeCarActivity.this.selectedDate,
-                        CustomizeCarActivity.this
-                );
-                newFragment.show(getSupportFragmentManager(), "datePicker");
-            }
-        });
+        dateTextView.setOnClickListener(this);
 
-        ((Button)findViewById(R.id.btn_addPicture)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, SELECT_PICTURE_INTENT);
-            }
-        });
-
-        ((Button)findViewById(R.id.btn_addCover)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, SELECT_COVER_INTENT);
-            }
-        });
+        ((Button)findViewById(R.id.btn_addPicture)).setOnClickListener(this);
+        ((Button)findViewById(R.id.btn_addCover)).setOnClickListener(this);
 
         backButton = (Button) findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        backButton.setOnClickListener(this);
 
         finishButton = (Button) findViewById(R.id.finishButton);
-        finishButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Car car = new Car(
-                        imat.getText().toString(),
-                        Integer.parseInt(kilometers.getText().toString()),
-                        new Date(selectedDate.getTimeInMillis()),
-                        selectedCar);
-
-                if (getIntent().hasExtra("carId")){
-                    int carId = getIntent().getExtras().getInt("carId");
-                    if (carId > 0)
-                        car.setId(carId);
-                }
-                car.persist(true);
-
-                GlobalContext.setCurrentCar(car.getId());
-
-                // Saving the pictures
-                if (pictureUri != null)
-                    savePicture(pictureUri, false);
-
-                if (coverUri != null)
-                    savePicture(coverUri, true);
-
-                Intent intent = new Intent(CustomizeCarActivity.this, MainActivity.class);
-                CustomizeCarActivity.this.startActivity(intent);
-                setResult(GlobalContext.RESULT_CLOSE_ALL);
-                finish();
-            }
-        });
+        finishButton.setOnClickListener(this);
     }
 
     private TextWatcher mTextWatcher = new TextWatcher() {
@@ -159,6 +106,33 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
     };
 
     @Override
+    public void onClick(View v) {
+        Intent photoPickerIntent;
+
+        switch (v.getId()){
+            case R.id.dateTextView:
+                DialogFragment newFragment = DatePickerFragment.newInstance(this.selectedDate, this);
+                newFragment.show(getSupportFragmentManager(), "datePicker");
+                break;
+            case R.id.btn_addPicture:
+                photoPickerIntent = new Intent(Intent.ACTION_PICK).setType("image/*");
+                startActivityForResult(photoPickerIntent, SELECT_PICTURE_INTENT);
+                break;
+            case R.id.btn_addCover:
+                photoPickerIntent = new Intent(Intent.ACTION_PICK).setType("image/*");
+                startActivityForResult(photoPickerIntent, SELECT_COVER_INTENT);
+                break;
+            case R.id.backButton:
+                onBackPressed();
+                break;
+            case R.id.finishButton:
+                if (noPictureSet() || isStoragePermissionGranted())
+                    saveCarAndContinue();
+                break;
+        }
+    }
+
+    @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         selectedDate = Calendar.getInstance();
         selectedDate.set(year, monthOfYear, dayOfMonth);
@@ -166,28 +140,49 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         checkForm();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            // Save car with pictures
+            saveCarAndContinue();
+        } else {
+            // ToDo
+            // Add a warning message to user wich specify that his images won't be uploaded if he
+            // didn't allow eCarNet to access to his local storage
+
+            // Save the car without pictures
+            saveCarAndContinue(false);
+        }
+    }
+
     private void checkForm() {
         finishButton.setEnabled(
-                !imat.getText().toString().matches("") &&
-                        !kilometers.getText().toString().matches("") &&
-                        selectedDate != null
+            !imat.getText().toString().matches("") &&
+            !kilometers.getText().toString().matches("") &&
+            selectedDate != null
         );
+    }
+
+    private boolean noPictureSet() {
+        return pictureUri == null && coverUri == null;
     }
 
     private static String getFormattedDate(Context ctx, Calendar c) {
         return DateUtils.formatDateTime(ctx, c.getTimeInMillis(),
-                DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH);
+            DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_ABBREV_MONTH);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(resultCode) {
+        switch (resultCode) {
             case GlobalContext.RESULT_CLOSE_ALL:
                 setResult(GlobalContext.RESULT_CLOSE_ALL);
                 finish();
                 break;
             case RESULT_OK:
-                switch(requestCode) {
+                switch (requestCode) {
                     case SELECT_PICTURE_INTENT:
                         pictureUri = data.getData();
                         break;
@@ -200,8 +195,42 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void savePicture(Uri selectedImage, boolean isCover)
-    {
+    private void saveCarAndContinue() {
+        saveCarAndContinue(true);
+    }
+
+    private void saveCarAndContinue(boolean withPictures) {
+        Car car = new Car(
+            imat.getText().toString(),
+            Integer.parseInt(kilometers.getText().toString()),
+            new Date(selectedDate.getTimeInMillis()),
+            selectedCar
+        );
+
+        if (getIntent().hasExtra("carId")){
+            int carId = getIntent().getExtras().getInt("carId");
+            if (carId > 0)
+                car.setId(carId);
+        }
+        car.persist(true);
+
+        GlobalContext.setCurrentCar(car.getId());
+
+        if (withPictures) {
+            if (pictureUri != null)
+                savePicture(pictureUri, false);
+
+            if (coverUri != null)
+                savePicture(coverUri, true);
+        }
+
+        Intent intent = new Intent(CustomizeCarActivity.this, MainActivity.class);
+        CustomizeCarActivity.this.startActivity(intent);
+        setResult(GlobalContext.RESULT_CLOSE_ALL);
+        finish();
+    }
+
+    private void savePicture(Uri selectedImage, boolean isCover) {
         try {
             if (!Environment.getExternalStorageDirectory().canWrite())
                 return;
@@ -268,7 +297,18 @@ public class CustomizeCarActivity extends AppCompatActivity implements OnDateSet
         }
     }
 
-
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
 
     private String mediaUriToString(Uri uri)
     {
