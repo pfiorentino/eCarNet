@@ -3,9 +3,16 @@ apply plugin: 'com.android.application'
 def vcode = (int)(((new Date().getTime()/1000) - 1483225200) / 3600)
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'eCarNet'
+            keyPassword 'pipo12345'
+            storeFile file('/Users/paul/Workspaces/Perso/keystores/android.jks')
+            storePassword 'pipo1234'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion '25.0.0'
-
     defaultConfig {
         applicationId "me.alpha12.ecarnet"
         minSdkVersion 8
@@ -13,11 +20,18 @@ android {
         versionCode vcode
         versionName "0.9"
     }
-
     buildTypes {
+        debug {
+            applicationIdSuffix '.dev'
+            versionNameSuffix '-DEV'
+            resValue "string", "app_name", "eCarNet (dev)"
+            signingConfig signingConfigs.config
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "eCarNet"
+            signingConfig signingConfigs.config
         }
     }
 }

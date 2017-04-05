@@ -89,10 +89,12 @@ public class GlobalContext extends Application {
     }
 
     public static String getAppPicturePath() {
+        String folderName = "cars_pictures";
+
         return Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator  + "Android" + File.separator
                 + "data" + File.separator + getInstance().getPackageName()
-                + File.separator + "cars_pictures" + File.separator;
+                + File.separator + folderName + File.separator;
     }
 
     public static void pushNotification(String title, String message) {

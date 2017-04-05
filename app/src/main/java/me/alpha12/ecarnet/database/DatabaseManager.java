@@ -41,7 +41,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     + C_USE_OWN + " NUMERIC NOT NULL"
                     + ");";
 
-    private static final String DATABASE_NAME = "ecarnet.db";
+    private static final String DATABASE_NAME = GlobalContext.getInstance().getPackageName() + ".db";
     private static final int DATABASE_VERSION = 1;
     private String DATABASE_PATH; // Defined in constructor
 
@@ -99,7 +99,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("Database", "This method isn't used anymore because Android smells like a shit");
+        Log.d("Database", "This method isn't used anymore");
     }
 
     @Override
@@ -116,7 +116,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         Log.d("Database", "Database initialization");
         ZipInputStream zipInputFile;
         try {
-            InputStream inputFile = ctx.getAssets().open(DATABASE_NAME+".zip");
+            InputStream inputFile = ctx.getAssets().open("ecarnet.db.zip");
             zipInputFile = new ZipInputStream(new BufferedInputStream(inputFile));
             zipInputFile.getNextEntry();
 
